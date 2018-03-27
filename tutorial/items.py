@@ -8,7 +8,20 @@
 import scrapy
 
 
-class TutorialItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class YlyItem(scrapy.Item):
+    city = scrapy.Field()
+    yly_type = scrapy.Field()
+    factory_property = scrapy.Field()
+    person_in_charge = scrapy.Field()
+    establishment_time = scrapy.Field()
+    floor_surface = scrapy.Field()
+    building_area = scrapy.Field()
+    bednum = scrapy.Field()
+    for_persons = scrapy.Field()
+    charges_extent = scrapy.Field()
+    special_services = scrapy.Field()
+
+    contact_person = scrapy.Field()
+    address = scrapy.Field()
+    url = scrapy.Field()
+    transportation = scrapy.Field()
