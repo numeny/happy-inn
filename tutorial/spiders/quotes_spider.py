@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import scrapy
+from tutorial.rest_home_item import RestHomeItem
 
 total_idx = 0
 class QuotesSpider(scrapy.Spider):
@@ -7,18 +8,19 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-#            'http://www.yanglao.com.cn/resthome/27168.html',
+            'http://www.yanglao.com.cn/resthome/27168.html',
 
 #            'http://www.yanglao.com.cn/resthome/41090.html',
-            'http://www.yanglao.com.cn/xinjiang',
+#            'http://www.yanglao.com.cn/xinjiang',
+#            'http://www.yanglao.com.cn',
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
         global total_idx
-        '''
         # get all url of privice's resthome list
+        '''
         privince_url_list = response.xpath('//div[@class="hot-cities"]/dl/dd/a/@href').extract()
         for privince_url in privince_url_list:
             privince_url = "http://www.yanglao.com.cn" + privince_url
@@ -26,7 +28,9 @@ class QuotesSpider(scrapy.Spider):
             yield scrapy.Request(url=privince_url, callback=self.parse)
         '''
 
+        '''
         total_idx = total_idx + 1
+        # get next page of rest home list
         url_list_in_privince_text = response.xpath('//div[@class="pager"]/ul[@class="pages"]/li/a/text()').extract()
         url_list_in_privince_href = response.xpath('//div[@class="pager"]/ul[@class="pages"]/li/a/@href').extract()
         for idx in xrange(0, len(url_list_in_privince_text)):
@@ -34,44 +38,47 @@ class QuotesSpider(scrapy.Spider):
                 next_url_list_in_prinvice = "http://www.yanglao.com.cn" + url_list_in_privince_href[idx].strip()
                 print("====total_idx: %d===== next_url_list_in_prinvice: %s" % (total_idx, next_url_list_in_prinvice))
                 yield scrapy.Request(url=next_url_list_in_prinvice, callback=self.parse)
+        '''
 
+        '''
         url_list_in_privince_one_page = response.xpath('//div[@class="restlist"]/div[@class="list-view"]/ul/li/div[@class="info"]/h4/a/@href').extract()
         print("====total_idx: %d===== url_list_in_privince_one_page: %s" % (total_idx, url_list_in_privince_one_page))
         for url in url_list_in_privince_one_page:
             url = "http://www.yanglao.com.cn" + url.strip()
             print("----------parse start: %d, url: %s" % (total_idx, url))
             yield scrapy.Request(url=url, callback=self.parse)
+        '''
 
         print("----------parse start: %d" % (total_idx))
-        '''
-        page = response.url.split("/")[-2]
-        filename = 'quotes-%s.html' % page
-        with open(filename, 'wb') as f:
-            f.write(response.body)
-        self.log('Saved file %s' % filename)
-        print('Saved file %s' % filename)
 
-        # print('savedData: ' $ response.css('div.cont ul li').extract())
-        # for quote in response.css('div.cont ul li'):
-        # base info
-        '''
+        rhit = RestHomeItem()
+
+        print("----------parse rh_name----------")
         rh_name = response.xpath('//div[@class="inst-summary"]/h1/text()').extract()
         print("rh_name: %s" % rh_name[0].strip());
+        rhit['rh_name'] = rh_name[0].strip()
+        '''
         yield {
             "rh_name" : rh_name[0].strip()
         }
+        '''
+        print("----------parse rh_phone----------")
         rh_phone = response.xpath('//div[@class="inst-summary"]/ul/li/span/text()').extract()
         if len(rh_phone) != 0:
             print("rh_phone: %s" % rh_phone[0].strip());
+            rhit['rh_phone'] = rh_phone[0].strip()
+            '''
             yield {
                 "rh_phone" : rh_phone[0].strip()
             }
+            '''
+        print("----------parse base info----------")
         page_item_values = response.xpath('//div[@class="base-info"]/div[@class="cont"]/ul/li/text()').extract()
         page_item_keys = response.xpath('//div[@class="base-info"]/div[@class="cont"]/ul/li/em/text()').extract()
         for page_item_idx in xrange(0, len(page_item_keys)):
             page_item_key = page_item_keys[page_item_idx]
             title_0 = {
-                'rh_city':   u'\u6240\u5728\u5730\u533a\uff1a',     #1, '所在地区：'
+                'rh_location_id':   u'\u6240\u5728\u5730\u533a\uff1a',     #1, '所在地区：'
                 'rh_type':   u'\u673a\u6784\u7c7b\u578b\uff1a',     #2, '机构类型：'
                 'rh_factory_property':   u'\u673a\u6784\u6027\u8d28\uff1a',     #3, '机构性质：'
                 'rh_person_in_charge':   u'\u8d1f  \u8d23  \u4eba\uff1a',       #4, '负 责 人：'
@@ -87,11 +94,15 @@ class QuotesSpider(scrapy.Spider):
             for idx in xrange(0, len(title_0.values())):
                 if page_item_key == title_0.values()[idx]:
                     print('%s : %s, \"%s\"' % (idx, title_0.keys()[idx], page_item_values[page_item_idx].strip()));
+                    rhit[title_0.keys()[idx].strip()] = page_item_values[page_item_idx].strip()
+                    '''
                     yield {
                         title_0.keys()[idx].strip(): page_item_values[page_item_idx].strip()
                     }
+                    '''
                     break;
 
+        print("----------parse contact-info----------")
         # contact us
         idx = -1
         for quote in response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li/text()').extract():
@@ -103,11 +114,15 @@ class QuotesSpider(scrapy.Spider):
                 'rh_transportation',  #4
             ]
             print('%s: %s' % (title_1[idx], quote))
+            rhit[title_1[idx].strip()] = quote.strip()
+            '''
             yield {
                 title_1[idx]: quote
             }
+            '''
 
         # introduction
+        print("----------parse introduction----------")
         inst_intro = ""
         introductions = response.xpath('//div[@class="inst-intro"]/div[@class="cont"]/text()').extract()
         for i in introductions:
@@ -120,11 +135,15 @@ class QuotesSpider(scrapy.Spider):
             inst_intro = inst_intro + i.strip()
 
         print('rh_inst_intro: %s' % inst_intro)
+        rhit['rh_inst_intro'] = inst_intro.strip()
+        '''
         yield {
             "rh_inst_intro": inst_intro
         }
+        '''
 
         # facilities 设施
+        print("----------parse facilities----------")
         facilities = response.xpath('//div[@class="facilities"]/div[@class="cont"]/text()').extract()
         if len(facilities) != 0:
             fac = facilities[0].strip()
@@ -136,20 +155,28 @@ class QuotesSpider(scrapy.Spider):
                 for f in facilities:
                     fac = fac + f.strip()
             print('rh_facilities: %s' % fac)
+            rhit['rh_facilities'] = fac.strip()
+            '''
             yield {
                 "rh_facilities": fac.strip()
             }
+            '''
 
         # service-content 服务内容
+        print("----------parse service-content----------")
         service_content = response.xpath('//div[@class="service-content"]/div[@class="cont"]/text()').extract()
         if len(service_content) != 0:
             service = service_content[0].strip()
             print('rh_service_content: %s' % service)
+            rhit['rh_service_content'] = service
+            '''
             yield {
                 "rh_service_content": service
             }
+            '''
 
         # inst-notes 入住须知 FIXME format \n\t
+        print("----------parse inst-notes----------")
         inst_notes = response.xpath('//div[@class="inst-notes"]/div[@class="cont"]/p/text()').extract()
         if len(inst_notes) != 0:
             info =""
@@ -158,16 +185,10 @@ class QuotesSpider(scrapy.Spider):
                 inst_notes = response.xpath('//div[@class="inst-notes"]/div[@class="cont"]/p/span/text()').extract()
                 for i in inst_notes: info = info + i.strip()
             print('rh_inst_notes: %s' % info)
+            rhit['rh_inst_notes'] = info.strip()
+            '''
             yield {
                 "rh_inst_notes": info
             }
-
-        
-
-        '''
-        # get new join rest home
-        new_join_list = response.xpath('//div[@class="rbox new-join"]/div[@class="cont"]/ul[@class="txtlist"]/li/a/@href').extract()
-        for new_join in new_join_list:
-            new_url = "http://www.yanglao.com.cn" + new_join
-            yield scrapy.Request(url=new_url, callback=self.parse)
-        '''
+            '''
+        yield rhit
