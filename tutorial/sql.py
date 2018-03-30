@@ -59,6 +59,7 @@ class RhSql(object):
         print("********* Start sql operation *******")
         self.connect_to_sql()
         self.create_resthome_table_if_neccesary()
+        self.excute_sql("set names utf8;")
 
     def connect_to_sql(self):
         print("connect_to_sql ...")
@@ -94,8 +95,8 @@ class RhSql(object):
         print("insert_data ...")
         RestHomeItem.init_item_field_to_default_if_null(item)
 
-        #if self.existed_rh_name(item["rh_name"]) is not None:
-        if self.existed_rh_name("bdg") is not None:
+        ret = self.existed_rh_name(item["rh_name"])
+        if ret is not None:
             print("[Warnning] the following resthome is existed:")
             RestHomeItem.printSelf(item)
             return
@@ -114,6 +115,7 @@ class RhSql(object):
                     item["rh_special_services"], item["rh_contact_person"], item["rh_address"],\
                     item["rh_url"], item["rh_transportation"], item["rh_inst_intro"],\
                     item["rh_facilities"], item["rh_service_content"], item["rh_inst_notes"]))
+
         self.excute_sql(sql_str)
 
 
