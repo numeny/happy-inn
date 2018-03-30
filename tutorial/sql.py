@@ -9,24 +9,24 @@ from tutorial.rest_home_item import RestHomeItem
 class RhSql(object):
     __sql_create_resthome_table = "CREATE TABLE IF NOT EXISTS rh (\
                 rh_id INT UNSIGNED AUTO_INCREMENT,\
-                rh_name VARCHAR(100) NOT NULL,\
-                rh_phone VARCHAR(100),\
+                rh_name VARCHAR(500) NOT NULL,\
+                rh_phone VARCHAR(200),\
                 rh_location_id INT UNSIGNED,\
-                rh_type VARCHAR(100),\
-                rh_factory_property VARCHAR(100),\
-                rh_person_in_charge VARCHAR(100),\
+                rh_type VARCHAR(200),\
+                rh_factory_property VARCHAR(200),\
+                rh_person_in_charge VARCHAR(200),\
                 rh_establishment_time DATE,\
-                rh_floor_surface VARCHAR(100),\
-                rh_building_area VARCHAR(100),\
+                rh_floor_surface VARCHAR(200),\
+                rh_building_area VARCHAR(200),\
                 rh_bednum SMALLINT UNSIGNED,\
-                rh_for_persons VARCHAR(1000),\
+                rh_for_persons VARCHAR(200),\
                 rh_charges_extent VARCHAR(1000),\
                 rh_special_services VARCHAR(1000),\
-                rh_contact_person VARCHAR(1000),\
+                rh_contact_person VARCHAR(200),\
                 rh_address VARCHAR(1000),\
                 rh_url VARCHAR(1000),\
                 rh_transportation VARCHAR(1000),\
-                rh_inst_intro VARCHAR(10000),\
+                rh_inst_intro VARCHAR(5000),\
                 rh_facilities VARCHAR(1000),\
                 rh_service_content VARCHAR(1000),\
                 rh_inst_notes VARCHAR(1000),\

@@ -66,6 +66,7 @@ class RestHomeItem(scrapy.Item):
         item["rh_establishment_time"] = "19790101"
         item["rh_location_id"]=200
         item["rh_bednum"] = 200
+        '''
         try:
             item["rh_name"] = item["rh_name"].encode('UTF-8')
             item["rh_phone"] = item["rh_phone"].encode('UTF-8')
@@ -90,7 +91,7 @@ class RestHomeItem(scrapy.Item):
             print(e)
 
         '''
-        item["rh_name"] = "111"
+        item["rh_name"] = "海南省托老院"
         item["rh_phone"] = "rh_phone_6"
         item["rh_type"] = "rh_type_5"
         item["rh_factory_property"] = "rh_factory_property_5"
@@ -108,8 +109,6 @@ class RestHomeItem(scrapy.Item):
         item["rh_facilities"] = "rh_facilities_5"
         item["rh_service_content"] = "rh_service_content_5"
         item["rh_inst_notes"] = "rh_inst_notes"
-        '''
-
 
     def printSelf(item):
         for i in RestHomeItem.item_list.keys():
