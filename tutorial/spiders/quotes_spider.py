@@ -1,4 +1,6 @@
-# -*- coding: UTF-8 -*-
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import scrapy
 from tutorial.rest_home_item import RestHomeItem
 
@@ -8,9 +10,8 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'http://www.yanglao.com.cn/resthome/27168.html',
-
-#            'http://www.yanglao.com.cn/resthome/41090.html',
+#            'http://www.yanglao.com.cn/resthome/27168.html',
+            'http://www.yanglao.com.cn/resthome/41090.html',
 #            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn',
         ]
@@ -19,6 +20,7 @@ class QuotesSpider(scrapy.Spider):
 
     def parse(self, response):
         global total_idx
+        # all province
         # get all url of privice's resthome list
         '''
         privince_url_list = response.xpath('//div[@class="hot-cities"]/dl/dd/a/@href').extract()
@@ -28,6 +30,7 @@ class QuotesSpider(scrapy.Spider):
             yield scrapy.Request(url=privince_url, callback=self.parse)
         '''
 
+        # all pages for one province
         '''
         total_idx = total_idx + 1
         # get next page of rest home list
@@ -40,6 +43,8 @@ class QuotesSpider(scrapy.Spider):
                 yield scrapy.Request(url=next_url_list_in_prinvice, callback=self.parse)
         '''
 
+        # all url for one province's one page
+        '''
         '''
         url_list_in_privince_one_page = response.xpath('//div[@class="restlist"]/div[@class="list-view"]/ul/li/div[@class="info"]/h4/a/@href').extract()
         print("====total_idx: %d===== url_list_in_privince_one_page: %s" % (total_idx, url_list_in_privince_one_page))
@@ -47,7 +52,6 @@ class QuotesSpider(scrapy.Spider):
             url = "http://www.yanglao.com.cn" + url.strip()
             print("----------parse start: %d, url: %s" % (total_idx, url))
             yield scrapy.Request(url=url, callback=self.parse)
-        '''
 
         print("----------parse start: %d" % (total_idx))
 
