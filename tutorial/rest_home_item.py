@@ -7,6 +7,7 @@
 # https://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+import re
 
 class RestHomeItem(scrapy.Item):
     rh_name = scrapy.Field()
@@ -41,7 +42,7 @@ class RestHomeItem(scrapy.Item):
         "rh_type": "",\
         "rh_factory_property": "",\
         "rh_person_in_charge": "",\
-        "rh_establishment_time": "19990101",\
+        "rh_establishment_time": u"1999年01月01日",\
         "rh_floor_surface": "",\
         "rh_building_area": "",\
         "rh_bednum": 0,\
@@ -63,7 +64,8 @@ class RestHomeItem(scrapy.Item):
             if i not in item:
                 item[i] = RestHomeItem.item_list[i]
                 print("[Warnning] (%s) not existed!" % i)
-        item["rh_establishment_time"] = "19790101"
+#item["rh_establishment_time"] = "19790101"
+        print(item["rh_establishment_time"])
         item["rh_location_id"]=200
         item["rh_bednum"] = 200
         try:
@@ -89,6 +91,27 @@ class RestHomeItem(scrapy.Item):
             print("*********************************")
             print(e)
         '''
+        print("rh_establishment_time %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  ")
+        print(item["rh_establishment_time"])
+        item["rh_establishment_time"] = item["rh_establishment_time"].strip()
+#pattern = re.compile(r'[^\d]')
+        pattern = re.compile(r'[^\d]')
+        m = pattern.split(item["rh_establishment_time"])
+        print("m[0]:")
+        print(m)
+        print(m[0].encode('utf-8'))
+        print(m[1].encode('utf-8'))
+        print(m[2].encode('utf-8'))
+        print("m[0]")
+        item["rh_establishment_time"] = "{:0>4s}{:0>2s}{:0>2s}".format(m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
+#        item["rh_establishment_time"] = ("%s%02s%02s") % (m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
+#item["rh_establishment_time"] = re.sub(item["rh_establishment_time"], )
+        print(item["rh_establishment_time"])
+        print("%%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  ")
+        '''
+        RestHomeItem.handleDate(item, "rh_establishment_time")
+
+        '''
 
         item["rh_name"] = "海南省托老"
         item["rh_phone"] = "rh_phone_6"
@@ -109,6 +132,24 @@ class RestHomeItem(scrapy.Item):
         item["rh_service_content"] = "rh_service_content_5"
         item["rh_inst_notes"] = "rh_inst_notes"
         '''
+    def handleDate(item, idx):
+        ''' item.[idx] is u"1999年1月11日" '''
+        item[idx] = item[idx].strip()
+        pattern = re.compile(r'[^\d]')
+        m = pattern.split(item[idx])
+        if(len(m) < 2):
+            print("[Warning]: rh_establishment_time is not correct, for %s" % item["rh_url"])
+            print(item[idx])
+            return
+        item[idx] = "{:0>4s}{:0>2s}{:0>2s}".format(m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
+
+    '''
+    def handleOneNum(item, idx):
+        # item.[idx] is u"汉字num汉字"
+        item[idx] = item[idx].strip()
+        pattern = re.compile(r'[^\d]')
+        m = pattern.split(item[idx]).encode('utf-8')
+    '''
 
     def printSelf(item):
         for i in RestHomeItem.item_list.keys():
