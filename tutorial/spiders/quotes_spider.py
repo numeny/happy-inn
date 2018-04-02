@@ -166,7 +166,7 @@ class QuotesSpider(scrapy.Spider):
         introductions_2 = response.xpath('//div[@class="inst-intro"]/div[@class="cont"]/span/text()').extract()
         for i in introductions_2:
             inst_intro = inst_intro + i.strip()
-        introductions_3 = response.xpath('//div[@class="inst-intro"]/div[@class="cont"]/p/span/text()').extract()
+        introductions_3 = response.xpath('//div[@class="inst-intro"]/div[@class="cont"]/p/text() | //div[@class="inst-intro"]/div[@class="cont"]/p/span/text() | //div[@class="inst-intro"]/div[@class="cont"]/p/b/text()').extract()
         for i in introductions_3:
             inst_intro = inst_intro + i.strip()
 
@@ -176,6 +176,14 @@ class QuotesSpider(scrapy.Spider):
             "rh_inst_intro": inst_intro
         }
         '''
+
+
+        print("----------parse inst_charge----------")
+        inst_charge = response.xpath('//div[@class="inst-charge"]/div[@class="cont"]/text() | //div[@class="inst-charge"]/div[@class="cont"]/span/text() | //div[@class="inst-charge"]/div[@class="cont"]/span/span/text()').extract()
+        inst_charge_0 = ""
+        for i in inst_charge:
+            inst_charge_0 = inst_charge_0 + i.strip()
+        rhit['rh_inst_charge'] = inst_charge_0
 
         # facilities 设施
         print("----------parse facilities----------")

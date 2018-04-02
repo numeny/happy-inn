@@ -27,6 +27,7 @@ class RhSql(object):
                 rh_url VARCHAR(1000),\
                 rh_transportation VARCHAR(1000),\
                 rh_inst_intro VARCHAR(5000),\
+                rh_inst_charge VARCHAR(2000),\
                 rh_facilities VARCHAR(1000),\
                 rh_service_content VARCHAR(1000),\
                 rh_inst_notes VARCHAR(1000),\
@@ -43,7 +44,8 @@ class RhSql(object):
                     rh_bednum, rh_for_persons, rh_charges_extent,\
                     rh_special_services, rh_contact_person, rh_address,\
                     rh_url, rh_transportation, rh_inst_intro,\
-                    rh_facilities, rh_service_content, rh_inst_notes\
+                    rh_inst_charge, rh_facilities, rh_service_content,\
+                    rh_inst_notes\
                 ) VALUES (\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
@@ -51,7 +53,9 @@ class RhSql(object):
                     %d, \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
-                    \"%s\", \"%s\", \"%s\");"
+                    \"%s\", \"%s\", \"%s\",\
+                    \"%s\"\
+                    );"
 
 
     def __init__(self):
@@ -82,13 +86,9 @@ class RhSql(object):
         return self.cur.fetchone()
 
     def existed_rh_name(self, resthome_name):
-        print("existed_rh_name ...")
         sql_str = RhSql.__sql_existed_rh_name
-        print("existed_rh_name-1 ...%s" % sql_str)
         sql_str = sql_str.format(resthome_name)
-        print("existed_rh_name-1-2 ...%s" % sql_str)
         self.excute_sql(sql_str.format(resthome_name))
-        print("existed_rh_name-2 ...")
         return self.cur.fetchone()
 
     def insert_data(self, item):
@@ -102,11 +102,7 @@ class RhSql(object):
             return
 
         sql_str = RhSql.__sql_insert_data
-        print("sql_str-------------------------------1")
-        print(sql_str)
-        print("sql_str-------------------------------1-1")
         RestHomeItem.printSelf(item)
-        print("sql_str-------------------------------1-2")
         sql_str = (sql_str % (\
                     item["rh_name"], item["rh_phone"], item["rh_location_id"],\
                     item["rh_type"], item["rh_factory_property"], item["rh_person_in_charge"],\
@@ -114,18 +110,19 @@ class RhSql(object):
                     item["rh_bednum"], item["rh_for_persons"], item["rh_charges_extent"],\
                     item["rh_special_services"], item["rh_contact_person"], item["rh_address"],\
                     item["rh_url"], item["rh_transportation"], item["rh_inst_intro"],\
-                    item["rh_facilities"], item["rh_service_content"], item["rh_inst_notes"]))
+                    item["rh_inst_charge"], item["rh_facilities"], item["rh_service_content"],\
+                    item["rh_inst_notes"]))
 
         self.excute_sql(sql_str)
 
 
     def excute_sql(self, sql_str):
-        print("------sql_str------")
+        print("starting excute sql_str")
         print(sql_str)
         try:
             self.cur.execute(sql_str)
             self.conn.commit()
-            print("------sql_str------insert ok")
+            print("excute sql_str : ok")
         except Exception as e:
             print("------sql_str------execute Exception:")
             print(e)

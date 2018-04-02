@@ -31,6 +31,7 @@ class RestHomeItem(scrapy.Item):
     rh_transportation = scrapy.Field()
 
     rh_inst_intro = scrapy.Field()
+    rh_inst_charge = scrapy.Field()
     rh_facilities = scrapy.Field()
     rh_service_content = scrapy.Field()
     rh_inst_notes = scrapy.Field()
@@ -54,6 +55,7 @@ class RestHomeItem(scrapy.Item):
         "rh_url": "",\
         "rh_transportation": "",\
         "rh_inst_intro": "",\
+        "rh_inst_charge": "",\
         "rh_facilities": "",\
         "rh_service_content": "",\
         "rh_inst_notes": ""\
@@ -63,7 +65,7 @@ class RestHomeItem(scrapy.Item):
         for i in RestHomeItem.item_list:
             if i not in item:
                 item[i] = RestHomeItem.item_list[i]
-                print("[Warnning] (%s) not existed!" % i)
+                print("[Warning] (%s) not existed!" % i)
         RestHomeItem.handleString(item, "rh_name");
         RestHomeItem.handleString(item, "rh_phone");
         RestHomeItem.handleString(item, "rh_location_id");
@@ -80,6 +82,7 @@ class RestHomeItem(scrapy.Item):
         RestHomeItem.handleString(item, "rh_url");
         RestHomeItem.handleString(item, "rh_transportation");
         RestHomeItem.handleString(item, "rh_inst_intro");
+        RestHomeItem.handleString(item, "rh_inst_charge");
         RestHomeItem.handleString(item, "rh_facilities");
         RestHomeItem.handleString(item, "rh_service_content");
         RestHomeItem.handleString(item, "rh_inst_notes");
@@ -104,6 +107,7 @@ class RestHomeItem(scrapy.Item):
         item["rh_url"] = "rh_url_5"
         item["rh_transportation"] = "rh_transportation_5"
         item["rh_inst_intro"] = "rh_inst_intro_5"
+        item["rh_inst_charge"] = "rh_inst_charge_5"
         item["rh_facilities"] = "rh_facilities_5"
         item["rh_service_content"] = "rh_service_content_5"
         item["rh_inst_notes"] = "rh_inst_notes"
