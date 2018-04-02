@@ -31,12 +31,15 @@ class RhSql(object):
                 rh_facilities VARCHAR(1000),\
                 rh_service_content VARCHAR(1000),\
                 rh_inst_notes VARCHAR(1000),\
+                rh_ylw_id VARCHAR(20),\
                 PRIMARY KEY ( rh_id )\
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 
     __sql_select_name = "select * from rh where rh_name=\"{}\";"
     __sql_select_all = "select * from rh;"
+    __sql_select_count = "select count(*) from rh;"
     __sql_delete_all = "delete from rh;"
+    __sql_drop_table = "drop table rh;"
     __sql_existed_rh_name = "select 1 from rh where rh_name=\'{}\' limit 1;"
 
     __sql_insert_data = "insert into rh (\
@@ -47,7 +50,7 @@ class RhSql(object):
                     rh_special_services, rh_contact_person, rh_address,\
                     rh_url, rh_transportation, rh_inst_intro,\
                     rh_inst_charge, rh_facilities, rh_service_content,\
-                    rh_inst_notes\
+                    rh_inst_notes, rh_ylw_id\
                 ) VALUES (\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
@@ -56,7 +59,7 @@ class RhSql(object):
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
-                    \"%s\"\
+                    \"%s\", \"%s\"\
                     );"
 
 
@@ -111,6 +114,13 @@ class RhSql(object):
         result = self.cur.fetchone()
         self.printOneRecord(result)
 
+    def select_count(self):
+        print("select_count ...")
+        sql_str = RhSql.__sql_select_count
+        self.excute_sql(sql_str)
+        result = self.cur.fetchone()
+        print("select_count ... count: %s" % result[0])
+
     def existed_rh_name(self, resthome_name):
         sql_str = RhSql.__sql_existed_rh_name
         sql_str = sql_str.format(resthome_name)
@@ -137,13 +147,18 @@ class RhSql(object):
                     item["rh_special_services"], item["rh_contact_person"], item["rh_address"],\
                     item["rh_url"], item["rh_transportation"], item["rh_inst_intro"],\
                     item["rh_inst_charge"], item["rh_facilities"], item["rh_service_content"],\
-                    item["rh_inst_notes"]))
+                    item["rh_inst_notes"], item["rh_ylw_id"]))
 
         self.excute_sql(sql_str)
 
     def delete_all(self):
         print("delete_all ...")
         sql_str = RhSql.__sql_delete_all
+        self.excute_sql(sql_str)
+
+    def drop_table(self):
+        print("drop_table ...")
+        sql_str = RhSql.__sql_drop_table
         self.excute_sql(sql_str)
 
     def excute_sql(self, sql_str):

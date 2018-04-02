@@ -10,9 +10,9 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-#            'http://www.yanglao.com.cn/resthome/27168.html',
+            'http://www.yanglao.com.cn/resthome/27168.html',
             'http://www.yanglao.com.cn/resthome/41090.html',
-#            'http://www.yanglao.com.cn/resthome/228436.html',
+            'http://www.yanglao.com.cn/resthome/228436.html',
 #            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn',
         ]

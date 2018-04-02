@@ -1,0 +1,3 @@
+#!/bin/bash
+cd ~/ssd/dl/chromium/chromium.src/pro/happy-inn/tutorial/db
+./drop_table.py
