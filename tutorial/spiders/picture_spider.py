@@ -4,6 +4,8 @@
 import os
 import scrapy
 
+from tutorial.sql import RhSql
+
 class PictureSpider(scrapy.Spider):
     name = "picture"
 
@@ -17,6 +19,7 @@ class PictureSpider(scrapy.Spider):
         except Exception as e:
             print(e)
 
+        '''
         urls = [
             'http://www.yanglao.com.cn/resthome/27168.html',
 #            'http://www.yanglao.com.cn/resthome/41090.html',
@@ -26,6 +29,15 @@ class PictureSpider(scrapy.Spider):
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
+        '''
+        sql = RhSql()
+        urls = sql.select_all_rh_ylw_id()
+        print(urls)
+        for url in urls:
+            if len(url[0]) > 0:
+                absolute_url = 'http://www.yanglao.com.cn/resthome/' + url[0] + ".html"
+                print("%s" % absolute_url)
+                yield scrapy.Request(url=absolute_url, callback=self.parse)
 
     def parse(self, response):
         print("parsing picture's url ...")

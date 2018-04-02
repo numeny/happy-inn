@@ -10,10 +10,10 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'http://www.yanglao.com.cn/resthome/27168.html',
-            'http://www.yanglao.com.cn/resthome/41090.html',
-            'http://www.yanglao.com.cn/resthome/228436.html',
-#            'http://www.yanglao.com.cn/xinjiang',
+#            'http://www.yanglao.com.cn/resthome/27168.html',
+#            'http://www.yanglao.com.cn/resthome/41090.html',
+#            'http://www.yanglao.com.cn/resthome/228436.html',
+            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn',
         ]
         for url in urls:
@@ -52,10 +52,12 @@ class QuotesSpider(scrapy.Spider):
         for url in url_list_in_privince_one_page:
             url = "http://www.yanglao.com.cn" + url.strip()
             print("----------parse start: %d, url: %s" % (total_idx, url))
-            yield scrapy.Request(url=url, callback=self.parse)
+            yield scrapy.Request(url=url, callback=self.parse_item_from_response)
 
-        print("----------parse start: %d" % (total_idx))
+        yield self.parse_item_from_response(response)
 
+    def parse_item_from_response(self, response):
+        print("Parse item start ... %s" % response.url)
         rhit = RestHomeItem()
 
         print("----------parse rh_name----------")
@@ -81,6 +83,11 @@ class QuotesSpider(scrapy.Spider):
         if len(rh_phone) != 0:
             print("rh_phone: %s" % rh_phone[0].strip());
             rhit['rh_phone'] = rh_phone[0].strip()
+
+        print("----------parse rh_ylw_id----------")
+        last_html_file = response.url[response.url.rfind("/")+1 : len(response.url)]
+        rhit['rh_ylw_id'] = RestHomeItem.getFirstNum(last_html_file)
+        print("rh_ylw_id: %s" % rhit['rh_ylw_id'])
 
         print("----------parse base info----------")
         page_item_values = response.xpath('//div[@class="base-info"]/div[@class="cont"]/ul/li/text()').extract()
@@ -234,4 +241,4 @@ class QuotesSpider(scrapy.Spider):
                 "rh_inst_notes": info
             }
             '''
-        yield rhit
+        return rhit

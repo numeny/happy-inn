@@ -126,6 +126,12 @@ class RestHomeItem(scrapy.Item):
             print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
 
     @staticmethod
+    def getFirstNum(s):
+        pattern = re.compile(r'[^\d]')
+        m = pattern.split(s)
+        return m[0].encode('utf-8')
+
+    @staticmethod
     def printSelf(item):
         for i in RestHomeItem.item_list:
             if i[0] in item:

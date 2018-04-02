@@ -38,6 +38,7 @@ class RhSql(object):
     __sql_select_name = "select * from rh where rh_name=\"{}\";"
     __sql_select_all = "select * from rh;"
     __sql_select_count = "select count(*) from rh;"
+    __sql_select_all_rh_ylw_id = "select rh_ylw_id from rh;"
     __sql_delete_all = "delete from rh;"
     __sql_drop_table = "drop table rh;"
     __sql_existed_rh_name = "select 1 from rh where rh_name=\'{}\' limit 1;"
@@ -106,6 +107,12 @@ class RhSql(object):
         results = self.cur.fetchall()
         for r in results:
             self.printOneRecord(r)
+
+    def select_all_rh_ylw_id(self):
+        print("select_all_rh_ylw_id ...")
+        sql_str = RhSql.__sql_select_all_rh_ylw_id
+        self.excute_sql(sql_str)
+        return self.cur.fetchall()
 
     def select_first_one(self):
         print("select_all ...")
