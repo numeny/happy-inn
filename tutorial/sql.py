@@ -35,6 +35,8 @@ class RhSql(object):
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 
     __sql_select_name = "select * from rh where rh_name=\"{}\";"
+    __sql_select_all = "select * from rh;"
+    __sql_delete_all = "delete from rh;"
     __sql_existed_rh_name = "select 1 from rh where rh_name=\'{}\' limit 1;"
 
     __sql_insert_data = "insert into rh (\
@@ -85,6 +87,30 @@ class RhSql(object):
         self.excute_sql(sql_str.format(resthome_name))
         return self.cur.fetchone()
 
+    def printOneRecord(self, record):
+        print("")
+        print("rh_id: %s" % record[0])
+        idx = 1
+        for i in RestHomeItem.item_list:
+            print("%s: %s" % (i[0], record[idx]))
+            idx = idx + 1
+        print("")
+
+    def select_all(self):
+        print("select_all ...")
+        sql_str = RhSql.__sql_select_all
+        self.excute_sql(sql_str)
+        results = self.cur.fetchall()
+        for r in results:
+            self.printOneRecord(r)
+
+    def select_first_one(self):
+        print("select_all ...")
+        sql_str = RhSql.__sql_select_all
+        self.excute_sql(sql_str)
+        result = self.cur.fetchone()
+        self.printOneRecord(result)
+
     def existed_rh_name(self, resthome_name):
         sql_str = RhSql.__sql_existed_rh_name
         sql_str = sql_str.format(resthome_name)
@@ -115,6 +141,10 @@ class RhSql(object):
 
         self.excute_sql(sql_str)
 
+    def delete_all(self):
+        print("delete_all ...")
+        sql_str = RhSql.__sql_delete_all
+        self.excute_sql(sql_str)
 
     def excute_sql(self, sql_str):
         print("starting excute sql_str")

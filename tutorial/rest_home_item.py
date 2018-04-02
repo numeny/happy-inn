@@ -36,36 +36,36 @@ class RestHomeItem(scrapy.Item):
     rh_service_content = scrapy.Field()
     rh_inst_notes = scrapy.Field()
 
-    item_list = {
-        "rh_name": "unknow resthome name",\
-        "rh_phone": "",\
-        "rh_location_id": "",\
-        "rh_type": "",\
-        "rh_factory_property": "",\
-        "rh_person_in_charge": "",\
-        "rh_establishment_time": u"1999年01月01日",\
-        "rh_floor_surface": "",\
-        "rh_building_area": "",\
-        "rh_bednum": u"0张",\
-        "rh_for_persons": "",\
-        "rh_charges_extent": "",\
-        "rh_special_services": "",\
-        "rh_contact_person": "",\
-        "rh_address": "",\
-        "rh_url": "",\
-        "rh_transportation": "",\
-        "rh_inst_intro": "",\
-        "rh_inst_charge": "",\
-        "rh_facilities": "",\
-        "rh_service_content": "",\
-        "rh_inst_notes": ""\
-    }
+    item_list = (
+        ("rh_name", "unknow resthome name"),\
+        ("rh_phone", ""),\
+        ("rh_location_id", ""),\
+        ("rh_type", ""),\
+        ("rh_factory_property", ""),\
+        ("rh_person_in_charge", ""),\
+        ("rh_establishment_time", u"1999年01月01日"),\
+        ("rh_floor_surface", ""),\
+        ("rh_building_area", ""),\
+        ("rh_bednum", u"0张"),\
+        ("rh_for_persons", ""),\
+        ("rh_charges_extent", ""),\
+        ("rh_special_services", ""),\
+        ("rh_contact_person", ""),\
+        ("rh_address", ""),\
+        ("rh_url", ""),\
+        ("rh_transportation", ""),\
+        ("rh_inst_intro", ""),\
+        ("rh_inst_charge", ""),\
+        ("rh_facilities", ""),\
+        ("rh_service_content", ""),\
+        ("rh_inst_notes", "")\
+    )
 
     def init_item_field_to_default_if_null(item):
         for i in RestHomeItem.item_list:
-            if i not in item:
-                item[i] = RestHomeItem.item_list[i]
-                print("[Warning] (%s) not existed!" % i)
+            if i[0] not in item:
+                item[i[0]] = i[1]
+                print("[Warning] (%s) not existed!" % i[0])
         RestHomeItem.handleString(item, "rh_name");
         RestHomeItem.handleString(item, "rh_phone");
         RestHomeItem.handleString(item, "rh_location_id");
@@ -144,6 +144,8 @@ class RestHomeItem(scrapy.Item):
             print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
 
     def printSelf(item):
-        for i in RestHomeItem.item_list.keys():
-            if i in item:
-                print("%s: %s" % (i, item[i]))
+        for i in RestHomeItem.item_list:
+            if i[0] in item:
+                print("%s: %s" % (i[0], item[i[0]]))
+            else:
+                print("%s: not in item" % (i[0]))
