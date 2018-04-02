@@ -143,6 +143,7 @@ class RestHomeItem(scrapy.Item):
         if len(old_item) != 0 and item[idx] == 0:
             print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
 
+    @staticmethod
     def printSelf(item):
         for i in RestHomeItem.item_list:
             if i[0] in item:
