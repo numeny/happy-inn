@@ -38,14 +38,14 @@ class RestHomeItem(scrapy.Item):
     item_list = {
         "rh_name": "unknow resthome name",\
         "rh_phone": "",\
-        "rh_location_id": 0,\
+        "rh_location_id": "",\
         "rh_type": "",\
         "rh_factory_property": "",\
         "rh_person_in_charge": "",\
         "rh_establishment_time": u"1999年01月01日",\
         "rh_floor_surface": "",\
         "rh_building_area": "",\
-        "rh_bednum": 0,\
+        "rh_bednum": u"0张",\
         "rh_for_persons": "",\
         "rh_charges_extent": "",\
         "rh_special_services": "",\
@@ -64,52 +64,28 @@ class RestHomeItem(scrapy.Item):
             if i not in item:
                 item[i] = RestHomeItem.item_list[i]
                 print("[Warnning] (%s) not existed!" % i)
-#item["rh_establishment_time"] = "19790101"
-        print(item["rh_establishment_time"])
-        item["rh_location_id"]=200
-        item["rh_bednum"] = 200
-        try:
-            item["rh_name"] = item["rh_name"].encode('UTF-8')
-            item["rh_phone"] = item["rh_phone"].encode('UTF-8')
-            item["rh_type"] = item["rh_type"].encode('UTF-8')
-            item["rh_factory_property"] = item["rh_factory_property"].encode('UTF-8')
-            item["rh_person_in_charge"] = item["rh_person_in_charge"].encode('UTF-8')
-            item["rh_floor_surface"] = item["rh_floor_surface"].encode('UTF-8')
-            item["rh_building_area"] = item["rh_building_area"].encode('UTF-8')
-            item["rh_for_persons"] = item["rh_for_persons"].encode('UTF-8')
-            item["rh_charges_extent"] = item["rh_charges_extent"].encode('UTF-8')
-            item["rh_special_services"] = item["rh_special_services"].encode('UTF-8')
-            item["rh_contact_person"] = item["rh_contact_person"].encode('UTF-8')
-            item["rh_address"] = item["rh_address"].encode('UTF-8')
-            item["rh_url"] = item["rh_url"].encode('UTF-8')
-            item["rh_transportation"] = item["rh_transportation"].encode('UTF-8')
-            item["rh_inst_intro"] = item["rh_inst_intro"].encode('UTF-8')
-            item["rh_facilities"] = item["rh_facilities"].encode('UTF-8')
-            item["rh_service_content"] = item["rh_service_content"].encode('UTF-8')
-            item["rh_inst_notes"] = item["rh_inst_notes"].encode('UTF-8')
-        except Exception as e:
-            print("*********************************")
-            print(e)
-        '''
-        print("rh_establishment_time %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  ")
-        print(item["rh_establishment_time"])
-        item["rh_establishment_time"] = item["rh_establishment_time"].strip()
-#pattern = re.compile(r'[^\d]')
-        pattern = re.compile(r'[^\d]')
-        m = pattern.split(item["rh_establishment_time"])
-        print("m[0]:")
-        print(m)
-        print(m[0].encode('utf-8'))
-        print(m[1].encode('utf-8'))
-        print(m[2].encode('utf-8'))
-        print("m[0]")
-        item["rh_establishment_time"] = "{:0>4s}{:0>2s}{:0>2s}".format(m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
-#        item["rh_establishment_time"] = ("%s%02s%02s") % (m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
-#item["rh_establishment_time"] = re.sub(item["rh_establishment_time"], )
-        print(item["rh_establishment_time"])
-        print("%%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  %%  ")
-        '''
+        RestHomeItem.handleString(item, "rh_name");
+        RestHomeItem.handleString(item, "rh_phone");
+        RestHomeItem.handleString(item, "rh_location_id");
+        RestHomeItem.handleString(item, "rh_type");
+        RestHomeItem.handleString(item, "rh_factory_property");
+        RestHomeItem.handleString(item, "rh_person_in_charge");
+        RestHomeItem.handleString(item, "rh_floor_surface");
+        RestHomeItem.handleString(item, "rh_building_area");
+        RestHomeItem.handleString(item, "rh_for_persons");
+        RestHomeItem.handleString(item, "rh_charges_extent");
+        RestHomeItem.handleString(item, "rh_special_services");
+        RestHomeItem.handleString(item, "rh_contact_person");
+        RestHomeItem.handleString(item, "rh_address");
+        RestHomeItem.handleString(item, "rh_url");
+        RestHomeItem.handleString(item, "rh_transportation");
+        RestHomeItem.handleString(item, "rh_inst_intro");
+        RestHomeItem.handleString(item, "rh_facilities");
+        RestHomeItem.handleString(item, "rh_service_content");
+        RestHomeItem.handleString(item, "rh_inst_notes");
+
         RestHomeItem.handleDate(item, "rh_establishment_time")
+        RestHomeItem.handleOneNum(item, "rh_bednum")
 
         '''
 
@@ -132,24 +108,36 @@ class RestHomeItem(scrapy.Item):
         item["rh_service_content"] = "rh_service_content_5"
         item["rh_inst_notes"] = "rh_inst_notes"
         '''
+    def handleString(item, idx):
+        try:
+            item[idx] = item[idx].encode('UTF-8')
+        except Exception as e:
+            print("*********************************")
+            print(e)
+
     def handleDate(item, idx):
         ''' item.[idx] is u"1999年1月11日" '''
         item[idx] = item[idx].strip()
+        old_item = item[idx]
         pattern = re.compile(r'[^\d]')
         m = pattern.split(item[idx])
         if(len(m) < 2):
-            print("[Warning]: rh_establishment_time is not correct, for %s" % item["rh_url"])
+            print("[Error-parse]: rh_establishment_time is not correct, for %s" % item["rh_url"])
             print(item[idx])
             return
         item[idx] = "{:0>4s}{:0>2s}{:0>2s}".format(m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
+        if len(old_item) != 0 and len(item[idx]) == 0:
+            print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
 
-    '''
     def handleOneNum(item, idx):
         # item.[idx] is u"汉字num汉字"
         item[idx] = item[idx].strip()
+        old_item = item[idx]
         pattern = re.compile(r'[^\d]')
-        m = pattern.split(item[idx]).encode('utf-8')
-    '''
+        m = pattern.split(item[idx])
+        item[idx] = int(m[0].encode('utf-8'))
+        if len(old_item) != 0 and item[idx] == 0:
+            print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
 
     def printSelf(item):
         for i in RestHomeItem.item_list.keys():

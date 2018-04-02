@@ -12,7 +12,7 @@ class QuotesSpider(scrapy.Spider):
         urls = [
 #            'http://www.yanglao.com.cn/resthome/27168.html',
 #            'http://www.yanglao.com.cn/resthome/41090.html',
-            'http://www.yanglao.com.cn/resthome/27168.html',
+            'http://www.yanglao.com.cn/resthome/228436.html',
 #            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn',
         ]
@@ -77,6 +77,11 @@ class QuotesSpider(scrapy.Spider):
                 "rh_phone" : rh_phone[0].strip()
             }
             '''
+        rh_phone = response.xpath('//div[@class="inst-summary"]/ul/li/a/@href').extract()
+        if len(rh_phone) != 0:
+            print("rh_phone: %s" % rh_phone[0].strip());
+            rhit['rh_phone'] = rh_phone[0].strip()
+
         print("----------parse base info----------")
         page_item_values = response.xpath('//div[@class="base-info"]/div[@class="cont"]/ul/li/text()').extract()
         page_item_keys = response.xpath('//div[@class="base-info"]/div[@class="cont"]/ul/li/em/text()').extract()
@@ -110,13 +115,15 @@ class QuotesSpider(scrapy.Spider):
         print("----------parse contact-info----------")
         # contact us
         idx = -1
-        for quote in response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li/text()').extract():
+        rh_contact_info = response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li/text()').extract()
+        print(rh_contact_info)
+        for quote in rh_contact_info:
             idx = idx + 1
+            if idx > 1:
+                break
             title_1 = [
                 'rh_contact_person',  #1
                 'rh_address',  #2
-                'rh_url',  #3
-                'rh_transportation',  #4
             ]
             print('%s: %s' % (title_1[idx], quote))
             rhit[title_1[idx].strip()] = quote.strip()
@@ -125,6 +132,30 @@ class QuotesSpider(scrapy.Spider):
                 title_1[idx]: quote
             }
             '''
+        # 'rh_url',  #3
+        print("----------parse contact-info---------- rh_transportation")
+        rh_url = response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li/a/@href').extract()
+        print(rh_url)
+        if len(rh_url) != 0 and len(rh_url[0]) != 0:
+            # for exam: 228436.html
+            print(rh_url[0].strip())
+            print('rh_url: %s' % (rh_url[0].strip()))
+            rhit['rh_url'] = rh_url[0].strip()
+        else:
+            # for example: 27168.html
+            if len(rh_contact_info) > 2 and len(rh_contact_info[2]) != 0:
+                print(rh_contact_info[2].strip())
+                print('rh_url: %s' % (rh_contact_info[2].strip()))
+                rhit['rh_url'] = rh_contact_info[2].strip()
+
+        # 'rh_transportation',  #4
+        print("----------parse contact-info---------- rh_transportation")
+        traffic = response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/text()').extract()
+        print(traffic)
+        if len(traffic) != 0 and len(traffic[0]) != 0:
+            print(traffic[0].strip())
+            print('rh_transportation: %s' % (traffic[0].strip()))
+            rhit['rh_transportation'] = traffic[0].strip()
 
         # introduction
         print("----------parse introduction----------")
@@ -139,7 +170,6 @@ class QuotesSpider(scrapy.Spider):
         for i in introductions_3:
             inst_intro = inst_intro + i.strip()
 
-        print('rh_inst_intro: %s' % inst_intro)
         rhit['rh_inst_intro'] = inst_intro.strip()
         '''
         yield {

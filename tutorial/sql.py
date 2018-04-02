@@ -11,7 +11,7 @@ class RhSql(object):
                 rh_id INT UNSIGNED AUTO_INCREMENT,\
                 rh_name VARCHAR(500) NOT NULL,\
                 rh_phone VARCHAR(200),\
-                rh_location_id INT UNSIGNED,\
+                rh_location_id VARCHAR(200),\
                 rh_type VARCHAR(200),\
                 rh_factory_property VARCHAR(200),\
                 rh_person_in_charge VARCHAR(200),\
@@ -45,7 +45,7 @@ class RhSql(object):
                     rh_url, rh_transportation, rh_inst_intro,\
                     rh_facilities, rh_service_content, rh_inst_notes\
                 ) VALUES (\
-                    \"%s\", \"%s\", %d,\
+                    \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     %d, \"%s\", \"%s\",\
