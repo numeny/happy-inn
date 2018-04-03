@@ -92,7 +92,8 @@ class RhSql(object):
         return self.cur.fetchone()
 
     def printOneRecord(self, record):
-        print("")
+        if record is None:
+            return
         print("rh_id: %s" % record[0])
         idx = 1
         for i in RestHomeItem.item_list:
@@ -119,6 +120,10 @@ class RhSql(object):
         sql_str = RhSql.__sql_select_all
         self.excute_sql(sql_str)
         result = self.cur.fetchone()
+        if result is None:
+            print("")
+            print("No record existed!")
+            return
         self.printOneRecord(result)
 
     def select_count(self):
