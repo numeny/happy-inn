@@ -9,6 +9,8 @@ import MySQLdb as mdb
 
 sys.path.append("../../")  
 
+from sql import RhSql
+
 # 创建 FieldStorage 的实例化
 form = cgi.FieldStorage() 
 
@@ -27,8 +29,14 @@ print '<body>'
 print '<h2>Hello Word! This is my first CGI program</h2>'
 print '<div>'
 
-
-print(rh_ylw_id)
+print("rh_ylw_id: %s" % rh_ylw_id)
+sql = RhSql()
+rec = sql.select_one_rh_ylw_id(rh_ylw_id)
+for i in rec:
+    for j in i:
+        print('<p>')
+        print(j)
+        print('</p>')
 
 print '</div>'
 print '</body>'
