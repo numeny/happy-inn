@@ -11,9 +11,10 @@ class QuotesSpider(scrapy.Spider):
     def start_requests(self):
         urls = [
 #            'http://www.yanglao.com.cn/resthome/27168.html',
-#            'http://www.yanglao.com.cn/resthome/41090.html',
+            'http://www.yanglao.com.cn/resthome/41090.html',
 #            'http://www.yanglao.com.cn/resthome/228436.html',
-            'http://www.yanglao.com.cn/xinjiang',
+#            'http://www.yanglao.com.cn/resthome/40844.html',
+#            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn',
         ]
         for url in urls:
@@ -81,8 +82,9 @@ class QuotesSpider(scrapy.Spider):
             '''
         rh_phone = response.xpath('//div[@class="inst-summary"]/ul/li/a/@href').extract()
         if len(rh_phone) != 0:
-            print("rh_phone: %s" % rh_phone[0].strip());
-            rhit['rh_phone'] = rh_phone[0].strip()
+            # special to indicate that phone number need to login, for exam: #41090
+            print("[Warning] rh_phone: need login");
+            rhit['rh_phone'] = "login"
 
         print("----------parse rh_ylw_id----------")
         last_html_file = response.url[response.url.rfind("/")+1 : len(response.url)]
@@ -156,8 +158,9 @@ class QuotesSpider(scrapy.Spider):
                 rhit['rh_url'] = rh_contact_info[2].strip()
 
         # 'rh_transportation',  #4
+        # ul/li/p -> 40636
         print("----------parse contact-info---------- rh_transportation")
-        traffic = response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/text()').extract()
+        traffic = response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/text() | //div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/p/text()').extract()
         print(traffic)
         if len(traffic) != 0 and len(traffic[0]) != 0:
             print(traffic[0].strip())
