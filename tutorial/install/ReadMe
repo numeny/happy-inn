@@ -1,1 +1,29 @@
 1. sudo apt-get install python-mysqldb
+
+
+2. 配置apache2的cgi(for python):
+https://blog.csdn.net/typ2004/article/details/59174162
+1)
+cd /etc/apache2/mods-enabled需要进入到这个目录，需要软链接到绝对路径
+sudo ln -s /etc/apache2/mods-available/cgi.load cgi.load
+2）
+        ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+        <Directory "/usr/lib/cgi-bin">
+            AllowOverride None
+            Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+            Require all granted
+        </Directory>
+====>>
+        ScriptAlias /cgi-bin/ /home/bdg/ssd/dl/chromium/chromium.src/pro/happy-inn/server/cgi-bin/
+        <Directory "/home/bdg/ssd/dl/chromium/chromium.src/pro/happy-inn/server/cgi-bin/">
+            AllowOverride None
+            Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+            Require all granted
+# 不需要修改
+#            AllowOverride None
+#            Options Indexes FollowSymLinks ExecCGI
+#            Require all granted
+#            Require host ip
+        </Directory>
+
+

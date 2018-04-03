@@ -30,7 +30,7 @@ class RhSql(object):
                 rh_inst_charge VARCHAR(2000),\
                 rh_facilities VARCHAR(1000),\
                 rh_service_content VARCHAR(1000),\
-                rh_inst_notes VARCHAR(1000),\
+                rh_inst_notes VARCHAR(5000),\
                 rh_ylw_id VARCHAR(20),\
                 PRIMARY KEY ( rh_id )\
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
@@ -39,6 +39,8 @@ class RhSql(object):
     __sql_select_all = "select * from rh;"
     __sql_select_count = "select count(*) from rh;"
     __sql_select_all_rh_ylw_id = "select rh_ylw_id from rh;"
+    __sql_select_one_rh_ylw_id = "select * from rh where rh_ylw_id=\"{}\";"
+
     __sql_delete_all = "delete from rh;"
     __sql_drop_table = "drop table rh;"
     __sql_existed_rh_name = "select 1 from rh where rh_name=\'{}\' limit 1;"
@@ -112,6 +114,13 @@ class RhSql(object):
     def select_all_rh_ylw_id(self):
         print("select_all_rh_ylw_id ...")
         sql_str = RhSql.__sql_select_all_rh_ylw_id
+        self.excute_sql(sql_str)
+        return self.cur.fetchall()
+
+    def select_one_rh_ylw_id(self, rh_ylw_id):
+        print("select_all_rh_ylw_id ...")
+        sql_str = RhSql.__sql_select_one_rh_ylw_id
+        sql_str.format(rh_ylw_id)
         self.excute_sql(sql_str)
         return self.cur.fetchall()
 

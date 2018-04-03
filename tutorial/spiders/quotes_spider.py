@@ -11,9 +11,9 @@ class QuotesSpider(scrapy.Spider):
     def start_requests(self):
         urls = [
 #            'http://www.yanglao.com.cn/resthome/27168.html',
-            'http://www.yanglao.com.cn/resthome/41090.html',
+#            'http://www.yanglao.com.cn/resthome/41090.html',
 #            'http://www.yanglao.com.cn/resthome/228436.html',
-#            'http://www.yanglao.com.cn/resthome/40844.html',
+            'http://www.yanglao.com.cn/resthome/40844.html',
 #            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn',
         ]
@@ -158,44 +158,28 @@ class QuotesSpider(scrapy.Spider):
                 rhit['rh_url'] = rh_contact_info[2].strip()
 
         # 'rh_transportation',  #4
-        # ul/li/p -> 40636
         print("----------parse contact-info---------- rh_transportation")
-        traffic = response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/text() | //div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/p/text()').extract()
-        print(traffic)
-        if len(traffic) != 0 and len(traffic[0]) != 0:
-            print(traffic[0].strip())
-            print('rh_transportation: %s' % (traffic[0].strip()))
-            rhit['rh_transportation'] = traffic[0].strip()
+        cond1 = '//div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/text()'
+        cond2 = '//div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/p/text()' #40636
+        cond3 = '//div[@class="contact-info"]/div[@class="cont"]/ul/li[@class="traffic"]/p/strong/span/text()' #40844
+        cond = cond1 + ' | ' + cond2 + ' | ' + cond3
+        transportation_0 = ""
+        transportation = response.xpath(cond).extract()
+        for i in transportation:
+            transportation_0 = transportation_0 + i.strip()
+        rhit['rh_transportation'] = transportation_0.strip()
 
-        # introduction
-        print("----------parse introduction----------")
-        inst_intro = ""
-        introductions = response.xpath('//div[@class="inst-intro"]/div[@class="cont"]/text()').extract()
-        for i in introductions:
-            inst_intro = inst_intro + i.strip()
-        introductions_2 = response.xpath('//div[@class="inst-intro"]/div[@class="cont"]/span/text()').extract()
-        for i in introductions_2:
-            inst_intro = inst_intro + i.strip()
-        introductions_3 = response.xpath('//div[@class="inst-intro"]/div[@class="cont"]/p/text() | //div[@class="inst-intro"]/div[@class="cont"]/p/span/text() | //div[@class="inst-intro"]/div[@class="cont"]/p/b/text()').extract()
-        for i in introductions_3:
-            inst_intro = inst_intro + i.strip()
-
-        rhit['rh_inst_intro'] = inst_intro.strip()
-        '''
-        yield {
-            "rh_inst_intro": inst_intro
-        }
-        '''
-
-
-        print("----------parse inst_charge----------")
-        inst_charge = response.xpath('//div[@class="inst-charge"]/div[@class="cont"]/text() | //div[@class="inst-charge"]/div[@class="cont"]/span/text() | //div[@class="inst-charge"]/div[@class="cont"]/span/span/text()').extract()
-        inst_charge_0 = ""
-        for i in inst_charge:
-            inst_charge_0 = inst_charge_0 + i.strip()
-        rhit['rh_inst_charge'] = inst_charge_0
+        parse_whole_div_list = (\
+                ('rh_inst_intro', 'inst-intro'),\
+                ('rh_inst_charge', 'inst-charge'),\
+                ('rh_facilities', 'facilities'),\
+                ('rh_service_content', 'service-content'),\
+                ('rh_inst_notes', 'inst-notes'))
+        for i in parse_whole_div_list:
+            QuotesSpider.parseWholeDiv(response, rhit, i[0], i[1])
 
         # facilities 设施
+        '''
         print("----------parse facilities----------")
         facilities = response.xpath('//div[@class="facilities"]/div[@class="cont"]/text()').extract()
         if len(facilities) != 0:
@@ -209,39 +193,17 @@ class QuotesSpider(scrapy.Spider):
                     fac = fac + f.strip()
             print('rh_facilities: %s' % fac)
             rhit['rh_facilities'] = fac.strip()
-            '''
-            yield {
-                "rh_facilities": fac.strip()
-            }
-            '''
+        '''
 
-        # service-content 服务内容
-        print("----------parse service-content----------")
-        service_content = response.xpath('//div[@class="service-content"]/div[@class="cont"]/text()').extract()
-        if len(service_content) != 0:
-            service = service_content[0].strip()
-            print('rh_service_content: %s' % service)
-            rhit['rh_service_content'] = service
-            '''
-            yield {
-                "rh_service_content": service
-            }
-            '''
-
-        # inst-notes 入住须知 FIXME format \n\t
-        print("----------parse inst-notes----------")
-        inst_notes = response.xpath('//div[@class="inst-notes"]/div[@class="cont"]/p/text()').extract()
-        if len(inst_notes) != 0:
-            info =""
-            for i in inst_notes: info = info + i.strip()
-            if len(info) == 0:
-                inst_notes = response.xpath('//div[@class="inst-notes"]/div[@class="cont"]/p/span/text()').extract()
-                for i in inst_notes: info = info + i.strip()
-            print('rh_inst_notes: %s' % info)
-            rhit['rh_inst_notes'] = info.strip()
-            '''
-            yield {
-                "rh_inst_notes": info
-            }
-            '''
         return rhit
+
+    @staticmethod
+    def parseWholeDiv(response, item, key, key_content_class):
+        print("----------parse %s----------" % key)
+        info_0 = ""
+        str_xpath = '//div[@class=\"' + key_content_class + '\"]/div[@class=\"cont\"]'
+        info = response.xpath(str_xpath).extract()
+        for i in info:
+            info_0 = info_0 + i.strip()
+        info_0 = info_0.replace('\"', '\\\"')
+        item[key] = info_0.strip()
