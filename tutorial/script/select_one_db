@@ -1,3 +1,3 @@
 #!/bin/bash
 cd $HAPPYINN_SCRIPT_PATH
-./select_one_item.py
+./select_one_db.py
