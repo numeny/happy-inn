@@ -13,8 +13,8 @@ class QuotesSpider(scrapy.Spider):
 #            'http://www.yanglao.com.cn/resthome/27168.html',
 #            'http://www.yanglao.com.cn/resthome/41090.html',
 #            'http://www.yanglao.com.cn/resthome/228436.html',
-            'http://www.yanglao.com.cn/resthome/40844.html',
-#            'http://www.yanglao.com.cn/xinjiang',
+#            'http://www.yanglao.com.cn/resthome/40844.html',
+            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn',
         ]
         for url in urls:

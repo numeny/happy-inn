@@ -1,15 +1,16 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import sys
 
+sys.path.append("../../")
+sys.path.append("./")
+
 # CGI处理模块
-import cgi, cgitb 
+import cgi, cgitb
 import MySQLdb as mdb
 
-sys.path.append("../../")  
-
-from sql import RhSql
+from tutorial.sql import RhSql
 
 # 创建 FieldStorage 的实例化
 form = cgi.FieldStorage() 

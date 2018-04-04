@@ -4,6 +4,8 @@
 import sys
 import MySQLdb as mdb
 
+from tutorial.rest_home_item import RestHomeItem
+
 class RhSql(object):
     __sql_create_resthome_table = "CREATE TABLE IF NOT EXISTS rh (\
                 rh_id INT UNSIGNED AUTO_INCREMENT,\
@@ -91,6 +93,16 @@ class RhSql(object):
         self.excute_sql(sql_str.format(resthome_name))
         return self.cur.fetchone()
 
+    def printOneRecord(self, record):
+        if record is None:
+            return
+        print("rh_id: %s" % record[0])
+        idx = 1
+        for i in RestHomeItem.item_list:
+            print("%s: %s" % (i[0], record[idx]))
+            idx = idx + 1
+        print("")
+
     def select_all(self):
         print("select_all ...")
         sql_str = RhSql.__sql_select_all
@@ -106,9 +118,9 @@ class RhSql(object):
         return self.cur.fetchall()
 
     def select_one_rh_ylw_id(self, rh_ylw_id):
-        print("select_all_rh_ylw_id ... %s" % rh_ylw_id)
+        print("select_all_rh_ylw_id ...")
         sql_str = RhSql.__sql_select_one_rh_ylw_id
-        sql_str = sql_str.format(rh_ylw_id)
+        sql_str.format(rh_ylw_id)
         self.excute_sql(sql_str)
         return self.cur.fetchall()
 
@@ -138,13 +150,16 @@ class RhSql(object):
 
     def insert_data(self, item):
         print("insert_data ...")
+        RestHomeItem.init_item_field_to_default_if_null(item)
 
         ret = self.existed_rh_name(item["rh_name"])
         if ret is not None:
             print("[Warnning] the following resthome is existed:")
+            RestHomeItem.printSelf(item)
             return
 
         sql_str = RhSql.__sql_insert_data
+        RestHomeItem.printSelf(item)
         sql_str = (sql_str % (\
                     item["rh_name"], item["rh_phone"], item["rh_location_id"],\
                     item["rh_type"], item["rh_factory_property"], item["rh_person_in_charge"],\
@@ -168,7 +183,7 @@ class RhSql(object):
         self.excute_sql(sql_str)
 
     def excute_sql(self, sql_str):
-        print("starting excute sql_str: ")
+        print("starting excute sql_str")
         print(sql_str)
         try:
             self.cur.execute(sql_str)
