@@ -10,11 +10,12 @@ class QuotesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-#            'http://www.yanglao.com.cn/resthome/27168.html',
+            'http://www.yanglao.com.cn/resthome/27168.html',
 #            'http://www.yanglao.com.cn/resthome/41090.html',
 #            'http://www.yanglao.com.cn/resthome/228436.html',
 #            'http://www.yanglao.com.cn/resthome/40844.html',
-            'http://www.yanglao.com.cn/xinjiang',
+#            'http://www.yanglao.com.cn/xinjiang',
+#            'http://www.yanglao.com.cn/resthome/22608.html',
 #            'http://www.yanglao.com.cn',
         ]
         for url in urls:
@@ -125,7 +126,6 @@ class QuotesSpider(scrapy.Spider):
         # contact us
         idx = -1
         rh_contact_info = response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li/text()').extract()
-        print(rh_contact_info)
         for quote in rh_contact_info:
             idx = idx + 1
             if idx > 1:
@@ -134,7 +134,6 @@ class QuotesSpider(scrapy.Spider):
                 'rh_contact_person',  #1
                 'rh_address',  #2
             ]
-            print('%s: %s' % (title_1[idx], quote))
             rhit[title_1[idx].strip()] = quote.strip()
             '''
             yield {
@@ -144,17 +143,12 @@ class QuotesSpider(scrapy.Spider):
         # 'rh_url',  #3
         print("----------parse contact-info---------- rh_transportation")
         rh_url = response.xpath('//div[@class="contact-info"]/div[@class="cont"]/ul/li/a/@href').extract()
-        print(rh_url)
         if len(rh_url) != 0 and len(rh_url[0]) != 0:
             # for exam: 228436.html
-            print(rh_url[0].strip())
-            print('rh_url: %s' % (rh_url[0].strip()))
             rhit['rh_url'] = rh_url[0].strip()
         else:
             # for example: 27168.html
             if len(rh_contact_info) > 2 and len(rh_contact_info[2]) != 0:
-                print(rh_contact_info[2].strip())
-                print('rh_url: %s' % (rh_contact_info[2].strip()))
                 rhit['rh_url'] = rh_contact_info[2].strip()
 
         # 'rh_transportation',  #4

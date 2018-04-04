@@ -37,6 +37,11 @@ print("rh_ylw_id: %s" % rh_ylw_id)
 print("===================")
 sql = RhSql()
 rec = sql.select_one_rh_ylw_id(rh_ylw_id)
+if rec == None or len(rec) == 0:
+    print('<br />')
+    print('<br />')
+    print('<b> rh_id: %s not existed!</b>' % rh_ylw_id)
+    exit(1)
 for i in rec:
     for j in i:
         print('<p>')

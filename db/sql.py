@@ -25,12 +25,12 @@ class RhSql(object):
                 rh_contact_person VARCHAR(200),\
                 rh_address VARCHAR(1000),\
                 rh_url VARCHAR(1000),\
-                rh_transportation VARCHAR(1000),\
-                rh_inst_intro VARCHAR(5000),\
-                rh_inst_charge VARCHAR(2000),\
-                rh_facilities VARCHAR(1000),\
-                rh_service_content VARCHAR(1000),\
-                rh_inst_notes VARCHAR(5000),\
+                rh_transportation TEXT,\
+                rh_inst_intro TEXT,\
+                rh_inst_charge TEXT,\
+                rh_facilities TEXT,\
+                rh_service_content TEXT,\
+                rh_inst_notes TEXT,\
                 rh_ylw_id VARCHAR(20),\
                 PRIMARY KEY ( rh_id )\
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
