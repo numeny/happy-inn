@@ -64,6 +64,7 @@ class RestHomeItem(scrapy.Item):
         ("rh_ylw_id", "")\
     )
 
+    @staticmethod
     def init_item_field_to_default_if_null(item):
         for i in RestHomeItem.item_list:
             if i[0] not in item:
@@ -138,3 +139,14 @@ class RestHomeItem(scrapy.Item):
                 print("%s: %s" % (i[0], item[i[0]]))
             else:
                 print("%s: not in item" % (i[0]))
+
+    @staticmethod
+    def printOneRecord(record):
+        if record is None:
+            return
+        print("rh_id: %s" % record[0])
+        idx = 1
+        for i in RestHomeItem.item_list:
+            print("%s: %s" % (i[0], record[idx]))
+            idx = idx + 1
+        print("")

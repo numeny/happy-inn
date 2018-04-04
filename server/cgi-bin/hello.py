@@ -10,13 +10,15 @@ sys.path.append("./")
 import cgi, cgitb
 import MySQLdb as mdb
 
-from tutorial.sql import RhSql
+from db.sql import RhSql
 
-# 创建 FieldStorage 的实例化
-form = cgi.FieldStorage() 
-
-# 获取数据
-rh_ylw_id = form.getvalue('id')
+if len(sys.argv) > 1 and len(sys.argv[1]) != 0:
+    rh_ylw_id = sys.argv[1]
+else:
+    # 创建 FieldStorage 的实例化
+    form = cgi.FieldStorage() 
+    # 获取数据
+    rh_ylw_id = form.getvalue('id')
 
 print "Content-type:text/html"
 print
@@ -30,7 +32,9 @@ print '<body>'
 print '<h2>Hello Word! This is my first CGI program</h2>'
 print '<div>'
 
+print("===================")
 print("rh_ylw_id: %s" % rh_ylw_id)
+print("===================")
 sql = RhSql()
 rec = sql.select_one_rh_ylw_id(rh_ylw_id)
 for i in rec:

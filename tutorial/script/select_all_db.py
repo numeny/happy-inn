@@ -6,8 +6,10 @@ import sys
 sys.path.append("../../")
 
 import MySQLdb as mdb
-from tutorial.sql import RhSql
-
+from db.sql import RhSql
+from tutorial.rest_home_item import RestHomeItem
 
 test_RhSql = RhSql()
-test_RhSql.select_all()
+results = test_RhSql.select_all()
+for r in results:
+    RestHomeItem.printOneRecord(r)

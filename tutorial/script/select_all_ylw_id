@@ -1,0 +1,3 @@
+#!/bin/bash
+cd $HAPPYINN_SCRIPT_PATH
+./select_all_ylw_id.py

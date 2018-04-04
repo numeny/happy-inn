@@ -8,5 +8,7 @@ sys.path.append("../../")
 import MySQLdb as mdb
 from db.sql import RhSql
 
+
 test_RhSql = RhSql()
-test_RhSql.delete_all()
+ret = test_RhSql.select_all_rh_ylw_id()
+print(ret)

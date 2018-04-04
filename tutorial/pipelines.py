@@ -7,7 +7,7 @@
 
 from tutorial.rest_home_item import RestHomeItem
 
-from tutorial.sql import RhSql
+from db.sql import RhSql
 
 class TutorialPipeline(object):
     def process_item(self, item, spider):
@@ -19,5 +19,6 @@ class TutorialPipeline(object):
         for i in item.keys():
             print("%s: %s" % (i, item[i]))
         sql = RhSql()
+        RestHomeItem.init_item_field_to_default_if_null(item)
         sql.insert_data(item)
         return item

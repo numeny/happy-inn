@@ -6,7 +6,7 @@ import sys
 sys.path.append("../../")
 
 import MySQLdb as mdb
-from tutorial.sql import RhSql
+from db.sql import RhSql
 from tutorial.rest_home_item import RestHomeItem
 
 
@@ -40,4 +40,5 @@ print("--------");
 print("rh_location_id" in item)
 print(hasattr(item, "mmm"))
 print("--------");
+RestHomeItem.init_item_field_to_default_if_null(item)
 test_RhSql.insert_data(item);

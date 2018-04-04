@@ -4,7 +4,7 @@
 import os
 import scrapy
 
-from tutorial.sql import RhSql
+from db.sql import RhSql
 
 class PictureSpider(scrapy.Spider):
     name = "picture"

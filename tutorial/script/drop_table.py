@@ -6,7 +6,7 @@ import sys
 sys.path.append("../../")
 
 import MySQLdb as mdb
-from tutorial.sql import RhSql
+from db.sql import RhSql
 
 test_RhSql = RhSql()
 test_RhSql.drop_table()

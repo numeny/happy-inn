@@ -200,6 +200,7 @@ class QuotesSpider(scrapy.Spider):
     @staticmethod
     def parseWholeDiv(response, item, key, key_content_class):
         print("----------parse %s----------" % key)
+
         info_0 = ""
         str_xpath = '//div[@class=\"' + key_content_class + '\"]/div[@class=\"cont\"]'
         info = response.xpath(str_xpath).extract()
@@ -207,3 +208,9 @@ class QuotesSpider(scrapy.Spider):
             info_0 = info_0 + i.strip()
         info_0 = info_0.replace('\"', '\\\"')
         item[key] = info_0.strip()
+
+        # for 228436, rh_facilities has iframe, which lead to content is too big for mysql
+        str_xpath = '//div[@class=\"' + key_content_class + '\"]/div[@class=\"cont\"]/iframe/text()'
+        info = response.xpath(str_xpath).extract()
+        if len(info) != 0:
+            item[key] = "iframe"

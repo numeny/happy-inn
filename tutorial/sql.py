@@ -4,8 +4,6 @@
 import sys
 import MySQLdb as mdb
 
-from tutorial.rest_home_item import RestHomeItem
-
 class RhSql(object):
     __sql_create_resthome_table = "CREATE TABLE IF NOT EXISTS rh (\
                 rh_id INT UNSIGNED AUTO_INCREMENT,\
@@ -93,23 +91,12 @@ class RhSql(object):
         self.excute_sql(sql_str.format(resthome_name))
         return self.cur.fetchone()
 
-    def printOneRecord(self, record):
-        if record is None:
-            return
-        print("rh_id: %s" % record[0])
-        idx = 1
-        for i in RestHomeItem.item_list:
-            print("%s: %s" % (i[0], record[idx]))
-            idx = idx + 1
-        print("")
-
     def select_all(self):
         print("select_all ...")
         sql_str = RhSql.__sql_select_all
         self.excute_sql(sql_str)
         results = self.cur.fetchall()
-        for r in results:
-            self.printOneRecord(r)
+        return results
 
     def select_all_rh_ylw_id(self):
         print("select_all_rh_ylw_id ...")
@@ -118,7 +105,7 @@ class RhSql(object):
         return self.cur.fetchall()
 
     def select_one_rh_ylw_id(self, rh_ylw_id):
-        print("select_all_rh_ylw_id ...")
+        print("select_one_rh_ylw_id ...")
         sql_str = RhSql.__sql_select_one_rh_ylw_id
         sql_str.format(rh_ylw_id)
         self.excute_sql(sql_str)
@@ -128,12 +115,8 @@ class RhSql(object):
         print("select_all ...")
         sql_str = RhSql.__sql_select_all
         self.excute_sql(sql_str)
-        result = self.cur.fetchone()
-        if result is None:
-            print("")
-            print("No record existed!")
-            return
-        self.printOneRecord(result)
+        results = self.cur.fetchone()
+        return results
 
     def select_count(self):
         print("select_count ...")
@@ -150,7 +133,6 @@ class RhSql(object):
 
     def insert_data(self, item):
         print("insert_data ...")
-        RestHomeItem.init_item_field_to_default_if_null(item)
 
         ret = self.existed_rh_name(item["rh_name"])
         if ret is not None:
