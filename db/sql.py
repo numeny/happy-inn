@@ -11,6 +11,9 @@ class RhSql(object):
                 rh_id INT UNSIGNED AUTO_INCREMENT,\
                 rh_name VARCHAR(500) NOT NULL,\
                 rh_phone VARCHAR(200),\
+                rh_mobile VARCHAR(200),\
+                rh_email VARCHAR(200),\
+                rh_postcode VARCHAR(200),\
                 rh_location_id VARCHAR(200),\
                 rh_type VARCHAR(200),\
                 rh_factory_property VARCHAR(200),\
@@ -47,6 +50,7 @@ class RhSql(object):
 
     __sql_insert_data = "insert into rh (\
                     rh_name, rh_phone, rh_location_id,\
+                    rh_mobile, rh_email, rh_postcode,\
                     rh_type, rh_factory_property, rh_person_in_charge,\
                     rh_establishment_time, rh_floor_surface, rh_building_area,\
                     rh_bednum, rh_for_persons, rh_charges_extent,\
@@ -55,6 +59,7 @@ class RhSql(object):
                     rh_inst_charge, rh_facilities, rh_service_content,\
                     rh_inst_notes, rh_ylw_id\
                 ) VALUES (\
+                    \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
@@ -144,6 +149,7 @@ class RhSql(object):
         sql_str = RhSql.__sql_insert_data
         sql_str = (sql_str % (\
                     item["rh_name"], item["rh_phone"], item["rh_location_id"],\
+                    item["rh_mobile"], item["rh_email"], item["rh_postcode"],\
                     item["rh_type"], item["rh_factory_property"], item["rh_person_in_charge"],\
                     item["rh_establishment_time"], item["rh_floor_surface"], item["rh_building_area"],\
                     item["rh_bednum"], item["rh_for_persons"], item["rh_charges_extent"],\

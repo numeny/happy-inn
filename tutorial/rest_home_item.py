@@ -12,6 +12,9 @@ import re
 class RestHomeItem(scrapy.Item):
     rh_name = scrapy.Field()
     rh_phone = scrapy.Field()
+    rh_mobile = scrapy.Field()
+    rh_email = scrapy.Field()
+    rh_postcode = scrapy.Field()
 
     rh_location_id = scrapy.Field()
     rh_type = scrapy.Field()
@@ -41,6 +44,9 @@ class RestHomeItem(scrapy.Item):
     item_list = (
         ("rh_name", "unknow resthome name"),\
         ("rh_phone", ""),\
+        ("rh_mobile", ""),\
+        ("rh_email", ""),\
+        ("rh_postcode", ""),\
         ("rh_location_id", ""),\
         ("rh_type", ""),\
         ("rh_factory_property", ""),\
@@ -72,6 +78,9 @@ class RestHomeItem(scrapy.Item):
                 print("[Warning] (%s) not existed!" % i[0])
         RestHomeItem.handleString(item, "rh_name");
         RestHomeItem.handleString(item, "rh_phone");
+        RestHomeItem.handleString(item, "rh_mobile");
+        RestHomeItem.handleString(item, "rh_email");
+        RestHomeItem.handleString(item, "rh_postcode");
         RestHomeItem.handleString(item, "rh_location_id");
         RestHomeItem.handleString(item, "rh_type");
         RestHomeItem.handleString(item, "rh_factory_property");
