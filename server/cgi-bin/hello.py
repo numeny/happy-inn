@@ -1,53 +1,14 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-import sys
-
-sys.path.append("../../")
-sys.path.append("./")
-
-# CGI处理模块
-import cgi, cgitb
-import MySQLdb as mdb
-
-from db.sql import RhSql
-
-if len(sys.argv) > 1 and len(sys.argv[1]) != 0:
-    rh_ylw_id = sys.argv[1]
-else:
-    # 创建 FieldStorage 的实例化
-    form = cgi.FieldStorage() 
-    # 获取数据
-    rh_ylw_id = form.getvalue('id')
+# -*- coding: UTF-8 -*-
 
 print "Content-type:text/html"
-print
+print                               # 空行，告诉服务器结束头部
 print '<html>'
 print '<head>'
-print '<title>Hello</title>'
-print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
-print '<title>Example website</title>'
+print '<meta charset="utf-8">'
+print '<title>Hello World - 我的第一个 CGI 程序！</title>'
 print '</head>'
 print '<body>'
-print '<h2>Hello Word! This is my first CGI program</h2>'
-print '<div>'
-
-print("===================")
-print("rh_ylw_id: %s" % rh_ylw_id)
-print("===================")
-sql = RhSql()
-rec = sql.select_one_rh_ylw_id(rh_ylw_id)
-if rec == None or len(rec) == 0:
-    print('<br />')
-    print('<br />')
-    print('<b> rh_id: %s not existed!</b>' % rh_ylw_id)
-    exit(1)
-for i in rec:
-    for j in i:
-        print('<p>')
-        print(j)
-        print('</p>')
-
-print '</div>'
+print '<h2>Hello World! 我是来自菜鸟教程的第一CGI程序</h2>'
 print '</body>'
 print '</html>'

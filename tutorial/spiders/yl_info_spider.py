@@ -5,16 +5,16 @@ import scrapy
 from tutorial.rest_home_item import RestHomeItem
 
 total_idx = 0
-class QuotesSpider(scrapy.Spider):
-    name = "quotes"
+class YLInfoRestHomeSpider(scrapy.Spider):
+    name = "YLInfoRestHome"
 
     def start_requests(self):
         urls = [
-#            'http://www.yanglao.com.cn/resthome/27168.html',
+            'http://m.yanglaocn.com/shtml/ylyxx/2012-04/yly1335281469113.html',
 #            'http://www.yanglao.com.cn/resthome/41090.html',
 #            'http://www.yanglao.com.cn/resthome/228436.html',
 #            'http://www.yanglao.com.cn/resthome/40844.html',
-            'http://www.yanglao.com.cn/xinjiang',
+#            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn/resthome/22608.html',
 #            'http://www.yanglao.com.cn',
         ]
@@ -48,13 +48,13 @@ class QuotesSpider(scrapy.Spider):
 
         # all url for one province's one page
         '''
-        '''
         url_list_in_privince_one_page = response.xpath('//div[@class="restlist"]/div[@class="list-view"]/ul/li/div[@class="info"]/h4/a/@href').extract()
         print("====total_idx: %d===== url_list_in_privince_one_page: %s" % (total_idx, url_list_in_privince_one_page))
         for url in url_list_in_privince_one_page:
             url = "http://www.yanglao.com.cn" + url.strip()
             print("----------parse start: %d, url: %s" % (total_idx, url))
             yield scrapy.Request(url=url, callback=self.parse_item_from_response)
+        '''
 
         yield self.parse_item_from_response(response)
 
