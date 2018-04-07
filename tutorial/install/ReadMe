@@ -28,4 +28,7 @@ sudo ln -s /etc/apache2/mods-available/cgi.load cgi.load
 #            Require host ip
         </Directory>
 
-
+3. mysql operation:
+create user 'bdg'@'localhost' identified by '3';
+grant all on *.* to 'bdg'@'%';
+grant all on *.* to 'bdg'@'localhost';

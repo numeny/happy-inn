@@ -16,7 +16,8 @@ NEWSPIDER_MODULE = 'tutorial.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Linux; Android 5.0; AOSP on Mako Build/LRX21L) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile Safari/537.36 MQQBrowser/5.5'
+# USER_AGENT = 'Mozilla/5.0 (Linux; Android 5.0; AOSP on Mako Build/LRX21L) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile Safari/537.36 MQQBrowser/5.5'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/65.0.3325.181 Chrome/65.0.3325.181 Safari/537.36'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
