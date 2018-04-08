@@ -119,7 +119,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             print("result_mymain_xpath-1:")
             print(result_mymain_xpath)
             lefttitle = Selector(text=result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="lefttitle"]/span/text()').extract()
-            leftcontexttitle = Selector(text=result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="leftcontexttitle"]').extract()
+            leftcontexttitle = Selector(text=result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="leftcontexttitle"]/text()').extract()
             print("")
             print("lefttitle:")
             print(lefttitle)
@@ -194,15 +194,26 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             # Basic Information
             for idx1, val in enumerate(key_lists[idx]):
                 print("start parsing item : %s" % val)
-                print("start parsing item : %s" % leftcontexttitle[idx1].strip())
-                if len(leftcontexttitle) > idx1:
-                    rhit[val] = leftcontexttitle[idx1].strip()
-            if cmp("Basic Information", lefttitle[0]):
+                idx2 = idx1
+                if not cmp("Basic Information", lefttitle[0]):
+                    idx2 = idx2 + 1
+                print("start parsing item : %d, %s" % (idx2, leftcontexttitle[idx2].strip()))
+                print("start parsing item : %d, %d" % (idx2, len(leftcontexttitle)))
+                if len(leftcontexttitle) > idx2:
+                    print("start parsing item : %d, %d" % (idx2, len(leftcontexttitle)))
+                    print("start parsing item : val: %s" % (val))
+                    rhit[val] = leftcontexttitle[idx2].strip()
+                    print("start parsing item : val: %s" % (val))
+                    print("start parsing item : set item: %s, %s" % (val, leftcontexttitle[idx2].strip()))
+            if not cmp("Basic Information", lefttitle[0]):
+                print("start parsing rh_name_info")
                 rh_name_info = Selector(text=one_result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="leftcontexttitle"]/lable/text()').extract()
+                print("rh_name_info:")
+                print(rh_name_info)
                 if len(rh_name_info) > 0:
                     rhit['rh_name'] = rh_name_info[0].strip()
 
-            if cmp("Contact Us", lefttitle[0]):
+            if not cmp("Contact Us", lefttitle[0]):
                 url_info = Selector(text=one_result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="leftcontexttitle"]/a/@href').extract()
                 if len(url_info) > 0:
                     rhit["rh_url"] = url_info[0].strip()
