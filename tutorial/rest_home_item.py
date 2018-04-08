@@ -24,6 +24,7 @@ class RestHomeItem(scrapy.Item):
     rh_floor_surface = scrapy.Field()
     rh_building_area = scrapy.Field()
     rh_bednum = scrapy.Field()
+    rh_staff_num = scrapy.Field()
     rh_for_persons = scrapy.Field()
     rh_charges_extent = scrapy.Field()
     rh_special_services = scrapy.Field()
@@ -55,6 +56,7 @@ class RestHomeItem(scrapy.Item):
         ("rh_floor_surface", ""),\
         ("rh_building_area", ""),\
         ("rh_bednum", u"0张"),\
+        ("rh_staff_num", u"0人"),\
         ("rh_for_persons", ""),\
         ("rh_charges_extent", ""),\
         ("rh_special_services", ""),\
@@ -103,16 +105,18 @@ class RestHomeItem(scrapy.Item):
 
         RestHomeItem.handleDate(item, "rh_establishment_time")
         RestHomeItem.handleOneNum(item, "rh_bednum")
+        RestHomeItem.handleOneNum(item, "rh_staff_num")
 
     def handleString(item, idx):
         try:
-            item[idx] = item[idx].encode('UTF-8')
+            # change " to \"
+            item[idx] = item[idx].replace('\"', '\\\"').encode('UTF-8')
         except Exception as e:
             print("*********************************")
             print(e)
 
     def handleDate(item, idx):
-        ''' item.[idx] is u"1999年1月11日" '''
+        ''' item.[idx] is u"1999年1月11日" or u"1999年1月" '''
         item[idx] = item[idx].strip()
         old_item = item[idx]
         pattern = re.compile(r'[^\d]')
@@ -121,6 +125,14 @@ class RestHomeItem(scrapy.Item):
             print("[Error-parse]: rh_establishment_time is not correct, for %s" % item["rh_url"])
             print(item[idx])
             return
+        print("99999999999999999999999999999999")
+        if (len(m[0])) == 0:
+            m[0] = u"1999"
+        if (len(m[1])) == 0:
+            m[1] = u"01"
+        if (len(m[2])) == 0:
+            m[2] = u"01"
+        print("99999999999999999999999999999999")
         item[idx] = "{:0>4s}{:0>2s}{:0>2s}".format(m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
         if len(old_item) != 0 and len(item[idx]) == 0:
             print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))

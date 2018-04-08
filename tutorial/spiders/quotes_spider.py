@@ -200,7 +200,6 @@ class QuotesSpider(scrapy.Spider):
         info = response.xpath(str_xpath).extract()
         for i in info:
             info_0 = info_0 + i.strip()
-        info_0 = info_0.replace('\"', '\\\"')
         item[key] = info_0.strip()
 
         # for 228436, rh_facilities has iframe, which lead to content is too big for mysql

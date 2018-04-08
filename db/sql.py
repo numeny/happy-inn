@@ -22,6 +22,7 @@ class RhSql(object):
                 rh_floor_surface VARCHAR(200),\
                 rh_building_area VARCHAR(200),\
                 rh_bednum SMALLINT UNSIGNED,\
+                rh_staff_num SMALLINT UNSIGNED,\
                 rh_for_persons VARCHAR(200),\
                 rh_charges_extent VARCHAR(1000),\
                 rh_special_services VARCHAR(1000),\
@@ -34,7 +35,7 @@ class RhSql(object):
                 rh_facilities TEXT,\
                 rh_service_content TEXT,\
                 rh_inst_notes TEXT,\
-                rh_ylw_id VARCHAR(20),\
+                rh_ylw_id VARCHAR(50),\
                 PRIMARY KEY ( rh_id )\
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 
@@ -57,7 +58,7 @@ class RhSql(object):
                     rh_special_services, rh_contact_person, rh_address,\
                     rh_url, rh_transportation, rh_inst_intro,\
                     rh_inst_charge, rh_facilities, rh_service_content,\
-                    rh_inst_notes, rh_ylw_id\
+                    rh_inst_notes, rh_ylw_id, rh_staff_num\
                 ) VALUES (\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
@@ -67,7 +68,7 @@ class RhSql(object):
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
-                    \"%s\", \"%s\"\
+                    \"%s\", \"%s\", %d\
                     );"
 
 
@@ -143,7 +144,7 @@ class RhSql(object):
 
         ret = self.existed_rh_name(item["rh_name"])
         if ret is not None:
-            print("[Warnning] the following resthome is existed:")
+            print("[Warnning] the following resthome is existed: %s, %s" % item["rh_name"], item["rh_ylw_id"])
             return
 
         sql_str = RhSql.__sql_insert_data
@@ -156,7 +157,7 @@ class RhSql(object):
                     item["rh_special_services"], item["rh_contact_person"], item["rh_address"],\
                     item["rh_url"], item["rh_transportation"], item["rh_inst_intro"],\
                     item["rh_inst_charge"], item["rh_facilities"], item["rh_service_content"],\
-                    item["rh_inst_notes"], item["rh_ylw_id"]))
+                    item["rh_inst_notes"], item["rh_ylw_id"], item["rh_staff_num"]))
 
         self.excute_sql(sql_str)
 

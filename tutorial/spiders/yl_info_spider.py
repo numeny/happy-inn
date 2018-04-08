@@ -34,8 +34,8 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         urls = [
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0',
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=022',
-            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0955',
-#            'http://m.yanglaocn.com/shtml/ylyxx/2016-04/yly146172868824614.html'
+#            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0955',
+            'http://m.yanglaocn.com/shtml/ylyxx/2016-04/yly146172868824614.html'
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=02201&page=2',
 #            'http://www.yanglaocn.com/yanglaoyuan/yly',
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=01001&gotoip=y',
@@ -47,6 +47,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
     def parse(self, response):
         global total_idx
         print(" starting parse privince list ... response: %s" % response.url)
+        print(" starting parse privince list ... response: %s" % response.body)
         '''
         title_str = "RgSelect="
         area_url_start_idx = response.url.find(title_str) + len(title_str)
@@ -103,7 +104,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse_item_from_response)
         '''
 
-        self.parse_item_from_response(response)
+        yield self.parse_item_from_response(response)
 
     def parse_item_from_response(self, response):
         print("Parse item start ... %s" % response.url)
@@ -111,112 +112,91 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         '''
         rhit = RestHomeItem()
 
-        results_mymain_xpath = response.xpath('//div[@class="mymain"]').extract()
-        print("results_mymain_xpath:")
         print("")
-        rh_inst_intro = ""
-        for result_mymain_xpath in results_mymain_xpath:
-            print("result_mymain_xpath-1:")
-            print(result_mymain_xpath)
-            lefttitle = Selector(text=result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="lefttitle"]/span/text()').extract()
-            leftcontexttitle = Selector(text=result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="leftcontexttitle"]/text()').extract()
-            print("")
-            print("lefttitle:")
-            print(lefttitle)
-            print("leftcontexttitle:")
-            print(leftcontexttitle)
-            print("")
-            print("")
-            if len(lefttitle) <= 0:
-                continue
-            self.fill_item_with_list(lefttitle, leftcontexttitle, result_mymain_xpath)
+        print("parsing basicInformation ...")
+        print("")
+        # basicInformation
+        self.fill_item_with_list(rhit, response)
+        rh_name = response.xpath('//div[@id="BasicInformation"]/div[@class="leftcontexttitle"]/label/text()').extract()
+        if len(rh_name) > 0:
+            rhit['rh_name'] = rh_name[0]
 
-        print("----------parse start pring item----------rh_phone-4")
+        # Contact US info
+        print("")
+        print("parsing ContactUsList ...")
+        print("")
+        self.fill_item_with_list(rhit, response)
+        rh_url = response.xpath('//div[@id="ContactUsList"]/div[@class="leftcontexttitle"]/a/@href').extract()
+        if len(rh_url) > 0:
+            rhit['rh_url'] = rh_url[0]
+        if 'rh_contact_person' in rhit:
+            rhit['rh_person_in_charge'] = rhit['rh_contact_person']
+
+        # OrganizationsOn_Text
+        print("")
+        print("parsing OrganizationsOn etc ...")
+        print("")
+        self.fill_item_with_p_lable_list(rhit, response)
+
+        # for exam: m.yanglaocn.com/shtml/ylyxx/2013-04/yly1365591790411.html
+        rhit['rh_ylw_id'] = "ff-" + response.url[response.url.find("ylyxx") + len("ylyxx") + 1:]
+        rhit['rh_ylw_id'] = rhit['rh_ylw_id'].replace(".html", "")
         RestHomeItem.printSelf(rhit)
+        return rhit
 
-        '''
-            if !cmp(lefttitle[0], "Organizations On"):
-                organizations_on_info = Selector(text=result_mymain_xpath).xpath('//div[@class="leftcontext"]/div[@class="leftcontextmessage"]/p').extract()
-                print(organizations_on_info)
-                for i in organizations_on_info:
-                    rhit['rh_inst_intro'] = rhit['rh_inst_intro'] + i.strip()
-
-            if !cmp(lefttitle[0], "Check-in Notes"):
-                check_in_notes = Selector(text=result_mymain_xpath).xpath('//div[@class="leftcontext"]/div[@class="leftcontextmessage"]/p').extract()
-                print(organizations_on_info)
-                for i in organizations_on_info:
-                    rhit['rh_inst_intro'] = rhit['rh_inst_intro'] + i.strip()
-        '''
-
-    def fill_item_with_list(self, lefttitle, leftcontexttitle, one_result_mymain_xpath):
+    def fill_item_with_list(self, rhit, response):
         print("start fill_item_with_list-0 ...")
-        lefttitle_list = (
-            'Basic Information',
-            'Contact Us',
-            'Organizations On',
-            'Environmental Facilities',
-            'Service Object',
-            'Check-in Notes',
-            'Fee Scale',
-            'Traffic Information'
-        )
-        key_lists = (
-                 ('rh_establishment_time',
+        item_list = (
+            ('BasicInformation',
+                ('rh_establishment_time',
                  'rh_bednum',
                  'rh_floor_surface',
                  'rh_for_persons',
                  'rh_charges_extent',
+                 'rh_staff_num',
                  'rh_type',
                  'rh_factory_property'),
-                ('rh_person_in_charge',
-                 'rh_contact_person',
+            ),
+            ('ContactUsList',
+                ('rh_contact_person',
+                 'rh_location_id',
                  'rh_phone',
                  'rh_mobile',
                  'rh_email',
                  'rh_postcode',
-                 'rh_location_id',
                  'rh_address'),
-                ('rh_inst_intro'),
-                ('rh_facilities'),
-                ('rh_service_content'),
-                ('rh_inst_notes'),
-                ('rh_inst_charge'),
-                ('rh_transportation')
-                )
+             ),)
 
         print("start fill_item_with_list-1 ...")
-        for idx, l in enumerate(lefttitle_list):
-            print("start fill_item_with_list-2 ...")
-            print("start parsing lefttitle -0: %s" % lefttitle[0])
-            if cmp(l, lefttitle[0]):
-                continue
-            print("start parsing lefttitle -0: %s" % l)
-            # Basic Information
-            for idx1, val in enumerate(key_lists[idx]):
-                print("start parsing item : %s" % val)
-                idx2 = idx1
-                if not cmp("Basic Information", lefttitle[0]):
-                    idx2 = idx2 + 1
-                print("start parsing item : %d, %s" % (idx2, leftcontexttitle[idx2].strip()))
-                print("start parsing item : %d, %d" % (idx2, len(leftcontexttitle)))
-                if len(leftcontexttitle) > idx2:
-                    print("start parsing item : %d, %d" % (idx2, len(leftcontexttitle)))
-                    print("start parsing item : val: %s" % (val))
-                    rhit[val] = leftcontexttitle[idx2].strip()
-                    print("start parsing item : val: %s" % (val))
-                    print("start parsing item : set item: %s, %s" % (val, leftcontexttitle[idx2].strip()))
-            if not cmp("Basic Information", lefttitle[0]):
-                print("start parsing rh_name_info")
-                rh_name_info = Selector(text=one_result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="leftcontexttitle"]/lable/text()').extract()
-                print("rh_name_info:")
-                print(rh_name_info)
-                if len(rh_name_info) > 0:
-                    rhit['rh_name'] = rh_name_info[0].strip()
+        for i in item_list:
+            print("start parsing lefttitle -1: %s" % i[0])
+            str_xpath = '//div[@id="' + i[0] + '"]/div[@class="leftcontexttitle"]/text()'
+            leftcontexttitle_list = response.xpath(str_xpath).extract()
+            print(leftcontexttitle_list)
+            for idx, val in enumerate(i[1]):
+                print("start parsing lefttitle -2: %s" % val)
+                if len(leftcontexttitle_list) > idx and len(leftcontexttitle_list[idx].strip()) > 0:
+                    rhit[val] = leftcontexttitle_list[idx].strip()
+                    print("start parsing lefttitle -3: %s" % rhit[val])
 
-            if not cmp("Contact Us", lefttitle[0]):
-                url_info = Selector(text=one_result_mymain_xpath).xpath('//div[@class="mymain"]/div[@class="leftcontexttitle"]/a/@href').extract()
-                if len(url_info) > 0:
-                    rhit["rh_url"] = url_info[0].strip()
 
-#rhit['rh_ylw_id'] = ret_xpath[0].strip()
-#yield rhit
+    def fill_item_with_p_lable_list(self, rhit, response):
+        print("start fill_item_with_p_lable_list-1 ...")
+        item_list = (
+            ("OrganizationsOn_Text", "rh_inst_intro"),
+            ("EnvironmentalFacilities_Text", "rh_facilities"),
+            ("DietaryIntroduced_Text","rh_service_content"),
+            ("CheckinNotes_Text","rh_inst_notes"),
+            ("FeeScale_Text","rh_inst_charge"),
+            ("TrafficInformation_Text","rh_transportation"),
+        )
+        for i in item_list:
+            str_xpath = '//div[@id="' + i[0] + '"]/p'
+            print("start str_xpath -1 ... %s" % i[0])
+            info = response.xpath(str_xpath).extract()
+            print(info)
+            str_info = ""
+            for j in info:
+                str_info = str_info + j
+            if len(str_info) > 0:
+                rhit[i[1]] = str_info
