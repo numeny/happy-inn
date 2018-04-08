@@ -125,14 +125,12 @@ class RestHomeItem(scrapy.Item):
             print("[Error-parse]: rh_establishment_time is not correct, for %s" % item["rh_url"])
             print(item[idx])
             return
-        print("99999999999999999999999999999999")
         if (len(m[0])) == 0:
             m[0] = u"1999"
         if (len(m[1])) == 0:
             m[1] = u"01"
         if (len(m[2])) == 0:
             m[2] = u"01"
-        print("99999999999999999999999999999999")
         item[idx] = "{:0>4s}{:0>2s}{:0>2s}".format(m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
         if len(old_item) != 0 and len(item[idx]) == 0:
             print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
 import scrapy
 from scrapy import Selector
 from tutorial.rest_home_item import RestHomeItem
@@ -11,26 +12,15 @@ class YLInfoRestHomeSpider(scrapy.Spider):
     __host_pc = "http://www.yanglaocn.com"
     __host_mobile = "http://m.yanglaocn.com"
 
+    __pic_root_path = os.path.join("result", "picture")
+
     def start_requests(self):
-        '''
-        url = 'http://m.yanglaocn.com/useradmin/usermsg.php?ajaxtype=popupmsgshow&rand=0.26601639980108116'
-        yield scrapy.Request(url=url, callback=self.parse, headers={\
-            "X-Requested-With": "XMLHttpRequest",\
-            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/65.0.3325.181 Chrome/65.0.3325.181 Safari/537.36",\
-            "Referer": "http://www.yanglaocn.com/shtml/ylyxx/2014-11/yly141612656322899.html",\
-            "Cookie": "ipcity=%E5%8C%97%E4%BA%AC%E5%B8%82; yunsuo_session_verify=495ef87c27376ca65608c571a859a5a4; PHPSESSID=b108eb064070ba105f48cf8d384e5c25; Hm_lvt_6168556b0a921e8d0375330e702bc0fe=1522909169,1522981374,1522993601,1522996985; Hm_lpvt_6168556b0a921e8d0375330e702bc0fe=1522999936",\
-        })
-#for url in urls:
-        url = 'http://m.yanglaocn.com/yanglaoyuan/yanglaoyuanxx.php?ajaxtype=yanglaoxx_showlianxi&rand=0.0688758497167421'
-#for url in urls:
-#yield scrapy.Request(url=url, callback=self.parse)
-        yield scrapy.Request(url=url, callback=self.parse, method='post', headers={\
-            "X-Requested-With":"XMLHttpRequest",\
-            "Origin": "http://www.yanglaocn.com",\
-            "Referer": "http://www.yanglaocn.com/shtml/ylyxx/2012-04/yly1335281469113.html",\
-            "Accept-Encoding": "gzip, deflate"\
-        })
-        '''
+        try:
+            if os.path.exists(self.__pic_root_path):
+                YLInfoRestHomeSpider.rmdir_recursive(self.__pic_root_path)
+            os.makedirs(self.__pic_root_path, 0775)
+        except Exception as e:
+            print(e)
         urls = [
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0',
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=022',
@@ -141,7 +131,15 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         # for exam: m.yanglaocn.com/shtml/ylyxx/2013-04/yly1365591790411.html
         rhit['rh_ylw_id'] = "ff-" + response.url[response.url.find("ylyxx") + len("ylyxx") + 1:]
         rhit['rh_ylw_id'] = rhit['rh_ylw_id'].replace(".html", "")
+
         RestHomeItem.printSelf(rhit)
+        print("parse_picture ... rhit['rh_ylw_id']: %s" % rhit['rh_ylw_id'])
+        len1 = rhit['rh_ylw_id'].rfind("/")
+        len2 = len(rhit['rh_ylw_id'])
+        print("parse_picture ... rh_ylw_id")
+        rh_ylw_id = rhit['rh_ylw_id'][len1+1:len2]
+        print("parse_picture ... rh_ylw_id: " % rh_ylw_id)
+        self.parse_picture(response, rhit['rh_ylw_id'][rhit['rh_ylw_id'].rfind("/")+1:])
         return rhit
 
     def fill_item_with_list(self, rhit, response):
@@ -200,3 +198,42 @@ class YLInfoRestHomeSpider(scrapy.Spider):
                 str_info = str_info + j
             if len(str_info) > 0:
                 rhit[i[1]] = str_info
+
+    def parse_picture(self, response, rh_ylw_id):
+        print("parse_picture ... rh_ylw_id: " % rh_ylw_id)
+        for url in response.xpath('//div[@id="pic_ylyxx"]/img/src').extract():
+            if len(i) > 0 and i.startswith("http"):
+                yield scrapy.Request(url=url, callback=self.save_normal_pic(), meta={"rh_ylw_id": rh_ylw_id})
+
+    def save_normal_pic(self, response):
+        print("save_normal_pic ... ")
+        print("save_normal_pic ... rh_ylw_id: " % response.meta["rh_ylw_id"])
+        self.save_pic(response, False)
+
+    def save_pic(self, response, is_title):
+        file_name = response.url[(response.url.rfind("/") + 1) : ];
+        resthome_id = response.meta["rh_ylw_id"]
+        picture_dir = os.path.join(self.__pic_root_path, resthome_id)
+        if is_title:
+            picture_dir = os.path.join(picture_dir, "title")
+        filename = os.path.join(picture_dir, file_name)
+        try:
+            if not os.path.exists(picture_dir):
+                os.makedirs(picture_dir, 0775)
+        except Exception as e:
+            print(e)
+
+        print("saving picture ... ... %s" % filename)
+        with open(filename, 'wb') as f:
+            f.write(response.body)
+
+    @staticmethod
+    def rmdir_recursive(top):
+        try:
+            for root, dirs, files in os.walk(top, topdown=False):
+                for name in files:
+                    os.remove(os.path.join(root, name))
+                for name in dirs:
+                    os.rmdir(os.path.join(root, name))
+        except Exception as e:
+            print(e)
