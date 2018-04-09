@@ -16,6 +16,8 @@ from utils import file_util
 from tutorial.rest_home_item import RestHomeItem
 
 total_idx = 0
+total_privince_cnt = 0
+total_rh_pages_cnt = 0
 logger = my_log.get_my_logger()
 
 class YLInfoRestHomeSpider(scrapy.Spider):
@@ -30,9 +32,9 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         logger.debug("start_requests ...")
         file_util.create_dir(self.__pic_root_path)
         urls = [
-#            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0',
+            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0',
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=022',
-            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0955',
+#            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0955',
 #            'http://m.yanglaocn.com/shtml/ylyxx/2016-04/yly146172868824614.html'
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=02201&page=2',
 #            'http://www.yanglaocn.com/yanglaoyuan/yly',
@@ -44,8 +46,11 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
+        global total_privince_cnt
+        global total_rh_pages_cnt
         global total_idx
-        logger.info("starting parse() ... response: %s" % response.url)
+        logger.info("starting parse() ...[%d] [%d] [%d] response: %s" % (total_privince_cnt, total_rh_pages_cnt, total_idx, response.url))
+        '''
         '''
         title_str = "RgSelect="
         pos_title_str = response.url.find(title_str)
@@ -59,6 +64,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
                 privince_url_list = response.xpath('//div[@class="querywhere"]/div[@class="sanxiantj"]/div[@class="jigouquyu_right"]/label/a/@href').extract()
                 for privince_url in privince_url_list:
                     logger.info("send request for privince_url: %s" % privince_url)
+                    total_privince_cnt = total_privince_cnt + 1
                     yield scrapy.Request(url=privince_url, callback=self.parse)
         '''
         '''
@@ -73,9 +79,9 @@ class YLInfoRestHomeSpider(scrapy.Spider):
                 if len(n) > 0:
                     url_next_page = response.url[:response.url.rfind('/')] + n[0]
                     logger.info("starting parse : rest home list for next page of one privince ... %s" % url_next_page)
+                    total_rh_pages_cnt = total_rh_pages_cnt + 1
                     yield scrapy.Request(url=url_next_page, callback=self.parse)
 
-        '''
 
         '''
         '''
@@ -83,6 +89,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         url_list_in_privince_one_page = response.xpath('//div[@class="querywhere2"]/div[@class="jiadiantucontext"]/div[@class="jiadiantucontext_ul"]/a/@href').extract()
         for u in url_list_in_privince_one_page:
             u = u.replace("www", "m")
+            total_idx = total_idx + 1
             logger.info("starting parse : start request for url request for one mobile website ... %s" % u)
             yield scrapy.Request(url=u, callback=self.parse_page)
 
