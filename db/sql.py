@@ -6,6 +6,9 @@ import MySQLdb as mdb
 
 sys.path.append("./")
 
+from utils import my_log
+logger = my_log.get_my_logger()
+
 class RhSql(object):
     __sql_create_resthome_table = "CREATE TABLE IF NOT EXISTS rh (\
                 rh_id INT UNSIGNED AUTO_INCREMENT,\
@@ -73,65 +76,64 @@ class RhSql(object):
 
 
     def __init__(self):
-        print("")
-        print("********* Start sql operation *******")
+        logger.info("\n********* Start sql operation *******\n")
         self.connect_to_sql()
         self.create_resthome_table_if_neccesary()
         self.excute_sql("set names utf8;")
 
     def connect_to_sql(self):
-        print("connect_to_sql ...")
+        logger.debug("connect_to_sql ...")
         try:
             self.conn = mdb.connect(host='localhost', user='bdg', passwd='3', db ='rh')
             self.cur = self.conn.cursor()
         except mdb.Error, e:
-            print "connect_to_sql, Error %d: %s" % (e.args[0], e.args[1])
+            logger.critical("connect_to_sql, Error %d: %s" % (e.args[0], e.args[1]))
             self.close_db()
             sys.exit(1)
 
     def create_resthome_table_if_neccesary(self):
-        print("create_resthome_table_if_neccesary ...")
+        logger.debug("create_resthome_table_if_neccesary ...")
         self.excute_sql(RhSql.__sql_create_resthome_table)
 
     def select_name(self, resthome_name):
-        print("select_name ...")
+        logger.debug("select_name ...")
         sql_str = RhSql.__sql_select_name
         self.excute_sql(sql_str.format(resthome_name))
         return self.cur.fetchone()
 
     def select_all(self):
-        print("select_all ...")
+        logger.debug("select_all ...")
         sql_str = RhSql.__sql_select_all
         self.excute_sql(sql_str)
         results = self.cur.fetchall()
         return results
 
     def select_all_rh_ylw_id(self):
-        print("select_all_rh_ylw_id ...")
+        logger.debug("select_all_rh_ylw_id ...")
         sql_str = RhSql.__sql_select_all_rh_ylw_id
         self.excute_sql(sql_str)
         return self.cur.fetchall()
 
     def select_one_rh_ylw_id(self, rh_ylw_id):
-        print("select_one_rh_ylw_id ...")
+        logger.debug("select_one_rh_ylw_id ...")
         sql_str = RhSql.__sql_select_one_rh_ylw_id
         sql_str = sql_str.format(rh_ylw_id)
         self.excute_sql(sql_str)
         return self.cur.fetchall()
 
     def select_first_one(self):
-        print("select_all ...")
+        logger.debug("select_all ...")
         sql_str = RhSql.__sql_select_all
         self.excute_sql(sql_str)
         result = self.cur.fetchone()
         return result
 
     def select_count(self):
-        print("select_count ...")
+        logger.debug("select_count ...")
         sql_str = RhSql.__sql_select_count
         self.excute_sql(sql_str)
         result = self.cur.fetchone()
-        print("select_count ... count: %s" % result[0])
+        logger.debug("select_count ... count: %s" % result[0])
 
     def existed_rh_name(self, resthome_name):
         sql_str = RhSql.__sql_existed_rh_name
@@ -140,11 +142,11 @@ class RhSql(object):
         return self.cur.fetchone()
 
     def insert_data(self, item):
-        print("insert_data ...")
+        logger.debug("insert_data ...")
 
         ret = self.existed_rh_name(item["rh_name"])
         if ret is not None:
-            print("[Warnning] the following resthome is existed: %s, %s" % item["rh_name"], item["rh_ylw_id"])
+            logger.warning("the following resthome is existed: %s, %s" % item["rh_name"], item["rh_ylw_id"])
             return
 
         sql_str = RhSql.__sql_insert_data
@@ -162,25 +164,25 @@ class RhSql(object):
         self.excute_sql(sql_str)
 
     def delete_all(self):
-        print("delete_all ...")
+        logger.debug("delete_all ...")
         sql_str = RhSql.__sql_delete_all
         self.excute_sql(sql_str)
 
     def drop_table(self):
-        print("drop_table ...")
+        logger.debug("drop_table ...")
         sql_str = RhSql.__sql_drop_table
         self.excute_sql(sql_str)
 
     def excute_sql(self, sql_str):
-        print("starting excute sql_str")
-        print(sql_str)
+        logger.debug("starting excute sql_str:")
+        logger.debug(sql_str)
         try:
             self.cur.execute(sql_str)
             self.conn.commit()
-            print("excute sql_str : ok")
+            logger.info("excute sql_str : ok")
         except Exception as e:
-            print("------sql_str------execute Exception:")
-            print(e)
+            logger.error("execute sql Exception: %s" % sql_str)
+            logger.error(e)
             self.conn.rollback()
             self.close_db()
             sys.exit(1)

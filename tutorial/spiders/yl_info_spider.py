@@ -44,7 +44,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
 
     def parse(self, response):
         global total_idx
-        logger.debug("starting parse() ... response: %s" % response.url)
+        logger.info("starting parse() ... response: %s" % response.url)
         '''
         title_str = "RgSelect="
         pos_title_str = response.url.find(title_str)
@@ -57,7 +57,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
                 # get all url of privice's resthome list
                 privince_url_list = response.xpath('//div[@class="querywhere"]/div[@class="sanxiantj"]/div[@class="jigouquyu_right"]/label/a/@href').extract()
                 for privince_url in privince_url_list:
-                    logger.debug("send request for privince_url: %s" % privince_url)
+                    logger.info("send request for privince_url: %s" % privince_url)
                     yield scrapy.Request(url=privince_url, callback=self.parse)
         '''
         '''
@@ -71,7 +71,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
                 n = Selector(text=x).xpath("//a/@href").extract()
                 if len(n) > 0:
                     url_next_page = response.url[:response.url.rfind('/')] + n[0]
-                    logger.debug("starting parse : rest home list for next page of one privince ... %s" % url_next_page)
+                    logger.info("starting parse : rest home list for next page of one privince ... %s" % url_next_page)
                     yield scrapy.Request(url=url_next_page, callback=self.parse)
 
         '''
@@ -80,21 +80,28 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         url_list_in_privince_one_page = response.xpath('//div[@class="querywhere2"]/div[@class="jiadiantucontext"]/div[@class="jiadiantucontext_ul"]/a/@href').extract()
         for u in url_list_in_privince_one_page:
             u = u.replace("www", "m")
-            logger.debug("starting parse : start request for url request for one mobile website ... %s" % u)
+            logger.info("starting parse : start request for url request for one mobile website ... %s" % u)
             yield scrapy.Request(url=u, callback=self.parse_page)
 
 #        self.parse_page(response)
 
     def parse_page(self, response):
 #        self.parse_picture_1(response)
-        rh_ylw_id = "ff-" + response.url[response.url.find("ylyxx") + len("ylyxx") + 1:]
+        logger.info("starting parse one mobile page ... %s" % response.url)
+        pos = response.url.find("ylyxx")
+        if pos == -1:
+            logger.error("parse rh_ylw_id error ... %s, can't find str \"ylyxx\" in url" % response.url)
+            pos = 0
+        rh_ylw_id = "ff-" + response.url[pos + len("ylyxx") + 1:]
         rh_ylw_id = rh_ylw_id.replace(".html", "")
 
         len1 = rh_ylw_id.rfind("/")
+        if len1 == -1:
+            logger.error("parse rh_ylw_id error ... %s" % response.url)
         len2 = len(rh_ylw_id)
         rh_ylw_id_for_pic = rh_ylw_id[len1+1:len2]
 
-        logger.debug("start picture request for ... rh_ylw_id: %s" % rh_ylw_id_for_pic)
+        logger.info("start picture request for ... rh_ylw_id: %s" % rh_ylw_id_for_pic)
         # normal picture
         url_list = response.xpath('//div[@id="pic_ylyxx"]/img/@src').extract()
         for url in url_list:
@@ -111,9 +118,8 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         yield self.parse_item_from_response(response)
 
     def parse_item_from_response(self, response):
-        logger.debug("parse item start ... %s" % response.url)
-        '''
-        '''
+        logger.info("parse item start ... %s" % response.url)
+
         rhit = RestHomeItem()
 
         logger.debug("\nparsing basicInformation ...\n")

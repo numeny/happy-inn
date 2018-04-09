@@ -5,9 +5,16 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
+import sys
 
 import scrapy
 import re
+
+sys.path.append("../")
+
+from utils import my_log
+
+logger = my_log.get_my_logger()
 
 class RestHomeItem(scrapy.Item):
     rh_name = scrapy.Field()
@@ -77,7 +84,7 @@ class RestHomeItem(scrapy.Item):
         for i in RestHomeItem.item_list:
             if i[0] not in item:
                 item[i[0]] = i[1]
-                print("[Warning] (%s) not existed!" % i[0])
+                logger.warning("(%s) not existed!" % i[0])
         RestHomeItem.handleString(item, "rh_name");
         RestHomeItem.handleString(item, "rh_phone");
         RestHomeItem.handleString(item, "rh_mobile");
@@ -112,8 +119,8 @@ class RestHomeItem(scrapy.Item):
             # change " to \"
             item[idx] = item[idx].replace('\"', '\\\"').encode('UTF-8')
         except Exception as e:
-            print("*********************************")
-            print(e)
+            logger.warning("handleString() error when handle item: %s, value: %s" % (idx, item[idx]))
+            logger.warning(e)
 
     def handleDate(item, idx):
         ''' item.[idx] is u"1999年1月11日" or u"1999年1月" '''
@@ -122,8 +129,8 @@ class RestHomeItem(scrapy.Item):
         pattern = re.compile(r'[^\d]')
         m = pattern.split(item[idx])
         if(len(m) < 2):
-            print("[Error-parse]: rh_establishment_time is not correct, for %s" % item["rh_url"])
-            print(item[idx])
+            logger.warning(": rh_establishment_time is not correct, for %s" % item["rh_url"])
+            logger.warning(item[idx])
             return
         if (len(m[0])) == 0:
             m[0] = u"1999"
@@ -133,7 +140,7 @@ class RestHomeItem(scrapy.Item):
             m[2] = u"01"
         item[idx] = "{:0>4s}{:0>2s}{:0>2s}".format(m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
         if len(old_item) != 0 and len(item[idx]) == 0:
-            print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
+            logger.error("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
 
     def handleOneNum(item, idx):
         # item.[idx] is u"汉字num汉字"
@@ -143,7 +150,7 @@ class RestHomeItem(scrapy.Item):
         m = pattern.split(item[idx])
         item[idx] = int(m[0].encode('utf-8'))
         if len(old_item) != 0 and item[idx] == 0:
-            print("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
+            logger.warning("[Error-parse]: %s is not correct, for %s, item[%s]: %s" % (idx, item["rh_url"], idx, old_item))
 
     @staticmethod
     def getFirstNum(s):
@@ -155,17 +162,17 @@ class RestHomeItem(scrapy.Item):
     def printSelf(item):
         for i in RestHomeItem.item_list:
             if i[0] in item:
-                print("%s: %s" % (i[0], item[i[0]]))
+                logger.debug("%s: %s" % (i[0], item[i[0]]))
             else:
-                print("%s: not in item" % (i[0]))
+                logger.warning("%s: not in item" % (i[0]))
 
     @staticmethod
     def printOneRecord(record):
         if record is None:
             return
-        print("rh_id: %s" % record[0])
+        logger.debug("rh_id: %s" % record[0])
         idx = 1
         for i in RestHomeItem.item_list:
-            print("%s: %s" % (i[0], record[idx]))
+            logger.debug("%s: %s" % (i[0], record[idx]))
             idx = idx + 1
-        print("")
+        logger.debug("")

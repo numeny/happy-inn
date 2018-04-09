@@ -1,2 +1,3 @@
 #/bin/bash
+rm /tmp/log -rf
 scrapy crawl YLInfoRestHome --nolog
