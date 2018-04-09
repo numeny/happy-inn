@@ -1,13 +1,17 @@
 import os
+import logging
+
+import my_log
+logger = my_log.get_my_logger()
 
 def create_dir(path):
     try:
         if os.path.exists(path):
             rmdir_recursive(path)
-            os.makedirs(path, 0775)
+        os.makedirs(path, 0775)
     except Exception as e:
-        print("[Error] create_dir ... ... %s" % path)
-        print(e)
+        logger.warning("path : %s" % path)
+        logger.warning(e)
 
 def save_pic(base_path, file_name, is_title, content):
     picture_dir = base_path
@@ -20,8 +24,8 @@ def save_pic(base_path, file_name, is_title, content):
         with open(absolute_filename, 'wb') as f:
             f.write(content)
     except Exception as e:
-        print("[Error] saving picture ... ... %s" % absolute_filename)
-        print(e)
+        logger.warning("saving picture ... %s" % absolute_filename)
+        logger.warning(e)
 
 def rmdir_recursive(top):
     try:
@@ -31,5 +35,6 @@ def rmdir_recursive(top):
             for name in dirs:
                 os.rmdir(os.path.join(root, name))
     except Exception as e:
-        print("[Error] rmdir_recursive ... ... %s" % top)
-        print(e)
+        logger.warning("[Error] rmdir_recursive ... %s" % top)
+        logger.warning(e)
+
