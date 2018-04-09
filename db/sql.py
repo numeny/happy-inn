@@ -5,6 +5,8 @@ import sys
 import MySQLdb as mdb
 
 sys.path.append("./")
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 from utils import my_log
 logger = my_log.get_my_logger()
@@ -13,32 +15,32 @@ class RhSql(object):
     __sql_create_resthome_table = "CREATE TABLE IF NOT EXISTS rh (\
                 rh_id INT UNSIGNED AUTO_INCREMENT,\
                 rh_name VARCHAR(500) NOT NULL,\
-                rh_phone VARCHAR(200),\
-                rh_mobile VARCHAR(200),\
-                rh_email VARCHAR(200),\
-                rh_postcode VARCHAR(200),\
-                rh_location_id VARCHAR(200),\
-                rh_type VARCHAR(200),\
-                rh_factory_property VARCHAR(200),\
-                rh_person_in_charge VARCHAR(200),\
-                rh_establishment_time DATE,\
-                rh_floor_surface VARCHAR(200),\
-                rh_building_area VARCHAR(200),\
-                rh_bednum SMALLINT UNSIGNED,\
-                rh_staff_num SMALLINT UNSIGNED,\
-                rh_for_persons VARCHAR(200),\
-                rh_charges_extent VARCHAR(1000),\
-                rh_special_services VARCHAR(1000),\
-                rh_contact_person VARCHAR(200),\
-                rh_address VARCHAR(1000),\
-                rh_url VARCHAR(1000),\
+                rh_phone TEXT,\
+                rh_mobile TEXT,\
+                rh_email TEXT,\
+                rh_postcode TEXT,\
+                rh_location_id TEXT,\
+                rh_type TEXT,\
+                rh_factory_property TEXT,\
+                rh_person_in_charge TEXT,\
+                rh_establishment_time TEXT,\
+                rh_floor_surface TEXT,\
+                rh_building_area TEXT,\
+                rh_bednum TEXT,\
+                rh_staff_num TEXT,\
+                rh_for_persons TEXT,\
+                rh_charges_extent TEXT,\
+                rh_special_services TEXT,\
+                rh_contact_person TEXT,\
+                rh_address TEXT,\
+                rh_url TEXT,\
                 rh_transportation TEXT,\
                 rh_inst_intro TEXT,\
                 rh_inst_charge TEXT,\
                 rh_facilities TEXT,\
                 rh_service_content TEXT,\
                 rh_inst_notes TEXT,\
-                rh_ylw_id VARCHAR(50),\
+                rh_ylw_id TEXT,\
                 PRIMARY KEY ( rh_id )\
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 
@@ -67,16 +69,16 @@ class RhSql(object):
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
-                    %d, \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
                     \"%s\", \"%s\", \"%s\",\
-                    \"%s\", \"%s\", %d\
+                    \"%s\", \"%s\", \"%s\",\
+                    \"%s\", \"%s\", \"%s\"\
                     );"
 
 
     def __init__(self):
-        logger.info("\n********* Start sql operation *******\n")
+        logger.info("********* Start sql operation *******")
         self.connect_to_sql()
         self.create_resthome_table_if_neccesary()
         self.excute_sql("set names utf8;")
@@ -133,7 +135,7 @@ class RhSql(object):
         sql_str = RhSql.__sql_select_count
         self.excute_sql(sql_str)
         result = self.cur.fetchone()
-        logger.debug("select_count ... count: %s" % result[0])
+        print("select_count ... count: %s" % result[0])
 
     def existed_rh_name(self, resthome_name):
         sql_str = RhSql.__sql_existed_rh_name
@@ -146,7 +148,7 @@ class RhSql(object):
 
         ret = self.existed_rh_name(item["rh_name"])
         if ret is not None:
-            logger.warning("the following resthome is existed: %s, %s" % item["rh_name"], item["rh_ylw_id"])
+            logger.warning("the following resthome is existed: %s, %s" % (item["rh_name"].decode(), item["rh_ylw_id"].decode()))
             return
 
         sql_str = RhSql.__sql_insert_data
@@ -174,8 +176,7 @@ class RhSql(object):
         self.excute_sql(sql_str)
 
     def excute_sql(self, sql_str):
-        logger.debug("starting excute sql_str:")
-        logger.debug(sql_str)
+        logger.debug("starting excute sql_str: %s" % sql_str.decode())
         try:
             self.cur.execute(sql_str)
             self.conn.commit()
@@ -183,6 +184,8 @@ class RhSql(object):
         except Exception as e:
             logger.error("execute sql Exception: %s" % sql_str)
             logger.error(e)
+            print("execute sql Exception: %s" % sql_str)
+            print(e)
             self.conn.rollback()
             self.close_db()
             sys.exit(1)

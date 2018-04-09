@@ -13,9 +13,7 @@ class TutorialPipeline(object):
     def process_item(self, item, spider):
         print("")
         print("")
-        print("TutorialPipeline::process_item********************************")
-        '''
-        '''
+        print("****** TutorialPipeline::process_item ********************************-0")
         for i in item.keys():
             print("%s: %s" % (i, item[i]))
         sql = RhSql()

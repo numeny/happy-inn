@@ -38,6 +38,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
 #            'http://www.yanglaocn.com/yanglaoyuan/yly',
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=01001&gotoip=y',
 #            'http://m.yanglaocn.com/shtml/ylyxx/2014-06/yly140411449322841.html',
+#            'http://m.yanglaocn.com/shtml/ylyxx/2013-04/yly13655931991163.html'
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
@@ -76,6 +77,8 @@ class YLInfoRestHomeSpider(scrapy.Spider):
 
         '''
 
+        '''
+        '''
         # all url for one province's one page
         url_list_in_privince_one_page = response.xpath('//div[@class="querywhere2"]/div[@class="jiadiantucontext"]/div[@class="jiadiantucontext_ul"]/a/@href').extract()
         for u in url_list_in_privince_one_page:
@@ -83,7 +86,9 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             logger.info("starting parse : start request for url request for one mobile website ... %s" % u)
             yield scrapy.Request(url=u, callback=self.parse_page)
 
-#        self.parse_page(response)
+        '''
+        self.parse_page(response)
+        '''
 
     def parse_page(self, response):
 #        self.parse_picture_1(response)
@@ -175,11 +180,21 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         for i in item_list:
             str_xpath = '//div[@id="' + i[0] + '"]/div[@class="leftcontexttitle"]/text()'
             leftcontexttitle_list = response.xpath(str_xpath).extract()
+            # phone info is missed, for rh : 2013-04/yly1365592247649
+            rh_phone_is_missed = False
+            if len(leftcontexttitle_list) < len(i[1]) and not cmp(i[0], 'ContactUsList'):
+                rh_phone_is_missed = True
             logger.debug("start parsing lefttitle -1")
             for idx, val in enumerate(i[1]):
                 logger.debug("start parsing lefttitle -2: %s" % val)
-                if len(leftcontexttitle_list) > idx and len(leftcontexttitle_list[idx].strip()) > 0:
-                    rhit[val] = leftcontexttitle_list[idx].strip()
+                if rh_phone_is_missed and idx == 2:# 2 is index of rh_phone
+                    continue
+                elif rh_phone_is_missed and idx > 2:
+                    idx2 = idx - 1
+                else:
+                    idx2 = idx
+                if len(leftcontexttitle_list) > idx2 and len(leftcontexttitle_list[idx2].strip()) > 0:
+                    rhit[val] = leftcontexttitle_list[idx2].strip()
                     logger.debug("start parsing lefttitle -3: %s" % rhit[val])
 
 
@@ -189,12 +204,14 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             ("OrganizationsOn_Text", "rh_inst_intro"),
             ("EnvironmentalFacilities_Text", "rh_facilities"),
             ("DietaryIntroduced_Text","rh_service_content"),
+            ("ServiceObject_Text","rh_special_services"),
             ("CheckinNotes_Text","rh_inst_notes"),
             ("FeeScale_Text","rh_inst_charge"),
             ("TrafficInformation_Text","rh_transportation"),
         )
         for i in item_list:
-            str_xpath = '//div[@id="' + i[0] + '"]/p'
+            # div for rh: ff-2013-04/yly1365592338699
+            str_xpath = '//div[@id="' + i[0] + '"]/p | //div[@id="' + i[0] + '"]/div'
             info = response.xpath(str_xpath).extract()
             str_info = ""
             for j in info:

@@ -59,11 +59,11 @@ class RestHomeItem(scrapy.Item):
         ("rh_type", ""),\
         ("rh_factory_property", ""),\
         ("rh_person_in_charge", ""),\
-        ("rh_establishment_time", u"1999年01月01日"),\
+        ("rh_establishment_time", u""),\
         ("rh_floor_surface", ""),\
         ("rh_building_area", ""),\
-        ("rh_bednum", u"0张"),\
-        ("rh_staff_num", u"0人"),\
+        ("rh_bednum", ""),\
+        ("rh_staff_num", ""),\
         ("rh_for_persons", ""),\
         ("rh_charges_extent", ""),\
         ("rh_special_services", ""),\
@@ -110,9 +110,12 @@ class RestHomeItem(scrapy.Item):
         RestHomeItem.handleString(item, "rh_inst_notes");
         RestHomeItem.handleString(item, "rh_ylw_id");
 
-        RestHomeItem.handleDate(item, "rh_establishment_time")
-        RestHomeItem.handleOneNum(item, "rh_bednum")
-        RestHomeItem.handleOneNum(item, "rh_staff_num")
+#RestHomeItem.handleDate(item, "rh_establishment_time")
+        RestHomeItem.handleString(item, "rh_establishment_time")
+#RestHomeItem.handleOneNum(item, "rh_bednum")
+        RestHomeItem.handleString(item, "rh_bednum")
+#RestHomeItem.handleOneNum(item, "rh_staff_num")
+        RestHomeItem.handleString(item, "rh_staff_num")
 
     def handleString(item, idx):
         try:
@@ -123,20 +126,20 @@ class RestHomeItem(scrapy.Item):
             logger.warning(e)
 
     def handleDate(item, idx):
-        ''' item.[idx] is u"1999年1月11日" or u"1999年1月" '''
+        ''' item.[idx] is u"1999年1月11日" or u"1999年1月" or u"1999年"'''
         item[idx] = item[idx].strip()
         old_item = item[idx]
         pattern = re.compile(r'[^\d]')
         m = pattern.split(item[idx])
-        if(len(m) < 2):
-            logger.warning(": rh_establishment_time is not correct, for %s" % item["rh_url"])
-            logger.warning(item[idx])
+        if len(m) == 0:
+            logger.error("rh_establishment_time is not correct, for %s" % item["rh_ylw_id"])
+            logger.error(item[idx])
             return
-        if (len(m[0])) == 0:
+        if len(m[0]) == 0:
             m[0] = u"1999"
-        if (len(m[1])) == 0:
+        if (len(m) <= 1 or len(m[1])) == 0:
             m[1] = u"01"
-        if (len(m[2])) == 0:
+        if (len(m) <= 2 or len(m[2])) == 0:
             m[2] = u"01"
         item[idx] = "{:0>4s}{:0>2s}{:0>2s}".format(m[0].encode('utf-8'), m[1].encode('utf-8'), m[2].encode('utf-8'))
         if len(old_item) != 0 and len(item[idx]) == 0:
@@ -173,6 +176,6 @@ class RestHomeItem(scrapy.Item):
         logger.debug("rh_id: %s" % record[0])
         idx = 1
         for i in RestHomeItem.item_list:
-            logger.debug("%s: %s" % (i[0], record[idx]))
+            print("%s: %s" % (i[0], record[idx]))
             idx = idx + 1
-        logger.debug("")
+        print("")

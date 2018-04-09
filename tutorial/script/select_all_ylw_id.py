@@ -11,4 +11,5 @@ from db.sql import RhSql
 
 test_RhSql = RhSql()
 ret = test_RhSql.select_all_rh_ylw_id()
-print(ret)
+for i in ret:
+    print(i)
