@@ -2,11 +2,51 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
+
 import scrapy
 from scrapy import Selector
+
+sys.path.append("../../")
+
 from tutorial.rest_home_item import RestHomeItem
+#import tutorial.file_util
 
 total_idx = 0
+def create_dir(path):
+    try:
+        if os.path.exists(path):
+            rmdir_recursive(path)
+        os.makedirs(path, 0775)
+    except Exception as e:
+        print("[Error] create_dir ... ... %s" % path)
+        print(e)
+
+def save_pic(base_path, file_name, is_title, content):
+    picture_dir = base_path
+    if is_title:
+        picture_dir = os.path.join(picture_dir, "title")
+    absolute_filename = os.path.join(picture_dir, file_name)
+    try:
+        if not os.path.exists(picture_dir):
+            os.makedirs(picture_dir, 0775)
+        with open(absolute_filename, 'wb') as f:
+            f.write(content)
+    except Exception as e:
+        print("[Error] saving picture ... ... %s" % absolute_filename)
+        print(e)
+
+def rmdir_recursive(top):
+    try:
+        for root, dirs, files in os.walk(top, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+    except Exception as e:
+        print("[Error] rmdir_recursive ... ... %s" % top)
+        print(e)
+
 class YLInfoRestHomeSpider(scrapy.Spider):
     name = "YLInfoRestHome"
     __host_pc = "http://www.yanglaocn.com"
@@ -14,12 +54,15 @@ class YLInfoRestHomeSpider(scrapy.Spider):
 
     __pic_root_path = os.path.join("result", "picture")
 
+
     def start_requests(self):
+        path = self.__pic_root_path
         try:
-            if os.path.exists(self.__pic_root_path):
-                YLInfoRestHomeSpider.rmdir_recursive(self.__pic_root_path)
-            os.makedirs(self.__pic_root_path, 0775)
+            if os.path.exists(path):
+                rmdir_recursive(path)
+            os.makedirs(path, 0775)
         except Exception as e:
+            print("[Error] create_dir ... ... %s" % path)
             print(e)
         urls = [
 #            'http://www.yanglaocn.com/yanglaoyuan/yly/?RgSelect=0',
@@ -37,7 +80,6 @@ class YLInfoRestHomeSpider(scrapy.Spider):
     def parse(self, response):
         global total_idx
         print(" starting parse privince list ... response: %s" % response.url)
-        print(" starting parse privince list ... response: %s" % response.body)
         '''
         title_str = "RgSelect="
         area_url_start_idx = response.url.find(title_str) + len(title_str)
@@ -76,7 +118,6 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             print(m)
         '''
 
-        print("88888888888888888888")
         # all url for one province's one page
         url_list_in_privince_one_page = response.xpath('//div[@class="querywhere2"]/div[@class="jiadiantucontext"]/div[@class="jiadiantucontext_ul"]/a/@href').extract()
         print(url_list_in_privince_one_page)
@@ -84,7 +125,6 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             u = u.replace("www", "m")
             print(u)
             yield scrapy.Request(url=u, callback=self.parse)
-        print("99999999999999999999999999")
         '''
         url_list_in_privince_one_page = response.xpath('//div[@class="restlist"]/div[@class="list-view"]/ul/li/div[@class="info"]/h4/a/@href').extract()
         print("====total_idx: %d===== url_list_in_privince_one_page: %s" % (total_idx, url_list_in_privince_one_page))
@@ -94,7 +134,35 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse_item_from_response)
         '''
 
-        yield self.parse_item_from_response(response)
+#self.parse_picture_1(response)
+        rh_ylw_id = "ff-" + response.url[response.url.find("ylyxx") + len("ylyxx") + 1:]
+        rh_ylw_id = rh_ylw_id.replace(".html", "")
+
+        len1 = rh_ylw_id.rfind("/")
+        len2 = len(rh_ylw_id)
+        rh_ylw_id_for_pic = rh_ylw_id[len1+1:len2]
+        '''
+        url_list = response.xpath('//div[@id="pic_ylyxx"]/img/@src').extract()
+        for url in url_list:
+            print("parse_picture_1 ... rh_ylw_id: %s" % rh_ylw_id_for_pic)
+            if len(url) > 0 and url.startswith("http"):
+                yield scrapy.Request(url=url, callback=self.save_normal_pic, meta={"rh_ylw_id": rh_ylw_id_for_pic})
+                pass
+        '''
+        # title picture
+        url_list = response.xpath('//div[@class="mymain"]/div[@class="navTitle"]/span/img/@src').extract()
+        print("url_list")
+        print(url_list)
+        for url in url_list:
+            print("parse_picture_1 ... rh_ylw_id: %s" % rh_ylw_id_for_pic)
+            if len(url) > 0 and url.startswith("http"):
+                yield scrapy.Request(url=url, callback=self.save_title_pic, meta={"rh_ylw_id": rh_ylw_id_for_pic})
+                pass
+
+
+
+#rhit = self.parse_item_from_response(response)
+
 
     def parse_item_from_response(self, response):
         print("Parse item start ... %s" % response.url)
@@ -122,7 +190,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         if 'rh_contact_person' in rhit:
             rhit['rh_person_in_charge'] = rhit['rh_contact_person']
 
-        # OrganizationsOn_Text
+        # OrganizationsOn_Text etc.
         print("")
         print("parsing OrganizationsOn etc ...")
         print("")
@@ -133,13 +201,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         rhit['rh_ylw_id'] = rhit['rh_ylw_id'].replace(".html", "")
 
         RestHomeItem.printSelf(rhit)
-        print("parse_picture ... rhit['rh_ylw_id']: %s" % rhit['rh_ylw_id'])
-        len1 = rhit['rh_ylw_id'].rfind("/")
-        len2 = len(rhit['rh_ylw_id'])
-        print("parse_picture ... rh_ylw_id")
-        rh_ylw_id = rhit['rh_ylw_id'][len1+1:len2]
-        print("parse_picture ... rh_ylw_id: " % rh_ylw_id)
-        self.parse_picture(response, rhit['rh_ylw_id'][rhit['rh_ylw_id'].rfind("/")+1:])
+#self.parse_picture(response, rh_ylw_id_for_pic)
         return rhit
 
     def fill_item_with_list(self, rhit, response):
@@ -199,16 +261,46 @@ class YLInfoRestHomeSpider(scrapy.Spider):
             if len(str_info) > 0:
                 rhit[i[1]] = str_info
 
-    def parse_picture(self, response, rh_ylw_id):
-        print("parse_picture ... rh_ylw_id: " % rh_ylw_id)
+    def parse_picture_1(self, response):
+        rh_ylw_id = "ff-" + response.url[response.url.find("ylyxx") + len("ylyxx") + 1:]
+        rh_ylw_id = rh_ylw_id.replace(".html", "")
+
+        len1 = rh_ylw_id.rfind("/")
+        len2 = len(rh_ylw_id)
+        rh_ylw_id_for_pic = rh_ylw_id[len1+1:len2]
+        '''
+        url_list = response.xpath('//div[@id="pic_ylyxx"]/img/@src').extract()
+        for url in url_list:
+            print("parse_picture_1 ... rh_ylw_id: %s" % rh_ylw_id_for_pic)
+            if len(url) > 0 and url.startswith("http"):
+                yield scrapy.Request(url=url, callback=self.save_normal_pic, meta={"rh_ylw_id": rh_ylw_id_for_pic})
+                pass
+        '''
+        # title picture
+        url_list = response.xpath('//div[@class="mymain"]/div[@class="navTitle"]/span/img/@src').extract()
+        print("url_list")
+        print(url_list)
+        for url in url_list:
+            print("parse_picture_1 ... rh_ylw_id: %s" % rh_ylw_id_for_pic)
+            if len(url) > 0 and url.startswith("http"):
+                yield scrapy.Request(url=url, callback=self.save_title_pic, meta={"rh_ylw_id": rh_ylw_id_for_pic})
+                pass
+
+    def parse_picture(self, response, a):
+        print("parse_picture-2")
+        print("parse_picture ... rh_ylw_id:")
         for url in response.xpath('//div[@id="pic_ylyxx"]/img/src').extract():
             if len(i) > 0 and i.startswith("http"):
                 yield scrapy.Request(url=url, callback=self.save_normal_pic(), meta={"rh_ylw_id": rh_ylw_id})
 
     def save_normal_pic(self, response):
         print("save_normal_pic ... ")
-        print("save_normal_pic ... rh_ylw_id: " % response.meta["rh_ylw_id"])
         self.save_pic(response, False)
+        pass
+
+    def save_title_pic(self, response):
+        print("save_title_pic ... ")
+        self.save_pic(response, True)
 
     def save_pic(self, response, is_title):
         file_name = response.url[(response.url.rfind("/") + 1) : ];
@@ -226,6 +318,7 @@ class YLInfoRestHomeSpider(scrapy.Spider):
         print("saving picture ... ... %s" % filename)
         with open(filename, 'wb') as f:
             f.write(response.body)
+        print("saving picture OK ... ... %s" % filename)
 
     @staticmethod
     def rmdir_recursive(top):
