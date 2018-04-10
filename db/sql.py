@@ -181,6 +181,7 @@ class RhSql(object):
             self.cur.execute(sql_str)
             self.conn.commit()
             logger.info("excute sql_str : ok")
+            print("excute sql_str : ok")
         except Exception as e:
             logger.error("execute sql Exception: %s" % sql_str)
             logger.error(e)

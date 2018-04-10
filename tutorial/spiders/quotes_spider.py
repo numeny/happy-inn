@@ -1,20 +1,37 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import sys
+import os
+
 import scrapy
+import logging
+from scrapy import Selector
+
+sys.path.append("../../")
+
+from utils import my_log
+from utils import file_util
+
 from tutorial.rest_home_item import RestHomeItem
 
+total_privinces = 0
+total_pages = 0
 total_idx = 0
+
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
+    __pic_root_path = os.path.join("result", "picture")
 
     def start_requests(self):
+        logger.debug("start_requests ...")
+        file_util.create_dir(self.__pic_root_path)
         urls = [
 #            'http://www.yanglao.com.cn/resthome/27168.html',
 #            'http://www.yanglao.com.cn/resthome/41090.html',
 #            'http://www.yanglao.com.cn/resthome/228436.html',
-#            'http://www.yanglao.com.cn/resthome/40844.html',
-            'http://www.yanglao.com.cn/xinjiang',
+            'http://www.yanglao.com.cn/resthome/40844.html',
+#            'http://www.yanglao.com.cn/xinjiang',
 #            'http://www.yanglao.com.cn/resthome/22608.html',
 #            'http://www.yanglao.com.cn',
         ]
@@ -22,43 +39,56 @@ class QuotesSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
+        global total_privinces
+        global total_pages
         global total_idx
+
         # all province
         # get all url of privice's resthome list
         '''
-        privince_url_list = response.xpath('//div[@class="hot-cities"]/dl/dd/a/@href').extract()
+        privince_url_list = response.xpath('//div[@class="hot-items"]/div[@class="hot-cities"]/dl/dd/a/@href').extract()
         for privince_url in privince_url_list:
             privince_url = "http://www.yanglao.com.cn" + privince_url
-            print("privince_url: %s" % privince_url)
+            total_privinces = total_privinces + 1
+            print("====total_privinces: %d===== privince_url: %s" % (total_privinces, privince_url))
             yield scrapy.Request(url=privince_url, callback=self.parse)
         '''
 
         # all pages for one province
         '''
-        total_idx = total_idx + 1
         # get next page of rest home list
-        url_list_in_privince_text = response.xpath('//div[@class="pager"]/ul[@class="pages"]/li/a/text()').extract()
-        url_list_in_privince_href = response.xpath('//div[@class="pager"]/ul[@class="pages"]/li/a/@href').extract()
-        for idx in xrange(0, len(url_list_in_privince_text)):
-            if url_list_in_privince_text[idx] == u'\u4e0b\u4e00\u9875':
-                next_url_list_in_prinvice = "http://www.yanglao.com.cn" + url_list_in_privince_href[idx].strip()
-                print("====total_idx: %d===== next_url_list_in_prinvice: %s" % (total_idx, next_url_list_in_prinvice))
-                yield scrapy.Request(url=next_url_list_in_prinvice, callback=self.parse)
+        page_list_in_privince = response.xpath('//div[@class="pager"]/ul[@class="pages"]/li').extract()
+        for one_page_li in page_list_in_privince:
+            page_list_text = Selector(text=one_page_li).xpath('//li/a/text()').extract()
+            for page_url_text in page_list_text:
+                if page_url_text == u'\u4e0b\u4e00\u9875':
+                    next_page_urls = Selector(text=one_page_li).xpath('//li/a/@href').extract()
+                    for next_page_url in next_page_urls:
+                        next_page_abs_url = "http://www.yanglao.com.cn" + next_page_url.strip()
+                        total_pages = total_pages + 1
+                        print("====total_pages: %d===== next_page_abs_url: %s" % (total_pages, next_page_abs_url))
+                        yield scrapy.Request(url=next_page_abs_url, callback=self.parse)
         '''
 
+        '''
         # all url for one province's one page
-        '''
-        '''
-        url_list_in_privince_one_page = response.xpath('//div[@class="restlist"]/div[@class="list-view"]/ul/li/div[@class="info"]/h4/a/@href').extract()
-        print("====total_idx: %d===== url_list_in_privince_one_page: %s" % (total_idx, url_list_in_privince_one_page))
-        for url in url_list_in_privince_one_page:
+        rh_items_in_privince_one_page = response.xpath('//div[@class="restlist"]/div[@class="list-view"]/ul[@class="rest-items"]/li[@class="rest-items"]/div[@class="info"]/h4/a/@href').extract()
+        print("rh_items_in_privince_one_page:")
+        print(rh_items_in_privince_one_page)
+        for url in rh_items_in_privince_one_page:
+            total_idx = total_idx + 1
+            print("====total_idx: %d===== rh_item_url: %s" % (total_idx, url))
             url = "http://www.yanglao.com.cn" + url.strip()
-            print("----------parse start: %d, url: %s" % (total_idx, url))
-            yield scrapy.Request(url=url, callback=self.parse_item_from_response)
+            yield scrapy.Request(url=url, callback=self.parse_one_rh)
+        '''
 
-        yield self.parse_item_from_response(response)
+        yield self.parse_one_rh_item(response)
 
-    def parse_item_from_response(self, response):
+    def parse_one_rh(self, response):
+        self.parse_picture(response)
+        self.parse_one_rh_item(response)
+
+    def parse_one_rh_item(self, response):
         print("Parse item start ... %s" % response.url)
         rhit = RestHomeItem()
 
@@ -207,3 +237,47 @@ class QuotesSpider(scrapy.Spider):
         info = response.xpath(str_xpath).extract()
         if len(info) != 0:
             item[key] = "iframe"
+
+    def parse_picture(self, response):
+        print("parsing picture's url ...")
+        # get title picture's src and send request
+        title_picture = response.xpath('//div[@class="inst-info"]/div[@class="cont"]/div[@class="inst-pic"]/img/@src').extract()
+        if len(title_picture) != 0:
+            yield scrapy.Request(url=title_picture[0], callback=self.save_title_pic)
+
+        # get normal picture's src and send request
+        inst_photos = response.xpath('//div[@class="inst-photos"]/div[@class="cont"]/ul/li/a/img/@src').extract()
+        for i in inst_photos:
+            if len(i) != 0:
+                yield scrapy.Request(url = i, callback=self.save_normal_pic)
+
+    def save_title_pic(self, response):
+        print("parsing title picture to saving picture ... %s" % response.url)
+        self.save_pic(response, True)
+
+    def save_normal_pic(self, response):
+        print("parsing normal picture to saving picture ... %s" % response.url)
+        self.save_pic(response, False)
+
+    def save_pic(self, response, is_title):
+        if not response.url.endswith("jpg") and not response.url.endswith("png"):
+            return
+        print("saving picture ... ... %s" % response.url)
+
+        url_len = len(response.url)
+        url_last = response.url.rfind("/")
+        url_last_two = response.url.rfind("/", 0, url_last)
+        file_name = response.url[(url_last + 1) : url_len];
+        ylw_resthome_id = response.url[(url_last_two + 1) : url_last]
+
+        resthome_id = ylw_resthome_id
+        picture_dir = os.path.join(self.__pic_root_path, resthome_id)
+        if is_title:
+            picture_dir = os.path.join(picture_dir, "title")
+        filename = os.path.join(picture_dir, file_name)
+        try:
+            if not os.path.exists(picture_dir):
+                os.makedirs(picture_dir, 0775)
+        except Exception as e:
+            print(e)
+

@@ -1,3 +1,4 @@
 #/bin/bash
 #scrapy crawl quotes --nolog -o quotes.json
+rm /tmp/log
 scrapy crawl quotes --nolog
