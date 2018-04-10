@@ -7,5 +7,5 @@ import logging
 sys.path.append("../")
 
 def get_my_logger():
-    logger = logging.getLogger('YLInfoRestHomeSpider')
+    logger = logging.getLogger('QuotesSpider')
     return logger

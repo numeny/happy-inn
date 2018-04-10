@@ -52,7 +52,7 @@ class RhSql(object):
 
     __sql_delete_all = "delete from rh;"
     __sql_drop_table = "drop table rh;"
-    __sql_existed_rh_name = "select 1 from rh where rh_name=\'{}\' limit 1;"
+    __sql_existed_rh_name = "select 1 from rh where rh_name=\'{}\' and rh_ylw_id=\'{}\' limit 1;"
 
     __sql_insert_data = "insert into rh (\
                     rh_name, rh_phone, rh_location_id,\
@@ -137,16 +137,16 @@ class RhSql(object):
         result = self.cur.fetchone()
         print("select_count ... count: %s" % result[0])
 
-    def existed_rh_name(self, resthome_name):
+    def existed_rh_name(self, resthome_name, rh_ylw_id):
         sql_str = RhSql.__sql_existed_rh_name
-        sql_str = sql_str.format(resthome_name)
+        sql_str = sql_str.format(resthome_name, rh_ylw_id)
         self.excute_sql(sql_str.format(resthome_name))
         return self.cur.fetchone()
 
     def insert_data(self, item):
         logger.debug("insert_data ...")
 
-        ret = self.existed_rh_name(item["rh_name"])
+        ret = self.existed_rh_name(item["rh_name"], item["rh_ylw_id"])
         if ret is not None:
             logger.warning("the following resthome is existed: %s, %s" % (item["rh_name"].decode(), item["rh_ylw_id"].decode()))
             return
