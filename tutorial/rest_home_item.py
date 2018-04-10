@@ -81,41 +81,43 @@ class RestHomeItem(scrapy.Item):
 
     @staticmethod
     def init_item_field_to_default_if_null(item):
-        for i in RestHomeItem.item_list:
-            if i[0] not in item:
-                item[i[0]] = i[1]
-                logger.warning("(%s) not existed!" % i[0])
-        RestHomeItem.handleString(item, "rh_name");
-        RestHomeItem.handleString(item, "rh_phone");
-        RestHomeItem.handleString(item, "rh_mobile");
-        RestHomeItem.handleString(item, "rh_email");
-        RestHomeItem.handleString(item, "rh_postcode");
-        RestHomeItem.handleString(item, "rh_location_id");
-        RestHomeItem.handleString(item, "rh_type");
-        RestHomeItem.handleString(item, "rh_factory_property");
-        RestHomeItem.handleString(item, "rh_person_in_charge");
-        RestHomeItem.handleString(item, "rh_floor_surface");
-        RestHomeItem.handleString(item, "rh_building_area");
-        RestHomeItem.handleString(item, "rh_for_persons");
-        RestHomeItem.handleString(item, "rh_charges_extent");
-        RestHomeItem.handleString(item, "rh_special_services");
-        RestHomeItem.handleString(item, "rh_contact_person");
-        RestHomeItem.handleString(item, "rh_address");
-        RestHomeItem.handleString(item, "rh_url");
-        RestHomeItem.handleString(item, "rh_transportation");
-        RestHomeItem.handleString(item, "rh_inst_intro");
-        RestHomeItem.handleString(item, "rh_inst_charge");
-        RestHomeItem.handleString(item, "rh_facilities");
-        RestHomeItem.handleString(item, "rh_service_content");
-        RestHomeItem.handleString(item, "rh_inst_notes");
-        RestHomeItem.handleString(item, "rh_ylw_id");
+        try:
+            for i in RestHomeItem.item_list:
+                if i[0] not in item:
+                    item[i[0]] = i[1]
+                    logger.warning("(%s) not existed!" % i[0])
+            RestHomeItem.handleString(item, "rh_name");
+            RestHomeItem.handleString(item, "rh_phone");
+            RestHomeItem.handleString(item, "rh_mobile");
+            RestHomeItem.handleString(item, "rh_email");
+            RestHomeItem.handleString(item, "rh_postcode");
+            RestHomeItem.handleString(item, "rh_location_id");
+            RestHomeItem.handleString(item, "rh_type");
+            RestHomeItem.handleString(item, "rh_factory_property");
+            RestHomeItem.handleString(item, "rh_person_in_charge");
+            RestHomeItem.handleString(item, "rh_floor_surface");
+            RestHomeItem.handleString(item, "rh_building_area");
+            RestHomeItem.handleString(item, "rh_for_persons");
+            RestHomeItem.handleString(item, "rh_charges_extent");
+            RestHomeItem.handleString(item, "rh_special_services");
+            RestHomeItem.handleString(item, "rh_contact_person");
+            RestHomeItem.handleString(item, "rh_address");
+            RestHomeItem.handleString(item, "rh_url");
+            RestHomeItem.handleString(item, "rh_transportation");
+            RestHomeItem.handleString(item, "rh_inst_intro");
+            RestHomeItem.handleString(item, "rh_inst_charge");
+            RestHomeItem.handleString(item, "rh_facilities");
+            RestHomeItem.handleString(item, "rh_service_content");
+            RestHomeItem.handleString(item, "rh_inst_notes");
+            RestHomeItem.handleString(item, "rh_ylw_id");
 
-#RestHomeItem.handleDate(item, "rh_establishment_time")
-        RestHomeItem.handleString(item, "rh_establishment_time")
-#RestHomeItem.handleOneNum(item, "rh_bednum")
-        RestHomeItem.handleString(item, "rh_bednum")
-#RestHomeItem.handleOneNum(item, "rh_staff_num")
-        RestHomeItem.handleString(item, "rh_staff_num")
+            RestHomeItem.handleString(item, "rh_establishment_time")
+            RestHomeItem.handleString(item, "rh_bednum")
+            RestHomeItem.handleString(item, "rh_staff_num")
+        except Exception as e:
+            logger.critical("Error: init_item_field_to_default_if_null(), for rh_ylw_id: %s" % item['rh_ylw_id'])
+            logger.critical(e)
+
 
     def handleString(item, idx):
         try:

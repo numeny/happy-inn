@@ -78,10 +78,14 @@ class RhSql(object):
 
 
     def __init__(self):
-        logger.info("********* Start sql operation *******")
-        self.connect_to_sql()
-        self.create_resthome_table_if_neccesary()
-        self.excute_sql("set names utf8;")
+        try:
+            logger.info("********* Start sql operation *******")
+            self.connect_to_sql()
+            self.create_resthome_table_if_neccesary()
+            self.excute_sql("set names utf8;")
+        except Exception as e:
+            logger.critical("Error: sql.py.__init__()")
+            logger.critical(e)
 
     def connect_to_sql(self):
         logger.debug("connect_to_sql ...")
@@ -138,32 +142,40 @@ class RhSql(object):
         print("select_count ... count: %s" % result[0])
 
     def existed_rh_name(self, resthome_name, rh_ylw_id):
-        sql_str = RhSql.__sql_existed_rh_name
-        sql_str = sql_str.format(resthome_name, rh_ylw_id)
-        self.excute_sql(sql_str.format(resthome_name))
-        return self.cur.fetchone()
+        try:
+            sql_str = RhSql.__sql_existed_rh_name
+            sql_str = sql_str.format(resthome_name, rh_ylw_id)
+            self.excute_sql(sql_str.format(resthome_name))
+            return self.cur.fetchone()
+        except Exception as e:
+            logger.critical("Error: existed_rh_name(), for rh_ylw_id: %s" % rh_ylw_id)
+            logger.critical(e)
 
     def insert_data(self, item):
-        logger.debug("insert_data ...")
+        try:
+            logger.debug("insert_data ...")
 
-        ret = self.existed_rh_name(item["rh_name"], item["rh_ylw_id"])
-        if ret is not None:
-            logger.warning("the following resthome is existed: %s, %s" % (item["rh_name"].decode(), item["rh_ylw_id"].decode()))
-            return
+            ret = self.existed_rh_name(item["rh_name"], item["rh_ylw_id"])
+            if ret is not None:
+                logger.warning("the following resthome is existed: %s, %s" % (item["rh_name"].decode(), item["rh_ylw_id"].decode()))
+                return
 
-        sql_str = RhSql.__sql_insert_data
-        sql_str = (sql_str % (\
-                    item["rh_name"], item["rh_phone"], item["rh_location_id"],\
-                    item["rh_mobile"], item["rh_email"], item["rh_postcode"],\
-                    item["rh_type"], item["rh_factory_property"], item["rh_person_in_charge"],\
-                    item["rh_establishment_time"], item["rh_floor_surface"], item["rh_building_area"],\
-                    item["rh_bednum"], item["rh_for_persons"], item["rh_charges_extent"],\
-                    item["rh_special_services"], item["rh_contact_person"], item["rh_address"],\
-                    item["rh_url"], item["rh_transportation"], item["rh_inst_intro"],\
-                    item["rh_inst_charge"], item["rh_facilities"], item["rh_service_content"],\
-                    item["rh_inst_notes"], item["rh_ylw_id"], item["rh_staff_num"]))
+            sql_str = RhSql.__sql_insert_data
+            sql_str = (sql_str % (\
+                        item["rh_name"], item["rh_phone"], item["rh_location_id"],\
+                        item["rh_mobile"], item["rh_email"], item["rh_postcode"],\
+                        item["rh_type"], item["rh_factory_property"], item["rh_person_in_charge"],\
+                        item["rh_establishment_time"], item["rh_floor_surface"], item["rh_building_area"],\
+                        item["rh_bednum"], item["rh_for_persons"], item["rh_charges_extent"],\
+                        item["rh_special_services"], item["rh_contact_person"], item["rh_address"],\
+                        item["rh_url"], item["rh_transportation"], item["rh_inst_intro"],\
+                        item["rh_inst_charge"], item["rh_facilities"], item["rh_service_content"],\
+                        item["rh_inst_notes"], item["rh_ylw_id"], item["rh_staff_num"]))
 
-        self.excute_sql(sql_str)
+            self.excute_sql(sql_str)
+        except Exception as e:
+            logger.critical("Error: insert_data(), for rh_ylw_id: %s" % item['rh_ylw_id'])
+            logger.critical(e)
 
     def delete_all(self):
         logger.debug("delete_all ...")
@@ -183,8 +195,8 @@ class RhSql(object):
             logger.info("excute sql_str : ok")
             print("excute sql_str : ok")
         except Exception as e:
-            logger.error("execute sql Exception: %s" % sql_str)
-            logger.error(e)
+            logger.critical("execute sql Exception: %s" % sql_str)
+            logger.critical(e)
             print("execute sql Exception: %s" % sql_str)
             print(e)
             self.conn.rollback()
