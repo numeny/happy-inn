@@ -6,9 +6,8 @@ logger = my_log.get_my_logger()
 
 def create_dir(path):
     try:
-        if os.path.exists(path):
-            rmdir_recursive(path)
-        os.makedirs(path, 0775)
+        if not os.path.exists(path):
+            os.makedirs(path, 0775)
     except Exception as e:
         logger.warning("path : %s" % path)
         logger.warning(e)

@@ -3,6 +3,7 @@
 
 import sys
 import os
+import time
 
 import scrapy
 import logging
@@ -15,7 +16,6 @@ from utils import file_util
 
 from tutorial.rest_home_item import RestHomeItem
 
-
 logger = my_log.get_my_logger()
 total_privinces = 0
 total_pages = 0
@@ -24,6 +24,9 @@ total_idx = 0
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
     __pic_root_path = os.path.join("result", "picture")
+
+    __retry_url_map = {}
+    __MAX_RETRY_COUNT = 5
 
     def start_requests(self):
         logger.info("start_requests ...")
@@ -34,21 +37,49 @@ class QuotesSpider(scrapy.Spider):
 #            'http://www.yanglao.com.cn/resthome/20671.html',
 #            'http://www.yanglao.com.cn/resthome/20665.html',
 #            'http://www.yanglao.com.cn/resthome/20666.html',
-            'http://www.yanglao.com.cn',
+
+            'http://www.yanglao.com.cn/resthome/8120.html',
+#            'http://www.yanglao.com.cn',
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
+        '''
+        with open("/tmp/list.not.insert") as a:
+            a0 = a.readline()
+            while a0:
+                a0 = a0.replace("\n", "");
+                if len(a0) != 0:
+                    url = 'http://www.yanglao.com.cn/resthome/' + a0 + '.html'
+                    print(url)
+                    yield scrapy.Request(url=url, callback=self.parse)
+                a0 = a.readline()
+        '''
 
     def parse(self, response):
         global total_privinces
         global total_pages
         global total_idx
+        try:
 
+            print("parse ... url: %s" % response.url)
+            # retry request if failed
+            if response.status == 404:
+                if __retry_url_map.has_key(response.url):
+                    retry_cnt = __retry_url_map[response.url] + 1
+                else:
+                    retry_cnt = 1
+                __retry_url_map[response.url] = retry_cnt
+                if retry_cnt < __MAX_RETRY_COUNT:
+                    logger.debug("Failed 404: retry send request times [%d] for url: %s" % (retry_cnt, response.url))
+                    yield scrapy.Request(url=response.url, callback=self.parse)
+                else:
+                    logger.critical("Failed 404: request url: %s, exceed max retry time: %d" % response.url, __MAX_RETRY_COUNT)
+                    logger.critical(e)
+
+            '''
+            '''
         # all province
         # get all url of privice's resthome list
-        try:
-            '''
-            '''
             privince_url_list = response.xpath('//div[@class="hot-items"]/div[@class="hot-cities"]/dl/dd/a/@href').extract()
             for privince_url in privince_url_list:
                 privince_url = "http://www.yanglao.com.cn" + privince_url
@@ -85,6 +116,20 @@ class QuotesSpider(scrapy.Spider):
 
     def parse_one_rh(self, response):
         try:
+            # retry request if failed
+            if response.status == 404:
+                if __retry_url_map.has_key(response.url):
+                    retry_cnt = __retry_url_map[response.url] + 1
+                else:
+                    retry_cnt = 1
+                __retry_url_map[response.url] = retry_cnt
+                if retry_cnt < __MAX_RETRY_COUNT:
+                    logger.debug("Failed 404: retry send request times [%d] for url: %s" % (retry_cnt, response.url))
+                    yield scrapy.Request(url=response.url, callback=self.parse)
+                else:
+                    logger.critical("Failed 404: request url: %s, exceed max retry time: %d" % response.url, __MAX_RETRY_COUNT)
+                    logger.critical(e)
+
             logger.info("parsing one rest home's page ... url: %s" % response.url)
             # get title picture's src and send request
             title_pictures = response.xpath('//div[@class="inst-info"]/div[@class="cont"]/div[@class="inst-pic"]/img/@src').extract()

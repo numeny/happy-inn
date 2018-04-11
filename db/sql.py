@@ -35,8 +35,8 @@ class RhSql(object):
                 rh_address TEXT,\
                 rh_url TEXT,\
                 rh_transportation TEXT,\
-                rh_inst_intro TEXT,\
-                rh_inst_charge TEXT,\
+                rh_inst_intro MEDIUMTEXT,\
+                rh_inst_charge MEDIUMTEXT,\
                 rh_facilities TEXT,\
                 rh_service_content TEXT,\
                 rh_inst_notes TEXT,\
