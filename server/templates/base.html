@@ -7,7 +7,12 @@
 <body>
 <form action="/search" method="post">
 {% csrf_token %}
-<input type="text" name="q" />
+<input type="text" placeholder="input ylw id" name="q_id" />
+<input type="submit" />
+</form>
+<form action="/search" method="post">
+{% csrf_token %}
+<input type="text" placeholder="input yl name" name="q_name" />
 <input type="submit" />
 </form>
 
