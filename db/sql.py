@@ -145,7 +145,7 @@ class RhSql(object):
         try:
             sql_str = RhSql.__sql_existed_rh_name
             sql_str = sql_str.format(resthome_name, rh_ylw_id)
-            self.excute_sql(sql_str.format(resthome_name))
+            self.excute_sql(sql_str)
             return self.cur.fetchone()
         except Exception as e:
             logger.critical("Error: existed_rh_name(), for rh_ylw_id: %s" % rh_ylw_id)

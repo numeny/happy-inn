@@ -10,6 +10,8 @@ from scrapy import Selector
 sys.path.append("../../")
 
 from utils import my_log
+from tutorial.city_item import CityItem
+
 logger = my_log.get_my_logger()
 
 total_privinces = 0
@@ -69,3 +71,8 @@ class CityListSpider(scrapy.Spider):
             if "city" in response.meta:
                 c = response.meta["city"]
             print("[%s][%s][%s]" % (p, c, a))
+            ci = CityItem()
+            ci['privince'] = p
+            ci['city'] = c
+            ci['area'] = a
+            yield ci
