@@ -11,9 +11,16 @@
 <input type="submit" />
 </form>
 
-<p>{{ message }}</p>
     {% block mainbody %}
        <p>original</p>
     {% endblock %}
+<form action="/search" method="post">
+{% csrf_token %}
+<input type="submit" name="pre_page" value="上一页"/>
+<input type="submit" name="next_page" value="下一页"/>
+</form>
+
+<p>{{ message }}</p>
+
 </body>
 </html>
