@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <title></title>
+
+<script>
+function debug(msg)
+{
+    document.getElementById("my_message").innerHTML = msg;
+}
+</script>
 </head>
 <body>
 <form action="/search" method="post">
@@ -25,9 +32,10 @@
 <input type="submit" name="next_page" value="下一页"/>
 </form>
 
-<p>{{ message }}</p>
+<p id="my_message">{{ message }}</p>
 <br />
 
+{% block content %}
 <p>id: {{ record.id  | safe }} </p>
 {% if record.rh_ylw_id != null and record.rh_ylw_id != '-' %}
 <p>rh_ylw_id: {{ record.rh_ylw_id  | safe }} </p>
@@ -137,6 +145,7 @@
 <p>rh_inst_notes: {{ record.rh_inst_notes | safe }} </p>
 {% endif %}
 
+{% endblock %}
 <p> -------------------------- </p>
 <p> -------------------------- </p>
 

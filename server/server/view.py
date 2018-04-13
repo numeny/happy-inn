@@ -23,6 +23,20 @@ def start(request):
 
     return render(request, 'index.html', context)
 
+def edit(request):
+    global curr_index
+    context = {}
+    if "pre_page" in request.POST:
+        get_pre_page(context)
+    if "next_page" in request.POST:
+        get_next_page(context)
+    if "q_id" in request.POST:
+        get_page_from_rh_ylw_id(context, request.POST['q_id'])
+    if "q_name" in request.POST:
+        get_page_from_rh_name(context, request.POST['q_name'])
+
+    return render(request, 'edit.html', context)
+
 def get_pre_page(context):
     global curr_index
     context['message'] = 'pre_page'
