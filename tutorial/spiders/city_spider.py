@@ -46,20 +46,21 @@ class CityListSpider(scrapy.Spider):
         privinces = response.xpath('//div[@id="InsuAllCity"]/div[@class="insuccententul"]').extract()
         for p in privinces:
             total_privinces = total_privinces + 1
-            privince = Selector(text=p).xpath('//div[@class="insuccententul"]/div[@class="insuccententlileft"]/a[@class="query"]/text()').extract()
-            if len(privince) == 0:
-                privince_text = ""
-            else:
-                privince_text = privince[0]
-            logger.debug("request cities %d for prinvice [%s]" % (total_privinces, privince_text))
-            cities = Selector(text=p).xpath('//div[@class="insuccententul"]/div[@class="insuccententliright"]/a[@class="ameth2"]').extract()
+            privince = Selector(text=p).xpath('//div[@class="insuccententlileft"]/a[@class="query"]/text()').extract()
+            privince_text_is_null = (len(privince) == 0)
+            logger.debug("request privince [%d]" % (total_privinces))
+            cities = Selector(text=p).xpath('//div[@class="insuccententliright"]/a[@class="ameth2"]').extract()
             for c in cities:
                 city = Selector(text=c).xpath('//a[@class="ameth2"]/span/text()').extract()
                 city_url = Selector(text=c).xpath('//a[@class="ameth2"]/@href').extract()
                 if len(city) < 1 or len(city_url) < 1:
                     logger.critical("Error: len(city) < 1, for url: %s" % response.url)
-                if len(privince_text) == 0:
+                if privince_text_is_null:
                     privince_text = city[0]
+                else:
+                    privince_text = privince[0]
+                total_cities = total_cities + 1
+                logger.debug("----- request cities [%d] for prinvice [%s], city[%s]" % (total_cities, privince_text, city[0]))
                 yield scrapy.Request(url=city_url[0], callback=self.parse, meta={"privince": privince_text, "city": city[0]})
 
         areas = response.xpath('//div[@class="querywhere"]/div[@class="sanxiantj"]/div[@class="jigouquyu_right"]/label/a/text()').extract()
@@ -75,4 +76,6 @@ class CityListSpider(scrapy.Spider):
             ci['privince'] = p
             ci['city'] = c
             ci['area'] = a
+            total_areas = total_areas + 1
+            logger.debug("----- request area [%d] for prinvice [%s], city[%s], area[%s]" % (total_areas, p, c, a))
             yield ci

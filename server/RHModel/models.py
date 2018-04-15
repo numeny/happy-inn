@@ -35,3 +35,8 @@ class rh(models.Model):
     rh_service_content = models.TextField()
     rh_inst_notes = models.TextField()
     rh_ylw_id = models.TextField()
+
+class city(models.Model):
+    privince = models.TextField()
+    city = models.TextField()
+    area = models.TextField()
