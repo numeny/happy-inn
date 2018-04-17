@@ -1,0 +1,33 @@
+1.mysql:
+mysql -u bdg -p
+
+2.
+CREATE USER bdg IDENTIFIED BY '3';
+CREATE USER bdg@localhost IDENTIFIED BY '3';
+GRANT ALL PRIVILEGES ON *.* TO bdg;
+GRANT ALL PRIVILEGES ON *.* TO bdg@localhost;
+
+create database rh;
+
+cd ~/happy-inn/data.bak/db.use.command/ylw.and.ylxxw
+mysql -u "root" -p rh < rh.backup.sql
+
+3.
+python manage.py migrate
+python manage.py makemigrations RHModel
+python manage.py migrate RHModel
+
+mysql>
+alter table RHModel_rh convert to charset utf8;
+
+
+mysql>
+insert into RHModel_rh(rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id) select rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id from rh;
+
+
+
+修改区域：
+
+
+update rh set rh.rh_privince=city.privince rh.rh_city=city.city rh.rh_area=city.area where rh.rh_location_id like concat("\%", concat(substring(city.privince, 0, 2), '\%')) and rh.rh_location_id like concat('\%', concat(substring(city.city, 0, 2), '\%')) and rh.rh_location_id like concat('\%', concat(substring(city.area, 0, 2), '\%'));
+
