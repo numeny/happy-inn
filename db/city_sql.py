@@ -20,9 +20,9 @@ class CitySql(object):
                 PRIMARY KEY ( city_id )\
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 
-    __sql_select_name = "select * from rh where rh_name=\"{}\";"
-    __sql_select_all = "select * from rh;"
-    __sql_select_count = "select count(*) from rh;"
+    __sql_select_name = "select * from city where rh_name=\"{}\";"
+    __sql_select_all = "select * from city;"
+    __sql_select_count = "select count(*) from city;"
 
     __sql_delete_all = "delete from city;"
     __sql_drop_table = "drop table city;"
@@ -58,6 +58,13 @@ class CitySql(object):
     def create_resthome_table_if_neccesary(self):
         logger.debug("create_resthome_table_if_neccesary ...")
         self.excute_sql(CitySql.__sql_create_city_table)
+
+    def select_all(self):
+        logger.debug("select_all ...")
+        sql_str = CitySql.__sql_select_all
+        self.excute_sql(sql_str)
+        results = self.cur.fetchall()
+        return results
 
     def existed_city(self, p, c, a):
         try:
@@ -102,7 +109,7 @@ class CitySql(object):
             self.cur.execute(sql_str)
             self.conn.commit()
             logger.info("excute sql_str : ok")
-            print("excute sql_str : ok")
+#print("excute sql_str : ok")
         except Exception as e:
             logger.critical("execute sql Exception: %s" % sql_str)
             logger.critical(e)

@@ -17,17 +17,16 @@ python manage.py migrate
 python manage.py makemigrations RHModel
 python manage.py migrate RHModel
 
-mysql>
+
+
 alter table RHModel_rh convert to charset utf8;
 
 
-mysql>
+插入rh表到RHModel_rh:
 insert into RHModel_rh(rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id) select rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id from rh;
 
 
 
-修改区域：
-
-
-update rh set rh.rh_privince=city.privince rh.rh_city=city.city rh.rh_area=city.area where rh.rh_location_id like concat("\%", concat(substring(city.privince, 0, 2), '\%')) and rh.rh_location_id like concat('\%', concat(substring(city.city, 0, 2), '\%')) and rh.rh_location_id like concat('\%', concat(substring(city.area, 0, 2), '\%'));
-
+alter table rh add column rh_privince TEXT;
+alter table rh add column rh_city TEXT;
+alter table rh add column rh_area TEXT;
