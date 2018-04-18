@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<input type="button" onclick="starEdit()" id="edit" value="修改"/>
+
+<form action="/search" method="post">
+{% csrf_token %}
+<input size="30" type="text" id="id" name="id" value="{{ record.id  | safe }}" />
+<br />
+rh_ylw_id: <input size="30" type="text" id="rh_ylw_id" name="rh_ylw_id" value="{{ record.rh_ylw_id  | safe }}" />
+<br />
+rh_name: <input size="30" type="text" id="rh_name" name="rh_name" value="{{ record.rh_name  | safe }}" />
+<br />
+rh_phone: <input size="30" type="text" id="rh_phone" name="rh_phone" value="{{ record.rh_phone  | safe }}" />
+<br />
+rh_mobile: <input size="30" type="text" id="rh_mobile" name="rh_mobile" value="{{ record.rh_mobile  | safe }}" />
+<br />
+rh_email: <input size="30" type="text" id="rh_email" name="rh_email" value="{{ record.rh_email  | safe }}" />
+<br />
+rh_postcode: <input size="30" type="text" id="rh_postcode" name="rh_postcode" value="{{ record.rh_postcode  | safe }}" />
+<br />
+rh_location_id: <input size="30" type="text" id="rh_location_id" name="rh_location_id" value="{{ record.rh_location_id  | safe }}" />
+<br />
+rh_type: <input size="30" type="text" id="rh_type" name="rh_type" value="{{ record.rh_type  | safe }}" />
+<br />
+rh_factory_property: <input size="30" type="text" id="rh_factory_property" name="rh_factory_property" value="{{ record.rh_factory_property  | safe }}" />
+<br />
+rh_person_in_charge: <input size="30" type="text" id="rh_person_in_charge" name="rh_person_in_charge" value="{{ record.rh_person_in_charge  | safe }}" />
+<br />
+rh_establishment_time: <input size="30" type="text" id="rh_establishment_time" name="rh_establishment_time" value="{{ record.rh_establishment_time  | safe }}" />
+<br />
+rh_floor_surface: <input size="30" type="text" id="rh_floor_surface" name="rh_floor_surface" value="{{ record.rh_floor_surface  | safe }}" />
+<br />
+rh_building_area: <input size="30" type="text" id="rh_building_area" name="rh_building_area" value="{{ record.rh_building_area  | safe }}" />
+<br />
+rh_bednum: <input size="30" type="text" id="rh_bednum" name="rh_bednum" value="{{ record.rh_bednum  | safe }}" />
+<br />
+rh_staff_num: <input size="30" type="text" id="rh_staff_num" name="rh_staff_num" value="{{ record.rh_staff_num  | safe }}" />
+<br />
+rh_for_persons: <input size="30" type="text" id="rh_for_persons" name="rh_for_persons" value="{{ record.rh_for_persons }}" />
+<br />
+rh_charges_extent: <input size="30" type="text" id="rh_charges_extent" name="rh_charges_extent" value="{{ record.rh_charges_extent }}" />
+<br />
+rh_special_services: <input size="30" type="text" id="rh_special_services" name="rh_special_services" value="{{ record.rh_special_services }}" />
+<br />
+rh_contact_person: <input size="30" type="text" id="rh_contact_person" name="rh_contact_person" value="{{ record.rh_contact_person }}" />
+<br />
+rh_address: <input size="30" type="text" id="rh_address" name="rh_address" value="{{ record.rh_address }}" />
+<br />
+rh_url: <input size="30" type="text" id="rh_url" name="rh_url" value="{{ record.rh_url }}" />
+<br />
+rh_transportation: <input size="30" type="text" id="rh_transportation" name="rh_transportation" value="{{ record.rh_transportation }}" />
+<br />
+rh_inst_intro: <input size="30" type="text" id="rh_inst_intro" name="rh_inst_intro" value="{{ record.rh_inst_intro }}" />
+<br />
+rh_inst_charge: <input size="30" type="text" id="rh_inst_charge" name="rh_inst_charge" value="{{ record.rh_inst_charge }}" />
+<br />
+rh_facilities: <input size="30" type="text" id="rh_facilities" name="rh_facilities" value="{{ record.rh_facilities }}" />
+<br />
+rh_service_content: <input size="30" type="text" id="rh_service_content" name="rh_service_content" value="{{ record.rh_service_content }}" size="100" />
+<br />
+rh_inst_notes: <textarea id="rh_inst_notes" name="rh_inst_notes" row="10" value="{{ record.rh_inst_notes }}" />
+</form>
+
+<script>
+</script>
+
+{% endblock %}

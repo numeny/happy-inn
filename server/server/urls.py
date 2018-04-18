@@ -20,8 +20,8 @@ import view, testdb
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', view.edit),
-    url(r'^search$', view.edit),
+    url(r'^$', view.search),
+    url(r'^search$', view.search),
     url(r'^edit$', view.edit),
     url(r'^testdb$', testdb.testdb),
 ]
