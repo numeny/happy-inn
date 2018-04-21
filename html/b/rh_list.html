@@ -7,6 +7,7 @@
    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="js/index.js"></script>
 </head>
 <style>
 .list_item {
@@ -21,11 +22,30 @@
   list-style: none;
 }
 
+.stick_fixed {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 9;
+}
 /*FIXME, not use*/
 .align_v {
   vertical-align: baseline;
 }
+.occupy {
+  vertical-align: baseline;
+}
 </style>
+
+<script>
+$(function() { 
+var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
+spyObj.init();
+});
+
+</script>
+
+
 <body>
 
 <div class="container">
@@ -92,7 +112,7 @@
     </a>
 </div>
 
-<div class="container" id="accordion">
+<div class="container" id="rh_list_title_bar">
 	<div class="row visible-on">
 		<div class="col-xs-3 col-sm-3 text-center" style="background-color: #dedef8;">
             <a data-toggle="collapse" data-parent="#accordion" href="#rh-exchange">
@@ -151,13 +171,113 @@
 
 </div>
 
-<div class="container">
+<div class="container" id="rh_list">
 	<div class="row">
   <ul class="list_ul">
     <li class="list_item">
     <a class="media" href="rh_detail.html">
       <div class="media-left">
         <!--img class="media-object" width="100" height="100*0.618" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象"-->
+        <img class="media-object" width="100" height="80" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象">
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">媒体标题</h4>
+        <div>
+          <small>地址：</small>
+        </div>
+        <div>
+          <small>床位数：</small>
+        </div>
+        <div>
+          <small>收费：</small>
+        </div>
+      </div>
+    </a>
+    </li>
+
+    <li class="list_item">
+    <a class="media" href="rh_detail.html">
+      <div class="media-left">
+        <img class="media-object" width="100" height="80" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象">
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">媒体标题</h4>
+        <div>
+          <small>地址：</small>
+        </div>
+        <div>
+          <small>床位数：</small>
+        </div>
+        <div>
+          <small>收费：</small>
+        </div>
+      </div>
+    </a>
+    </li>
+
+    <li class="list_item">
+    <a class="media" href="rh_detail.html">
+      <div class="media-left">
+        <img class="media-object" width="100" height="80" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象">
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">媒体标题</h4>
+        <div>
+          <small>地址：</small>
+        </div>
+        <div>
+          <small>床位数：</small>
+        </div>
+        <div>
+          <small>收费：</small>
+        </div>
+      </div>
+    </a>
+    </li>
+
+    <li class="list_item">
+    <a class="media" href="rh_detail.html">
+      <div class="media-left">
+        <img class="media-object" width="100" height="80" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象">
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">媒体标题</h4>
+        <div>
+          <small>地址：</small>
+        </div>
+        <div>
+          <small>床位数：</small>
+        </div>
+        <div>
+          <small>收费：</small>
+        </div>
+      </div>
+    </a>
+    </li>
+
+    <li class="list_item">
+    <a class="media" href="rh_detail.html">
+      <div class="media-left">
+        <img class="media-object" width="100" height="80" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象">
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">媒体标题</h4>
+        <div>
+          <small>地址：</small>
+        </div>
+        <div>
+          <small>床位数：</small>
+        </div>
+        <div>
+          <small>收费：</small>
+        </div>
+      </div>
+    </a>
+    </li>
+
+    <li class="list_item">
+    <a class="media" href="rh_detail.html">
+      <div class="media-left">
         <img class="media-object" width="100" height="80" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象">
       </div>
       <div class="media-body">
