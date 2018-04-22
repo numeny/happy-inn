@@ -1,3 +1,5 @@
+$(function() {
+var host = "http://192.168.43.94/";
 function spyObject(spyElement, stickClass, brother, stickFunc) {
   var spyOffset = function() {
     if ($(spyElement).length != 1) {
@@ -46,4 +48,59 @@ function spyObject(spyElement, stickClass, brother, stickFunc) {
     },
   }
 }
+$(".unselect-item").click(function(e) {
+  targetElem = $(e.target);
+  var selectedElem = targetElem.siblings(".selected-item")
+  if (selectedElem.length != 1 || targetElem.length != 1) {
+      console.error("Selector [ .selected-item ] or click target : count != 1");
+  }
+  selectedElem.removeClass("selected-item");
+  selectedElem.addClass("unselect-item");
+  targetElem.removeClass("unselect-item");
+  targetElem.addClass("selected-item");
 
+  priceSelected = $("#priceList").children(".selected-item").attr("data-index");
+  bedSelected = $("#bedList").children(".selected-item").attr("data-index");
+  typeSelected = $("#typeList").children(".selected-item").attr("data-index");
+  propSelected = $("#propList").children(".selected-item").attr("data-index");
+
+  var url = host;
+  var query = "";
+  var hasQuery = false;
+  if (priceSelected != "0") {
+    hasQuery = true;
+    query = "pr=" + priceSelected;
+  }
+  if (bedSelected != "0") {
+    if (hasQuery) {
+      query = query + "&"
+    }
+    query = query + "bed=" + bedSelected;
+    hasQuery = true;
+  }
+  if (typeSelected != "0") {
+    if (hasQuery) {
+      query = query + "&"
+    }
+    query = query + "type=" + typeSelected;
+    hasQuery = true;
+  }
+  if (propSelected != "0") {
+    if (hasQuery) {
+      query = query + "&"
+    }
+    query = query + "prop=" + propSelected;
+    hasQuery = true;
+  }
+  if (query != undefined && query.length > 0) {
+    url = url + "?" + query;
+  }
+  var par = targetElem.parent();
+  var parPar = par.parent();
+  targetElem.parent().parent().collapse('hide')
+  //$('#identifier').collapse('hide')
+  // window.location.href = url;
+});
+
+
+});

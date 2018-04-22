@@ -7,9 +7,47 @@
    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+   <link rel="stylesheet" href="css/index.css">
    <script src="js/index.js"></script>
 </head>
 <style>
+a {
+  color: black;
+  text-decoration: none;
+}
+a:hover {
+  color: blue;
+  text-decoration: none;
+}
+
+.block-color-bar {
+  background-color: #dedef8;
+}
+
+.block-color-bar:hover {
+  background-color: #ccccff;
+}
+
+.block-color:hover {
+  background-color: #ccccff;
+}
+
+
+.selected-item {
+  background-color: #0000ff;
+}
+
+.unselect-item {
+  background-color: pink;
+}
+
+
+
+
+
+
+
 .list_item {
   border-bottom:1px solid #e5e5e5;
   margin: 8px 0px;
@@ -115,66 +153,77 @@ spyObj.init();
 <div class="container" id="rh_list_title_bar">
 	<div class="row visible-on">
 		<div class="col-xs-3 col-sm-3 text-center" style="background-color: #dedef8;">
-            <a data-toggle="collapse" data-parent="#accordion" href="#rh-exchange">
-                <h5>区域<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
-            </a>
+      <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-exchange">
+        <h5>价格<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+      </a>
+		</div>
+		<div class="col-xs-3 col-sm-3 text-center classify-div" style="background-color: #dedef8;">
+      <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-bed-num">
+        <h5>床位数<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+      </a>
 		</div>
 		<div class="col-xs-3 col-sm-3 text-center" style="background-color: #dedef8;">
-            <a data-toggle="collapse" data-parent="#accordion" href="#rh-exchange">
-                <h5>价格<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
-            </a>
+      <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-type">
+        <h5>类型<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+      </a>
 		</div>
 		<div class="col-xs-3 col-sm-3 text-center" style="background-color: #dedef8;">
-            <a data-toggle="collapse" data-parent="#accordion" href="#rh-bed-num">
-                <h5>床位数<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
-            </a>
-		</div>
-		<div class="col-xs-3 col-sm-3 text-center active" style="background-color: #dedef8;">
-            <a data-toggle="collapse" data-parent="#accordion" href="#rh-type">
-                <h5>类型<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
-            </a>
+      <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-prop">
+        <h5>类型<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+      </a>
 		</div>
 	</div>
 
 	<div class="row visible-on collapse" id="rh-exchange">
-    <ul class="list-group text-center">
-        <li class="list-group-item"><h5>价格100</h5></li>
-        <li class="list-group-item"><h5>价格200</h5></li>
-        <li class="list-group-item"><h5>价格300</h5></li>
-        <li class="list-group-item"><h5>价格400</h5></li>
-        <li class="list-group-item"><h5>价格500</h5></li>
-        <li class="list-group-item"><h5>价格100</h5></li>
+    <ul class="list-group text-center" id="priceList">
+      <li class="list-group-item selected-item" data-index="0">不限</li>
+      <li class="list-group-item unselect-item" data-index="1">1000以下</li>
+      <li class="list-group-item unselect-item" data-index="2">1000-2000</li>
+      <li class="list-group-item unselect-item" data-index="3">2000-3000</li>
+      <li class="list-group-item unselect-item" data-index="4">3000-5000</li>
+      <li class="list-group-item unselect-item" data-index="5">5000-10000</li>
+      <li class="list-group-item unselect-item" data-index="6">10000以上</li>
     </ul>
 	</div>
 
 	<div class="row visible-on collapse" id="rh-bed-num">
-    <ul class="list-group text-center">
-        <li class="list-group-item"><h5>床位100</h5></li>
-        <li class="list-group-item"><h5>床位200</h5></li>
-        <li class="list-group-item"><h5>床位300</h5></li>
-        <li class="list-group-item"><h5>床位400</h5></li>
-        <li class="list-group-item"><h5>床位500</h5></li>
-        <li class="list-group-item"><h5>床位600</h5></li>
+    <ul class="list-group text-center" id="bedList">
+      <li class="list-group-item selected-item" data-index="0">不限</li>
+      <li class="list-group-item unselect-item" data-index="1">50以下</li>
+      <li class="list-group-item unselect-item" data-index="2">50-100</li>
+      <li class="list-group-item unselect-item" data-index="3">100-200</li>
+      <li class="list-group-item unselect-item" data-index="4">200-300</li>
+      <li class="list-group-item unselect-item" data-index="5">300-500</li>
+      <li class="list-group-item unselect-item" data-index="6">500以上</li>
     </ul>
 	</div>
 
 	<div class="row visible-on collapse" id="rh-type">
-    <ul class="list-group text-center">
-        <li class="list-group-item"><h5>类型100</h5></li>
-        <li class="list-group-item"><h5>类型100</h5></li>
-        <li class="list-group-item"><h5>类型100</h5></li>
-        <li class="list-group-item"><h5>类型100</h5></li>
-        <li class="list-group-item"><h5>类型100</h5></li>
-        <li class="list-group-item"><h5>类型100</h5></li>
+    <ul class="list-group text-center" id="typeList">
+      <li class="list-group-item selected-item" data-index="0">不限</li>
+      <li class="list-group-item unselect-item" data-index="1">老年公寓</li>
+      <li class="list-group-item unselect-item" data-index="2">养老照料中心</li>
+      <li class="list-group-item unselect-item" data-index="3">护理院</li>
+      <li class="list-group-item unselect-item" data-index="4">其他</li>
     </ul>
 	</div>
+</div>
 
+	<div class="row visible-on collapse" id="rh-prop">
+    <ul class="list-group text-center" id="propList">
+      <li class="list-group-item selected-item" data-index="0">不限</li>
+      <li class="list-group-item unselect-item" data-index="1">国营机构</li>
+      <li class="list-group-item unselect-item" data-index="2">民营机构</li>
+      <li class="list-group-item unselect-item" data-index="3">公办民营</li>
+      <li class="list-group-item unselect-item" data-index="4">其他</li>
+    </ul>
+	</div>
 </div>
 
 <div class="container" id="rh_list">
 	<div class="row">
   <ul class="list_ul">
-    <li class="list_item">
+    <li class="list_item block-color">
     <a class="media" href="rh_detail.html">
       <div class="media-left">
         <!--img class="media-object" width="100" height="100*0.618" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象"-->
@@ -195,7 +244,7 @@ spyObj.init();
     </a>
     </li>
 
-    <li class="list_item">
+    <li class="list_item block-color">
     <a class="media" href="rh_detail.html">
       <div class="media-left">
         <img class="media-object" width="100" height="80" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象">
@@ -330,7 +379,6 @@ spyObj.init();
       <li><a href="#">&raquo;</a></li>
     </ul>
 	</div>
-
 
 </div>
 
