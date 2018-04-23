@@ -1,5 +1,5 @@
 $(function() {
-var host = "http://192.168.43.94/";
+var host = "http://192.168.43.94/rhdetails";
 function spyObject(spyElement, stickClass, brother, stickFunc) {
   var spyOffset = function() {
     if ($(spyElement).length != 1) {

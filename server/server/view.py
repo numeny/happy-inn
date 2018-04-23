@@ -23,6 +23,20 @@ def start(request):
 
     return render(request, 'index.html', context)
 
+def show_rh_detail(request):
+    context = {}
+    if "rhid" in request.GET:
+        get_page_from_rh_ylw_id(context, request.GET['rhid'])
+
+    return render(request, 'rh_detail.html', context)
+
+def show_rh_list(request):
+    context = {}
+    if "rhid" in request.GET:
+        get_page_from_rh_ylw_id(context, request.GET['rhid'])
+
+    return render(request, 'rh_detail.html', context)
+
 def edit(request):
     global curr_index
     context = {}
@@ -34,6 +48,9 @@ def edit(request):
         get_page_from_rh_ylw_id(context, request.POST['q_id'])
     if "q_name" in request.POST:
         get_page_from_rh_name(context, request.POST['q_name'])
+
+    # FIXME
+    get_next_page(context)
 
     return render(request, 'edit.html', context)
 

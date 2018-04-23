@@ -24,4 +24,6 @@ urlpatterns = [
     url(r'^search$', view.search),
     url(r'^edit$', view.edit),
     url(r'^testdb$', testdb.testdb),
+    url(r'^rhdetail', view.show_rh_detail),
+    url(r'^rhlist', view.show_rh_list),
 ]
