@@ -9,24 +9,31 @@
    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <style>
-.list_item {
-  border-bottom:1px solid #e5e5e5;
-  margin: 8px 0px;
-  padding: 0px;
-}
-.list_ul {
-  border-bottom:1px solid #e5e5e5;
-  margin: 8px 0px;
-  padding: 0px;
-  list-style: none;
-}
 
 .opt_bar{position:absolute;right:1.125rem;bottom:1rem;text-align:justify;height:1.25rem;line-height:1.25rem;padding:0 .5625rem;background-color:rgba(0,0,0,.5);border-radius:1.25rem;font-size:.8125rem}
 
-/*FIXME, not use*/
-.align_v {
-  vertical-align: baseline;
+.title_font {
+  font-size: 1.3em;
 }
+.chief_border {
+    border-style: solid;
+    border-width: 1px 0px;
+}
+
+.chief_border_1 {
+    border-style: solid;
+    border-width: 0px 1px;
+}
+.items_title {
+  margin: 20px;
+}
+.items_detail {
+  margin: 20px;
+}
+.item_detail {
+  margin: 10px;
+}
+
 </style>
 <body>
 
@@ -55,13 +62,10 @@
       <!--div class="col-xs-3 col-sm-6">
          <button type="button" class="btn btn-primary">Menu</button>
       </div-->
-   </div>
-
-</div>
+  </div><!--row-->
 
 
-
-<div class="container">
+  <div class="row text-center">
   <div id="myCarousel" class="container carousel slide">
     <!-- 轮播（Carousel）指标 -->
     <ol class="carousel-indicators">
@@ -97,34 +101,57 @@
       <span class="sr-only">Next</span>
     </a>
   </div>
-</div>
+  </div><!--row-->
+</div><!--container-->
 
 
-<div class="container">
+<div class="container" style="margin: 5px">
   <div class="row text-center">
-    <h4>Title</h4>
+    <h3>Title</h3>
   </div>
 
+  <div class="chief_border row">
+     <div class="col-xs-4 col-sm-4 chief_border_1">
+        <p>所在区域</p>
+        <strong class="title_font ">北京市-朝阳区</strong>
+     </div>
+     <div class="col-xs-4 col-sm-4 chief_border_1">
+        <p>床位数</p>
+        <strong class="title_font">100个</strong>
+     </div>
+     <div class="col-xs-4 col-sm-4 chief_border_1">
+        <p>性质</p>
+        <strong class="title_font">公建民营</strong>
+     </div>
+  </div>
   <div class="row">
-     <div class="col-xs-3 col-sm-3 text-left">
-       <div class="">
-           <a href="javascript:history.back();" class="header_back">
-             <span class="glyphicon glyphicon-chevron-left"></span>
-           </a>
-         <a href="/city/" class="city_wrap">
-           <span class="switch_city"><em class="city">北京</em><i class="icon_pull"></i></span>
-         </a>
-       </div>
-     </div>
-     <div class="col-xs-6 col-sm-6 text-center">
-       <img width="100" height="30" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="First slide">
-     </div>
-     <div class="col-xs-3 col-sm-3 text-right">
-       <span class="btn btn-default btn-md glyphicon glyphicon-user"></span>
-     </div>
-
-  </div>
-
+    <div class="items_title">
+      <div class="items_detail basic_info">
+        <strong class="title_font ">基本信息</strong>
+        <div class="item_detail">机构名称：<span>新疆乌鲁木齐信用养老社区</span></div>
+        <div class="item_detail">成立时间：<span>1999年09月09日</span></div>
+        <div class="item_detail">床位数量：<span>100个</span></div>
+        <div class="item_detail">收费区间：<span>1000-2000元</span></div>
+        <div class="item_detail">员工人数：<span>100个</span></div>
+        <div class="item_detail">机构性质：<span>国营机构</span></div>
+        <div class="item_detail">机构类型：<span>老年公寓</span></div>
+      </div><!--basic info-->
+      <div class="items_detail contact_info">
+        <strong class="title_font">联系信息</strong>
+        <div class="item_detail">联系人：<span>张</span></div>
+        <div class="item_detail">所在地区：<span>北京-北京-海淀</span></div>
+        <div class="item_detail">固定电话：<span>0233-88888888-777</span></div>
+        <div class="item_detail">手机号码：<span>18888888888</span></div>
+        <div class="item_detail">官方网址：<span>http://www.baidu.com</span></div>
+        <div class="item_detail">电子邮箱：<span>88888888@qq.com</span></div>
+        <div class="item_detail">邮政编码：<span>888888</span></div>
+        <div class="item_detail">联系地址：<span>新疆乌鲁木齐</span></div>
+      </div><!--contact info-->
+      <div class="items_detail introduction_info">
+        <strong class="title_font">机构介绍</strong>
+        <div class="item_detail">联系人：</div>
+      </div><!--contact info-->
+  </div><!--row-->
 </div>
 
 
