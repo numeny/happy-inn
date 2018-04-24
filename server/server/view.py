@@ -2,6 +2,7 @@
  
 import sys
 
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -32,10 +33,10 @@ def show_rh_detail(request):
 
 def show_rh_list(request):
     context = {}
-    if "rhid" in request.GET:
-        get_page_from_rh_ylw_id(context, request.GET['rhid'])
+    # FIXME
+    get_rh_list(context)
 
-    return render(request, 'rh_detail.html', context)
+    return render(request, 'rh_list.html', context)
 
 def edit(request):
     global curr_index
@@ -64,13 +65,21 @@ def get_pre_page(context):
         curr_index = 0
     context['record'] = db[curr_index]
 
+def get_rh_list(context):
+    global curr_index
+    context['message'] = 'next_page'
+    # FIXME, should not query all DB
+    db = rh.objects.filter(Q(rh_location_id__endswith="门头沟区"))
+    curr_index = curr_index + 1
+    context['records'] = db
+
 def get_next_page(context):
     global curr_index
     context['message'] = 'next_page'
     # FIXME, should not query all DB
     db = rh.objects.all()
     curr_index = curr_index + 1
-    context['record'] = db[curr_index]
+    context['records'] = db
 
 def get_page_from_rh_ylw_id(context, ylw_id):
     context['message'] = 'you are querying ylw id: ' + ylw_id

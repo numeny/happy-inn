@@ -20,7 +20,7 @@ import view, testdb
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', view.search),
+    url(r'^$', view.show_rh_list),
     url(r'^search$', view.search),
     url(r'^edit$', view.edit),
     url(r'^testdb$', testdb.testdb),
