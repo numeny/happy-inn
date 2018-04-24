@@ -27,14 +27,29 @@ def start(request):
 def show_rh_detail(request):
     context = {}
     if "rhid" in request.GET:
-        get_page_from_rh_ylw_id(context, request.GET['rhid'])
+        get_page_from_rh_id(context, request.GET['rhid'])
 
     return render(request, 'rh_detail.html', context)
 
 def show_rh_list(request):
     context = {}
+    area = ""
+    pr = ""
+    bed = ""
+    str_type = ""
+    prop = ""
+    if "area" in request.GET:
+        area = request.GET['area']
+    if "pr" in request.GET:
+        pr = request.GET['pr']
+    if "bed" in request.GET:
+        bednum = request.GET['bed']
+    if "type" in request.POST:
+        str_type = request.GET['type']
+    if "prop" in request.POST:
+        prop = request.GET['prop']
     # FIXME
-    get_rh_list(context)
+    get_rh_list(context, area, pr, bed, str_type, prop)
 
     return render(request, 'rh_list.html', context)
 
@@ -65,7 +80,7 @@ def get_pre_page(context):
         curr_index = 0
     context['record'] = db[curr_index]
 
-def get_rh_list(context):
+def get_rh_list(context, area, pr, bed, str_type, prop):
     global curr_index
     context['message'] = 'next_page'
     # FIXME, should not query all DB
@@ -80,6 +95,15 @@ def get_next_page(context):
     db = rh.objects.all()
     curr_index = curr_index + 1
     context['records'] = db
+
+def get_page_from_rh_id(context, rh_id):
+    context['message'] = 'you are querying rh_id: ' + rh_id
+    db = rh.objects.filter(id=rh_id)
+    if len(db) > 0:
+        # FIXME, should not query only one
+        context['record'] = db[0]
+    else:
+        context['message'] = context['message'] + ', Not Existed'
 
 def get_page_from_rh_ylw_id(context, ylw_id):
     context['message'] = 'you are querying ylw id: ' + ylw_id

@@ -1,3 +1,2 @@
 #!/bin/bash
-cd /home/bdg/happy-inn/server
-python manage.py runserver 8000&
+python `pwd`/server/manage.py runserver 8000&

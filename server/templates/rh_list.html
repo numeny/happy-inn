@@ -8,8 +8,8 @@
    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-   <link rel="stylesheet" href="css/index.css">
-   <script src="js/index.js"></script>
+   <link rel="stylesheet" href="/static/css/index.css">
+   <script src="/static/js/index.js"></script>
 </head>
 <style>
 a {
@@ -112,10 +112,7 @@ spyObj.init();
          <button type="button" class="btn btn-primary">Menu</button>
       </div-->
    </div>
-
 </div>
-
-
 
 <div id="myCarousel" class="container carousel slide">
     <!-- 轮播（Carousel）指标 -->
@@ -225,7 +222,7 @@ spyObj.init();
   <ul class="list_ul">
     {% for record in records %}
     <li class="list_item block-color">
-    <a class="media" href="rh_detail.html">
+    <a class="media" href="rhdetail?rhid={{ record.id | safe }}">
       <div class="media-left">
         <!--img class="media-object" width="100" height="100*0.618" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象"-->
         <img class="media-object" width="100" height="80" src="/static/images/1.jpg" alt="媒体对象">
