@@ -36,6 +36,10 @@ class rh(models.Model):
     rh_inst_notes = models.TextField()
     rh_ylw_id = models.TextField()
 
+    rh_charges_min = models.IntegerField(default=0)
+    rh_charges_max = models.IntegerField(default=1000000)
+    rh_bednum_int = models.IntegerField(default=0)
+
 class city(models.Model):
     privince = models.TextField()
     city = models.TextField()

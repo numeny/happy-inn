@@ -7,7 +7,10 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from RHModel.models import rh
- 
+
+sys.path.append("../")
+sys.path.append("../../")
+
 curr_index = 0
 
 def start(request):
@@ -125,8 +128,3 @@ def get_page_from_rh_name(context, rh_name):
 
 def search(request):
     return start(request)
-
-'''
-def start(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-'''
