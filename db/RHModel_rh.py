@@ -60,7 +60,7 @@ for r in records:
     r.rh_charges_min = chargesMin
     r.rh_charges_max = chargesMax
 
-    if r.rh_factory_property.startswith('ff'):
+    if r.rh_ylw_id.startswith("ff"):
         rh_prop = r.rh_factory_property
         rh_type = r.rh_type
 
