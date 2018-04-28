@@ -31,7 +31,11 @@ def show_rh_detail(request):
     context = {}
     if "rhid" in request.GET:
         get_page_from_rh_id(context, request.GET['rhid'])
-
+    if "user_name" in request.session:
+        context["user_name"] = request.session['user_name']
+        context["session_key"] = request.session.session_key
+    else:
+        request.session['user_name'] = "admin"
     return render(request, 'rh_detail.html', context)
 
 def show_rh_list(request):
