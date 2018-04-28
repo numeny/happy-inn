@@ -35,6 +35,9 @@ class rh(models.Model):
     rh_service_content = models.TextField()
     rh_inst_notes = models.TextField()
     rh_ylw_id = models.TextField()
+    rh_privince = models.TextField()
+    rh_city = models.TextField()
+    rh_area = models.TextField()
 
     rh_charges_min = models.IntegerField(default=0)
     rh_charges_max = models.IntegerField(default=1000000)

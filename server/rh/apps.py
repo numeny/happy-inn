@@ -4,5 +4,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class RhmodelConfig(AppConfig):
-    name = 'RHModel'
+class RhConfig(AppConfig):
+    name = 'rh'

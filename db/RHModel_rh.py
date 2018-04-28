@@ -11,13 +11,14 @@ import django
 
 django.setup()
 
-from RHModel import models
+from rh import models
 from django.db.models import Q
 
-#records = models.rh.objects.all()
-records = models.rh.objects.filter(Q(rh_ylw_id__startswith="ff"))
+records = models.rh.objects.all()
+#records = models.rh.objects.filter(Q(rh_ylw_id__startswith="ff"))
 #print len(records)
 for r in records:
+    '''
     '''
     rh_bednum = r.rh_bednum.encode('utf-8').replace("张", "").replace("-", "0")
 
@@ -58,17 +59,19 @@ for r in records:
     print("[%d %d]                    rh_ylw_id: %s[%s]" % (chargesMin, chargesMax, r.rh_ylw_id.encode('utf-8'), r.rh_charges_extent.encode('utf-8')));
     r.rh_charges_min = chargesMin
     r.rh_charges_max = chargesMax
-    '''
-    rh_prop = r.rh_factory_property
-    rh_type = r.rh_type
 
-    if len(rh_prop) == 0 or rh_prop == '-':
-        print("rh_ylw_id: %s[%s]" % (r.rh_ylw_id.encode('utf-8'), rh_prop.encode('utf-8')));
-        rh_prop = "其他"
-    if len(rh_type) == 0 or rh_type == '-':
-        print("rh_ylw_id: %s[%s]" % (r.rh_ylw_id.encode('utf-8'), rh_type.encode('utf-8')));
-        rh_type = "其他"
+    if r.rh_factory_property.startswith('ff'):
+        rh_prop = r.rh_factory_property
+        rh_type = r.rh_type
 
-    r.rh_factory_property = rh_type
-    r.rh_type = rh_prop
+        if len(rh_prop) == 0 or rh_prop == '-':
+            print("rh_ylw_id: %s[%s]" % (r.rh_ylw_id.encode('utf-8'), rh_prop.encode('utf-8')));
+            rh_prop = "其他"
+        if len(rh_type) == 0 or rh_type == '-':
+            print("rh_ylw_id: %s[%s]" % (r.rh_ylw_id.encode('utf-8'), rh_type.encode('utf-8')));
+            rh_type = "其他"
+
+        r.rh_factory_property = rh_type
+        r.rh_type = rh_prop
+
     r.save()

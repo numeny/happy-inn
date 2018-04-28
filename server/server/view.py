@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from RHModel.models import rh
+from rh.models import rh
 
 sys.path.append("../")
 sys.path.append("../../")
