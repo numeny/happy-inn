@@ -20,7 +20,7 @@ records = models.rh.objects.all()
 for r in records:
     '''
     '''
-    rh_bednum = r.rh_bednum.encode('utf-8').replace("张", "").replace("-", "0")
+    r.rh_bednum = r.rh_bednum.encode('utf-8').replace("张", "").replace("-", "0")
 
     rh_charges_extent = r.rh_charges_extent.encode('utf-8').replace("元", "").replace("--", "-");
     idxLine = rh_charges_extent.find('-');
