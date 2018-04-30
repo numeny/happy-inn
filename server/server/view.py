@@ -89,11 +89,11 @@ def get_pre_page(context):
 
 def get_rh_list(context, area, pr, bed, str_type, prop):
     global curr_index
-    context['message'] = 'next_page'
     # FIXME, should not query all DB
-    db = rh.objects.filter(Q(rh_location_id__endswith="门头沟区"))
+    db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
     curr_index = curr_index + 1
     context['records'] = db
+    context['message'] = len(db)
 
 def get_next_page(context):
     global curr_index
