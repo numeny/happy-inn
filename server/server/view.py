@@ -33,30 +33,39 @@ def show_rh_detail(request):
         get_page_from_rh_id(context, request.GET['rhid'])
     if "user_name" in request.session:
         context["user_name"] = request.session['user_name']
-        context["session_key"] = request.session.session_key
     else:
         request.session['user_name'] = "admin"
+    context["session_key"] = request.session.session_key
     return render(request, 'rh_detail.html', context)
-
+#host/city/area_id/rh/
 def show_rh_list(request):
     context = {}
+    privince = ""
+    city = ""
     area = ""
-    pr = ""
+    price = ""
     bed = ""
     str_type = ""
     prop = ""
+
+    '''
+    '''
+    if "prov" in request.GET:
+        privince = request.GET['prov']
+    if "city" in request.GET:
+        city = request.GET['city']
     if "area" in request.GET:
         area = request.GET['area']
-    if "pr" in request.GET:
-        pr = request.GET['pr']
+    if "price" in request.GET:
+        price = request.GET['price']
     if "bed" in request.GET:
-        bednum = request.GET['bed']
-    if "type" in request.POST:
+        bed = request.GET['bed']
+    if "type" in request.GET:
         str_type = request.GET['type']
-    if "prop" in request.POST:
+    if "prop" in request.GET:
         prop = request.GET['prop']
     # FIXME
-    get_rh_list(context, area, pr, bed, str_type, prop)
+    get_rh_list(context, privince, city, area, price, bed, str_type, prop)
 
     return render(request, 'rh_list.html', context)
 
@@ -87,13 +96,20 @@ def get_pre_page(context):
         curr_index = 0
     context['record'] = db[curr_index]
 
-def get_rh_list(context, area, pr, bed, str_type, prop):
+def get_rh_list(context, privince, city, area, price, bed, str_type, prop):
     global curr_index
     # FIXME, should not query all DB
     db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
     curr_index = curr_index + 1
     context['records'] = db
-    context['message'] = len(db)
+    context['message'] = "privince: " + privince
+    context['message'] = context['message'] + ", city: " + city
+    context['message'] = context['message'] + ", area: "+ area
+    context['message'] = context['message'] + ", price: "+ str(price)
+    context['message'] = context['message'] + ", bed: "+ str(bed)
+    context['message'] = context['message'] + ", str_type: " + str(str_type)
+    context['message'] = context['message'] + ", prop: "+ str(prop)
+    print(context['message'])
 
 def get_next_page(context):
     global curr_index

@@ -1,5 +1,6 @@
 $(function() {
-var host = "http://localhost:8000/rhlist";
+var host = "http://localhost:8002/rhlist";
+
 function spyObject(spyElement, stickClass, brother, stickFunc) {
   var spyOffset = function() {
     if ($(spyElement).length != 1) {
@@ -48,28 +49,53 @@ function spyObject(spyElement, stickClass, brother, stickFunc) {
     },
   }
 }
-$(".unselect-item").click(function(e) {
-  targetElem = $(e.target);
-  var selectedElem = targetElem.siblings(".selected-item")
-  if (selectedElem.length != 1 || targetElem.length != 1) {
-      console.error("Selector [ .selected-item ] or click target : count != 1");
-  }
-  selectedElem.removeClass("selected-item");
-  selectedElem.addClass("unselect-item");
-  targetElem.removeClass("unselect-item");
-  targetElem.addClass("selected-item");
 
+function onRhListRequestShow() {
+  var url = host;
+  var query = "";
+  var hasQuery = false;
+
+  // select area
+  privinceSelected = $("#privince").text();
+  citySelected = $("#city").text();
+  areaSelected = $("#area").text();
+
+  if (privinceSelected.length != 0) {
+    if (hasQuery) {
+      query = query + "&"
+    }
+    query = query + "prov=" + privinceSelected;
+    hasQuery = true;
+  }
+
+  if (citySelected.length != 0) {
+    if (hasQuery) {
+      query = query + "&"
+    }
+    query = query + "city=" + citySelected;
+    hasQuery = true;
+  }
+
+  if (areaSelected.length != 0) {
+    if (hasQuery) {
+      query = query + "&"
+    }
+    query = query + "area=" + areaSelected;
+    hasQuery = true;
+  }
+
+  // select price, bednum, type, property, etc.
   priceSelected = $("#priceList").children(".selected-item").attr("data-index");
   bedSelected = $("#bedList").children(".selected-item").attr("data-index");
   typeSelected = $("#typeList").children(".selected-item").attr("data-index");
   propSelected = $("#propList").children(".selected-item").attr("data-index");
 
-  var url = host;
-  var query = "";
-  var hasQuery = false;
   if (priceSelected != "0") {
+    if (hasQuery) {
+      query = query + "&"
+    }
+    query = "price=" + priceSelected;
     hasQuery = true;
-    query = "pr=" + priceSelected;
   }
   if (bedSelected != "0") {
     if (hasQuery) {
@@ -95,11 +121,24 @@ $(".unselect-item").click(function(e) {
   if (query != undefined && query.length > 0) {
     url = url + "?" + query;
   }
-  var par = targetElem.parent();
-  var parPar = par.parent();
-  targetElem.parent().parent().collapse('hide')
-  //$('#identifier').collapse('hide')
   window.location.href = url;
+}
+
+$(".unselect-item").click(function(e) {
+  targetElem = $(e.target);
+  var selectedElem = targetElem.siblings(".selected-item")
+  if (selectedElem.length != 1 || targetElem.length != 1) {
+      console.error("Selector [ .selected-item ] or click target : count != 1");
+  }
+  selectedElem.removeClass("selected-item");
+  selectedElem.addClass("unselect-item");
+  targetElem.removeClass("unselect-item");
+  targetElem.addClass("selected-item");
+
+  targetElem.parent().parent().collapse('hide');
+  //$('#identifier').collapse('hide');
+
+  onRhListRequestShow();
 });
 
 

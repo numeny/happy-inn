@@ -77,17 +77,16 @@ a:hover {
 
 <script>
 $(function() { 
-/*
+$(function() {
 var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
 spyObj.init();
-*/
 });
 
 </script>
 
 
 <body>
-<!--div>message: <p><em>{{ message }}</em></p></div-->
+<div>message: <p><em>{{ message }}</em></p></div>
 <div class="container">
    <div class="row">
       <div class="col-xs-3 col-sm-3 text-left">
@@ -96,7 +95,7 @@ spyObj.init();
               <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
           <a href="/city/" class="city_wrap">
-            <span class="switch_city"><em class="city">北京</em><i class="icon_pull"></i></span>
+            <span class="switch_city"><em id="privince">北京市</em><em id="city">北京市</em><em id="area">海淀区</em><i class="icon_pull"></i></span>
           </a>
         </div>
       </div>
