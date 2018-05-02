@@ -96,11 +96,56 @@ def get_pre_page(context):
         curr_index = 0
     context['record'] = db[curr_index]
 
+'''
+'''
+def get_price_q_query(price):
+    if price == '1':
+        price_filter = (Q(rh_charges_min__gte=0) & Q(rh_charges_min__lte=1000)) | (Q(rh_charges_max__gte=0) & Q(rh_charges_max__lte=1000))
+    elif price == '2':
+        price_filter = (Q(rh_charges_min__gte=1000) & Q(rh_charges_min__lte=2000)) | (Q(rh_charges_max__gte=1000) & Q(rh_charges_max__lte=2000))
+    elif price == '3':
+        price_filter = (Q(rh_charges_min__gte=2000) & Q(rh_charges_min__lte=3000)) | (Q(rh_charges_max__gte=2000) & Q(rh_charges_max__lte=3000))
+    elif price == '4':
+        price_filter = (Q(rh_charges_min__gte=3000) & Q(rh_charges_min__lte=5000)) | (Q(rh_charges_max__gte=3000) & Q(rh_charges_max__lte=5000))
+    elif price == '5':
+        price_filter = (Q(rh_charges_min__gte=5000) & Q(rh_charges_min__lte=10000)) | (Q(rh_charges_max__gte=5000) & Q(rh_charges_max__lte=10000))
+    elif price == '6':
+        price_filter = Q(rh_charges_min__gte=10000) | Q(rh_charges_max__gte=10000)
+    else:
+        # FIXME
+        price_filter = None
+    return price_filter
+
+def get_bednum_q_query(bednum):
+    if bednum == '1':
+        bednum_int_filter = Q(rh_bednum_int__lt=50)
+    elif bednum == '2':
+        bednum_int_filter = Q(rh_bednum_int__gte=50) & Q(rh_bednum_int__lt=100)
+    elif bednum == '3':
+        bednum_int_filter = Q(rh_bednum_int__gte=100) & Q(rh_bednum_int__lt=200)
+    elif bednum == '4':
+        bednum_int_filter = Q(rh_bednum_int__gte=200) & Q(rh_bednum_int__lt=300)
+    elif bednum == '5':
+        bednum_int_filter = Q(rh_bednum_int__gte=300) & Q(rh_bednum_int__lt=500)
+    elif bednum == '6':
+        bednum_int_filter = Q(rh_bednum_int__gte=500)
+    else:
+        # FIXME
+        bednum_int_filter = None
+    return bednum_int_filter
+
 def get_rh_list(context, privince, city, area, price, bed, str_type, prop):
-    global curr_index
     # FIXME, should not query all DB
-    db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
-    curr_index = curr_index + 1
+    # db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
+    all_filter = Q(rh_area__endswith="海淀区")
+    if len(bed) != 0 and bed != '0':
+        bednum_filter = get_bednum_q_query(bed)
+        all_filter = all_filter & bednum_filter
+    if len(price) != 0 and price != '0':
+        price_filter = get_price_q_query(price)
+        all_filter = all_filter & price_filter
+    db = rh.objects.filter(all_filter)
+
     context['records'] = db
     context['message'] = "privince: " + privince
     context['message'] = context['message'] + ", city: " + city

@@ -21,7 +21,17 @@ for r in records:
     '''
     '''
     r.rh_bednum = r.rh_bednum.encode('utf-8').replace("张", "").replace("-", "0")
+    str_bednum = r.rh_bednum.strip()
+    if len(str_bednum) == 0:
+        int_bednum = 0
+    elif str_bednum.isdigit():
+        int_bednum = int(str_bednum)
+    else:
+        print("Error: rh_bednum is unormal, for rh_ylw_id: %s, rh_bednum: %s" % (r.rh_ylw_id, r.rh_bednum))
+    r.rh_bednum_int = int_bednum
 
+    '''
+    '''
     rh_charges_extent = r.rh_charges_extent.encode('utf-8').replace("元", "").replace("--", "-");
     idxLine = rh_charges_extent.find('-');
     len_rh_charges_extent = len(rh_charges_extent)
@@ -60,6 +70,7 @@ for r in records:
     r.rh_charges_min = chargesMin
     r.rh_charges_max = chargesMax
 
+    # exchange rh_prop and rh_type for ylxxw's record
     if r.rh_ylw_id.startswith("ff"):
         rh_prop = r.rh_factory_property
         rh_type = r.rh_type
