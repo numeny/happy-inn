@@ -1,5 +1,5 @@
 $(function() {
-var host = "http://localhost:8002/rhlist";
+var host = "http://localhost:8000/rhlist";
 
 function spyObject(spyElement, stickClass, brother, stickFunc) {
   var spyOffset = function() {
