@@ -12,6 +12,7 @@ sys.path.append("../")
 sys.path.append("../../")
 
 curr_index = 0
+rh_num_per_page = 15
 
 def start(request):
     global curr_index
@@ -47,6 +48,7 @@ def show_rh_list(request):
     bed = ""
     str_type = ""
     prop = ""
+    page = ""
 
     '''
     '''
@@ -64,8 +66,11 @@ def show_rh_list(request):
         str_type = request.GET['type']
     if "prop" in request.GET:
         prop = request.GET['prop']
+    if "page" in request.GET:
+        page = request.GET['page']
     # FIXME
-    get_rh_list(context, privince, city, area, price, bed, str_type, prop)
+    get_rh_list(context, privince, city, area,
+            price, bed, str_type, prop, page)
 
     return render(request, 'rh_list.html', context)
 
@@ -134,19 +139,72 @@ def get_bednum_q_query(bednum):
         bednum_int_filter = None
     return bednum_int_filter
 
-def get_rh_list(context, privince, city, area, price, bed, str_type, prop):
+def get_type_q_query(str_type):
+    if str_type == '1':
+        str_type_filter = Q(rh_type__startswith='老年公寓')
+    elif str_type == '2':
+        str_type_filter = Q(rh_type__startswith='养老照料中心')
+    elif str_type == '3':
+        str_type_filter = Q(rh_type__startswith='护理院')
+    elif str_type == '4':
+        str_type_filter = Q(rh_type__startswith='其他')
+    else:
+        # FIXME
+        str_type_filter = None
+    return str_type_filter
+
+def get_prop_q_query(prop):
+    if prop == '1':
+        prop_filter = Q(rh_factory_property__startswith='国营机构')
+    elif prop == '2':
+        prop_filter = Q(rh_factory_property__startswith='民营机构')
+    elif prop == '3':
+        prop_filter = Q(rh_factory_property__startswith='公办民营')
+    elif prop == '4':
+        prop_filter = Q(rh_factory_property__startswith='其他')
+    else:
+        # FIXME
+        prop_filter = None
+    return prop_filter
+
+def get_rh_list(context, privince, city, area,
+        price, bed, str_type, prop, page):
+    global rh_num_per_page
     # FIXME, should not query all DB
     # db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
     all_filter = Q(rh_area__endswith="海淀区")
-    if len(bed) != 0 and bed != '0':
-        bednum_filter = get_bednum_q_query(bed)
-        all_filter = all_filter & bednum_filter
+
     if len(price) != 0 and price != '0':
         price_filter = get_price_q_query(price)
         all_filter = all_filter & price_filter
-    db = rh.objects.filter(all_filter)
 
-    context['records'] = db
+    if len(bed) != 0 and bed != '0':
+        bednum_filter = get_bednum_q_query(bed)
+        all_filter = all_filter & bednum_filter
+
+    if len(str_type) != 0 and str_type != '0':
+        str_type_filter = get_type_q_query(str_type)
+        all_filter = all_filter & str_type_filter
+
+    if len(prop) != 0 and prop != '0':
+        prop_filter = get_prop_q_query(prop)
+        all_filter = all_filter & prop_filter
+
+    records = rh.objects.filter(all_filter)
+    page_num = len(records) / rh_num_per_page + 1
+
+    if len(page) != 0:
+        page_idx = int(page)
+    else:
+        page_idx = 0
+
+    ret_records = []
+    for idx, r in enumerate(records):
+        if idx >= page_idx * rh_num_per_page and idx < (page_idx + 1) * rh_num_per_page:
+            ret_records.append(r)
+
+    context['records'] = ret_records
+    context['page_num'] = page_num
     context['message'] = "privince: " + privince
     context['message'] = context['message'] + ", city: " + city
     context['message'] = context['message'] + ", area: "+ area

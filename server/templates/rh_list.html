@@ -42,11 +42,13 @@ a:hover {
   background-color: pink;
 }
 
+.selected-page-idx {
+  color: #0000ff;
+}
 
-
-
-
-
+.unselect-item {
+  text-color: pink;
+}
 
 .list_item {
   border-bottom:1px solid #e5e5e5;
@@ -250,14 +252,15 @@ spyObj.init();
 
 
 	<div class="row text-center">
-    <ul class="pagination">
-      <li><a href="#">&laquo;</a></li>
-      <li><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      <li><a href="#">&raquo;</a></li>
+    <ul class="pagination" id="page-idx">
+      <li>&laquo;</li>
+      <li class="selected-page-idx" data-index="1">1</li>
+      <li class="unselect-page-idx" data-index="2">2</li>
+      <li class="unselect-page-idx" data-index="3">3</li>
+      <li class="unselect-page-idx" data-index="4">4</li>
+      <li class="unselect-page-idx" data-index="5">5</li>
+      <li class="unselect-page-idx" data-index="6">{{ page_num }}</li>
+      <li>&raquo;</li>
     </ul>
 	</div>
 

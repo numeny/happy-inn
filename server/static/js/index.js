@@ -1,5 +1,5 @@
 $(function() {
-var host = "http://localhost:8000/rhlist";
+var host = "http://localhost:8001/rhlist";
 
 function spyObject(spyElement, stickClass, brother, stickFunc) {
   var spyOffset = function() {
@@ -89,6 +89,7 @@ function onRhListRequestShow() {
   bedSelected = $("#bedList").children(".selected-item").attr("data-index");
   typeSelected = $("#typeList").children(".selected-item").attr("data-index");
   propSelected = $("#propList").children(".selected-item").attr("data-index");
+  pageSelected = $("#page-idx").children(".selected-page-idx").attr("data-index");
 
   if (priceSelected != "0") {
     if (hasQuery) {
@@ -118,9 +119,19 @@ function onRhListRequestShow() {
     query = query + "prop=" + propSelected;
     hasQuery = true;
   }
+
+  if (pageSelected != "1") {
+    if (hasQuery) {
+      query = query + "&"
+    }
+    query = query + "page=" + pageSelected;
+    hasQuery = true;
+  }
+
   if (query != undefined && query.length > 0) {
     url = url + "?" + query;
   }
+
   window.location.href = url;
 }
 
@@ -141,5 +152,18 @@ $(".unselect-item").click(function(e) {
   onRhListRequestShow();
 });
 
+$(".unselect-page-idx").click(function(e) {
+  targetElem = $(e.target);
+  var selectedElem = targetElem.siblings(".selected-page-idx")
+  if (selectedElem.length != 1 || targetElem.length != 1) {
+      console.error("Selector [ .selected-page-idx ] or click target : count != 1");
+  }
+  selectedElem.removeClass("selected-page-idx");
+  selectedElem.addClass("unselect-page-idx");
+  targetElem.removeClass("unselect-page-idx");
+  targetElem.addClass("selected-page-idx");
+
+  onRhListRequestShow();
+});
 
 });
