@@ -193,10 +193,10 @@ def get_rh_list(context, privince, city, area,
     records = rh.objects.filter(all_filter)
     page_num = len(records) / rh_num_per_page + 1
 
-    if len(page) != 0:
-        page_idx = int(page)
+    if len(page) == 0 or page == '0':
+        page_idx = 1
     else:
-        page_idx = 0
+        page_idx = int(page)
 
     ret_records = []
     for idx, r in enumerate(records):
@@ -205,7 +205,30 @@ def get_rh_list(context, privince, city, area,
 
     context['records'] = ret_records
     context['page_num'] = page_num
+    context['curr_page'] = str(page_idx)
+    if len(price) == 0:
+        context['curr_price'] = '0'
+    else:
+        context['curr_price'] = price
+
+    if len(bed) == 0:
+        context['curr_bednum'] = '0'
+    else:
+        context['curr_bednum'] = bed
+
+    if len(str_type) == 0:
+        context['curr_type'] = '0'
+    else:
+        context['curr_type'] = str_type
+
+    if len(prop) == 0:
+        context['curr_prop'] = '0'
+    else:
+        context['curr_prop'] = prop
+
     context['message'] = "privince: " + privince
+    context['message'] = context['message'] + ", page_idx: "+ str(page_idx)
+    context['message'] = context['message'] + ", page: "+ str(page)
     context['message'] = context['message'] + ", city: " + city
     context['message'] = context['message'] + ", area: "+ area
     context['message'] = context['message'] + ", price: "+ str(price)

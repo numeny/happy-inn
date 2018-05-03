@@ -169,7 +169,7 @@ spyObj.init();
 		</div>
 		<div class="col-xs-3 col-sm-3 text-center" style="background-color: #dedef8;">
       <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-prop">
-        <h5>类型<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+        <h5>性质<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
       </a>
 		</div>
 	</div>
@@ -250,17 +250,16 @@ spyObj.init();
   </ul>
 	</div>
 
-
 	<div class="row text-center">
     <ul class="pagination" id="page-idx">
-      <li>&laquo;</li>
-      <li class="selected-page-idx" data-index="1">1</li>
-      <li class="unselect-page-idx" data-index="2">2</li>
-      <li class="unselect-page-idx" data-index="3">3</li>
-      <li class="unselect-page-idx" data-index="4">4</li>
-      <li class="unselect-page-idx" data-index="5">5</li>
-      <li class="unselect-page-idx" data-index="6">{{ page_num }}</li>
-      <li>&raquo;</li>
+      <!--li>&laquo;</li>
+      <li class="selected-page-idx" data-page-index="1">1</li>
+      <li class="unselect-page-idx" data-page-index="2">2</li>
+      <li class="unselect-page-idx" data-page-index="3">3</li>
+      <li class="unselect-page-idx" data-page-index="4">4</li>
+      <li class="unselect-page-idx" data-page-index="5">5</li>
+      <li class="unselect-page-idx" data-page-index="6">{{ page_num }}</li>
+      <li>&raquo;</li-->
     </ul>
 	</div>
 
@@ -269,5 +268,67 @@ spyObj.init();
 <div class="container">
 </div>
 
+
+<script type="text/javascript">
+$(function() {
+
+str_all_page_list = ""
+var page_num = parseInt({{ page_num }});
+var curr_page = parseInt({{ curr_page }});
+var start_page = 0;
+var end_page = 0;
+var pages_per_web_page = 5;
+var middle_of_pages = parseInt(pages_per_web_page / 2);
+if (page_num <= pages_per_web_page) {
+    start_page = 1;
+    end_page = page_num;
+} else if (curr_page <= middle_of_pages) {
+    start_page = 1;
+    end_page = pages_per_web_page;
+} else if (page_num - curr_page <= middle_of_pages) {
+    start_page = page_num - pages_per_web_page + 1;
+    end_page = page_num;
+} else {
+    start_page = curr_page - middle_of_pages;
+    end_page = curr_page - middle_of_pages + pages_per_web_page - 1;
+}
+
+if (start_page > 1) {
+    str_all_page_list = str_all_page_list + "<li>&laquo;</li>";
+}
+for (i = start_page; i <= end_page; i++) {
+    str_all_page_list = str_all_page_list + "<li data-page-index=\"" + i + "\">" + i + "</li>";
+}
+if (end_page < page_num) {
+    str_all_page_list = str_all_page_list + "<li>&raquo;</li>";
+}
+$("#page-idx").html(str_all_page_list);
+
+$("[data-page-index]").removeClass("selected-page-idx");
+$("[data-page-index]").removeClass("unselect-page-idx");
+$("[data-page-index]").addClass("unselect-page-idx");
+$("#page-idx").children("[data-page-index=\"{{ curr_page }}\"]").removeClass("unselect-page-idx");
+$("#page-idx").children("[data-page-index=\"{{ curr_page }}\"]").addClass("selected-page-idx");
+
+
+$("[data-index]").removeClass("unselect-item");
+$("[data-index]").removeClass("selected-item");
+$("[data-index]").addClass("unselect-item");
+
+$("#priceList").children("[data-index={{ curr_price }}]").removeClass("unselect-item");
+$("#priceList").children("[data-index={{ curr_price }}]").addClass("selected-item");
+
+$("#bedList").children("[data-index={{ curr_bednum }}]").removeClass("unselect-item");
+$("#bedList").children("[data-index={{ curr_bednum }}]").addClass("selected-item");
+
+$("#typeList").children("[data-index={{ curr_type }}]").removeClass("unselect-item");
+$("#typeList").children("[data-index={{ curr_type }}]").addClass("selected-item");
+
+$("#propList").children("[data-index={{ curr_prop }}]").removeClass("unselect-item");
+$("#propList").children("[data-index={{ curr_prop }}]").addClass("selected-item");
+
+
+});
+</script>
 </body>
 </html>
