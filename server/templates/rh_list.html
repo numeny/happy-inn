@@ -489,16 +489,40 @@ $(".unselect-page-idx").click(function(e) {
   onRhListRequestShow(true);
 });
 
-/*
 $("#prev_page").click(function(e) {
-  selectedElem = $("#page-idx").children(".selected-page-idx").attr("data-page-index");
-  idx = selectedElem.attr("data-page-index");
-  currPage = parseInt(idx);
+  selectedElem = $("#page-idx").children(".selected-page-idx");
+  currPage = parseInt(selectedElem.attr("data-page-index"));
   selectedElem.removeClass("selected-page-idx");
   selectedElem.addClass("unselect-page-idx");
+  if (currPage <= 1) {
+      return
+  }
+  currPage = currPage - 1
+
+  str_filter = "[data-page-index=\"" + currPage + "\"]"
+
+  $("#page-idx").children(str_filter).removeClass("unselect-page-idx");
+  $("#page-idx").children(str_filter).addClass("selected-page-idx");
 
   onRhListRequestShow(true);
 });
+$("#next_page").click(function(e) {
+  selectedElem = $("#page-idx").children(".selected-page-idx");
+  currPage = parseInt(selectedElem.attr("data-page-index"));
+  selectedElem.removeClass("selected-page-idx");
+  selectedElem.addClass("unselect-page-idx");
+  if (currPage > {{ page_num }}) {
+      return
+  }
+  currPage = currPage + 1
+  str_filter = "[data-page-index=\"" + currPage + "\"]"
+
+  $("#page-idx").children(str_filter).removeClass("unselect-page-idx");
+  $("#page-idx").children(str_filter).addClass("selected-page-idx");
+
+  onRhListRequestShow(true);
+});
+/*
 */
 
 var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
