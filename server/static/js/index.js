@@ -1,5 +1,5 @@
 $(function() {
-var host = "http://localhost:8001/rhlist";
+var host = "http://localhost:8000/rhlist";
 
 function spyObject(spyElement, stickClass, brother, stickFunc) {
   var spyOffset = function() {
@@ -137,6 +137,10 @@ function onRhListRequestShow(need_page_idx_query) {
   window.location.href = url;
 }
 
+$(".selected-item").click(function(e) {
+  onRhListRequestShow(false);
+}
+
 $(".unselect-item").click(function(e) {
   targetElem = $(e.target);
   var selectedElem = targetElem.siblings(".selected-item")
@@ -170,4 +174,11 @@ $(".unselect-page-idx").click(function(e) {
 
 var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
 spyObj.init();
+
+
+
+
+
+
+
 });
