@@ -1,2 +1,2 @@
 #!/bin/bash
-python `pwd`/server/manage.py runserver 8000&
+python $HAPPY_INN_PROJECT_PATH/server/manage.py runserver 8000&

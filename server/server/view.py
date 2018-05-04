@@ -203,6 +203,20 @@ def get_rh_list(context, privince, city, area,
     ret_records = []
     for idx, r in enumerate(records):
         if idx >= (page_idx - 1) * rh_num_per_page and idx < page_idx * rh_num_per_page:
+            found = False
+            if len(r.rh_title_image) > 0:
+                r.rh_title_image = "title/" + r.rh_title_image
+                found = True
+            else:
+                if len(r.rh_images) > 0:
+                    first_img = r.rh_images.split(',')
+                    if len(first_img) > 0:
+                        r.rh_title_image = first_img[0]
+                        found = True
+            if found:
+                r.rh_title_image = ("/static/images/%d/%s" % (r.id, r.rh_title_image))
+            else:
+                r.rh_title_image = "/static/images/default.jpg"
             ret_records.append(r)
 
     context['records'] = ret_records

@@ -218,7 +218,7 @@ a:hover {
     <a class="media" href="rhdetail?rhid={{ record.id | safe }}">
       <div class="media-left">
         <!--img class="media-object" width="100" height="100*0.618" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="媒体对象"-->
-        <img class="media-object" width="100" height="80" src="/static/images/1.jpg" alt="媒体对象">
+        <img id="rh_thumb" class="media-object" width="100" height="80" src="{{ record.rh_title_image }}" alt="媒体对象">
       </div>
       <div class="media-body">
         <h4 class="media-heading">{{ record.rh_name  | safe }}</h4>

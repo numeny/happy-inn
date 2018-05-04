@@ -38,6 +38,8 @@ class rh(models.Model):
     rh_privince = models.TextField()
     rh_city = models.TextField()
     rh_area = models.TextField()
+    rh_title_image = models.TextField(default="")
+    rh_images = models.TextField(default="")
 
     rh_charges_min = models.IntegerField(default=0)
     rh_charges_max = models.IntegerField(default=1000000)

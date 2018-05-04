@@ -1,2 +1,3 @@
-export HAPPYINN_SCRIPT_PATH=`pwd`/tutorial/script/
-export PATH=~/ssd/dl/chromium/chromium.src/pro/happy-inn/tutorial/script:$PATH
+export HAPPY_INN_PROJECT_PATH=`pwd`
+export HAPPYINN_SCRIPT_PATH=$HAPPY_INN_PROJECT_PATH/tutorial/script/
+export PATH=$HAPPY_INN_PROJECT_PATH/tutorial/script:$PATH
