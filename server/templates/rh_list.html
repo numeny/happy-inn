@@ -6,6 +6,7 @@
    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+   <script src="/static/js/forbidden_post.js"></script>
    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
    <link rel="stylesheet" href="/static/css/index.css">
@@ -19,6 +20,10 @@ a {
 a:hover {
   color: blue;
   text-decoration: none;
+}
+
+.mask_text_color {
+  color: #fff;
 }
 
 .block-color-bar {
@@ -75,38 +80,153 @@ a:hover {
 .occupy {
   vertical-align: baseline;
 }
+
+
+.city_select_mask {
+  background-color: #000000cc;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
+.city_select_panel_2 {
+  background-color: #eeeeee;
+  z-index: 999;
+  width: 100%;
+  height: 50%;
+}
+
+.city_select_panel {
+  margin: .8em;
+}
+
+.city_select_title {
+  color: #fff;
+}
+
+.city_select_item {
+  background-color: #ffffff;
+  width: 32%;
+  height: 2.25rem;
+  box-sizing: border-box;
+  margin-top: .4em;
+  margin-bottom: .4em;
+  margin-left: .22em;
+  margin-right: .22em;
+}
+
+.city_list {
+  height: 20em;
+  overflow: auto;
+}
+
 </style>
 
 <body>
 <div>message: <p><em>{{ message }}</em></p></div>
 <div class="container">
-   <div class="row">
-      <div class="col-xs-3 col-sm-3 text-left">
-        <div class="">
-            <a href="javascript:history.back();" class="header_back">
-              <span class="glyphicon glyphicon-chevron-left"></span>
-            </a>
-          <a href="/city/" class="city_wrap">
-            <span class="switch_city"><em id="privince">北京市</em><em id="city">北京市</em><em id="area">海淀区</em><i class="icon_pull"></i></span>
-          </a>
-        </div>
+  <div class="row">
+    <div class="col-xs-3 col-sm-3 text-left">
+      <div class="">
+        <a href="javascript:history.back();">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a href="/city/" class="city_wrap">
+          <span class="switch_city"><em id="privince">北京市</em><em id="city">北京市</em><em id="area">海淀区</em><i class="icon_pull"></i></span>
+        </a>
       </div>
-      <div class="col-xs-6 col-sm-6 text-center">
-        <img width="100" height="30" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="First slide">
-      </div>
-      <!--div class="col-xs-3 col-sm-3">
-        <button type="button" class="btn btn-primary">Login</button>
-      </div-->
-      <div class="col-xs-3 col-sm-3 text-right">
-        <span class="btn btn-default btn-md glyphicon glyphicon-user"></span>
-      </div>
-
-      <!--div class="col-xs-3 col-sm-6">
-         <button type="button" class="btn btn-primary">Menu</button>
-      </div-->
-   </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 text-center">
+      <img width="100" height="30" src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="First slide">
+    </div>
+    <div class="col-xs-3 col-sm-3 text-right">
+      <span class="btn btn-default btn-md glyphicon glyphicon-user"></span>
+    </div>
+  </div>
 </div>
 
+<div class="container city_select_mask">
+  <div class="row city_select_panel mask_text_color">
+      <div class="col-xs-6 col-sm-6">
+        <a href="javascript:history.back();" class="mask_text_color">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+      </div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_title">热门城市</div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_panel_2">
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+    </div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_title">选择区域:
+      <span><span id="all_coutry">全国</span> | <span id="privince_selected">北京市</span> | <span id="city_selected">北京市</span> | <span id="area_selected">昌平区</span></span>
+    </div>
+  </div>
+  <div class="city_list" id="city_list">
+  <div class="row city_select_panel">
+    <div class="city_select_panel_2">
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+    </div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_panel_2">
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">新疆维吾尔族自治区</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+    </div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_panel_2">
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+    </div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_panel_2">
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+    </div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_panel_2">
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+    </div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_panel_2">
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+    </div>
+  </div>
+  <div class="row city_select_panel">
+    <div class="city_select_panel_2">
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
+      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+    </div>
+  </div>
+  </div>
+  <div class="row city_select_panel mask_text_color">
+      <div class="col-xs-4 col-sm-4 text-center">返回</div>
+      <div class="col-xs-4 col-sm-4 text-center">重置</div>
+      <div class="col-xs-4 col-sm-4 text-center">确认</div>
+  </div>
+</div>
 <div id="myCarousel" class="container carousel slide">
     <!-- 轮播（Carousel）指标 -->
     <ol class="carousel-indicators">
@@ -524,6 +644,71 @@ $("#next_page").click(function(e) {
 });
 /*
 */
+var curr_privince = ""
+var curr_city = ""
+var curr_area = ""
+
+function updateAreaTitle() {
+}
+function updateCurrCity(update_city_list) {
+  updateAreaTitle();
+  if (!update_city_list) {
+    return;
+  }
+  
+  $.ajax({
+    url: "/citylist", //提交到那里
+    type: "POST", //提交类型
+    data: {"privince": curr_privince, "city": curr_city}, //提交的数据
+    success: function (area_list) {
+      alert(area_list);
+      city_list_html = "";
+      $.each(area_list, function(n, area) {
+        // city_list_html = city_list_html + "<div>" + n + ": " + area + "</div>";
+        if (n % 3 == 0) {
+          city_list_html = city_list_html +
+          "<div class=\"row city_select_panel\"><div class=\"city_select_panel_2\">"
+        }
+        city_list_html = city_list_html + "<div class=\"col-xs-4 col-sm-4 text-center city_select_item\">"
+                          + area + "</div>"
+        if (n % 3 == 2) {
+          city_list_html = city_list_html + "</div></div> "
+        }
+      });
+      $("#city_list").html(city_list_html);
+    }
+  });
+}
+
+$("#all_coutry").click(function(e) {
+  curr_privince = "";
+  curr_city = "";
+  curr_area = "";
+  updateCurrCity(true);
+});
+
+// for element adding by ajax
+// $(".city_select_item").click(function(e) {
+$(document).on("click", ".city_select_item", function() {
+  var targetElem = $(this);
+  var t = targetElem.text()
+  var updateCityList = false;
+  if (curr_privince.length == 0) {
+      curr_privince = t;
+      curr_city = "";
+      curr_area = "";
+      update_city_list = true;
+  } else if (curr_city.length == 0) {
+      curr_city = t;
+      curr_area = "";
+      update_city_list = true;
+  } else if (curr_area.length == 0) {
+      curr_area = t;
+      update_city_list = false;
+      // targetElem.addClass();
+  }
+  updateCurrCity(update_city_list);
+});
 
 var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
 spyObj.init();

@@ -7,13 +7,16 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from rh.models import rh
+from rh.models import city
+
+from json_response import JsonResponse
 
 sys.path.append("../")
 sys.path.append("../../")
 
 curr_index = 0
 rh_num_per_page = 15
-
+g_area_map = {}
 def start(request):
     global curr_index
     context = {}
@@ -38,6 +41,75 @@ def show_rh_detail(request):
         request.session['user_name'] = "admin"
     context["session_key"] = request.session.session_key
     return render(request, 'rh_detail.html', context)
+'''
+'''
+def init_g_area_map_if_neccesary():
+    global g_area_map
+    if g_area_map is not None and len(g_area_map) != 0:
+        return
+    #FIXME, get cities from where? rh or city's db
+    areas = city.objects.order_by('privince', 'city', 'area').values('privince', 'city', 'area').distinct()
+    for r in areas:
+        if len(r['privince']) == 0 or len(r['city']) == 0 or len(r['area']) == 0:
+            print("city's field is null. [%s] [%s] [%s]"\
+                % (r['privince'].encode('utf-8'), r['city'].encode('utf-8'), r['area'].encode('utf-8')))
+            continue;
+        if not g_area_map.has_key(r['privince']):
+            privince_map = {}
+            g_area_map.setdefault(r['privince'], privince_map)
+        privince_map = g_area_map.get(r['privince'])
+
+        if not privince_map.has_key(r['city']):
+            city_list = []
+            privince_map.setdefault(r['city'], city_list)
+        city_list = privince_map.get(r['city'])
+        city_list.append(r['area'])
+
+def getAreaList(privince, city):
+    global g_area_map
+
+    init_g_area_map_if_neccesary()
+
+    if privince is None or len(privince) == 0:
+        return g_area_map.keys()
+
+    if not g_area_map.has_key(privince):
+        print("Error: area map has no privince[%s]" % privince)
+        return []
+
+    privince_map = g_area_map.get(privince)
+    if city is None or len(city) == 0:
+        return privince_map.keys()
+
+    if not privince_map.has_key(city):
+        print("Error: area map has no privince[%s] city[%s] " % (privince, city))
+        return []
+    return privince_map.get(city)
+
+def citylist(request):
+    '''
+    name_dict = {'twz': 'Love python and Django', 'zqxt': 'I am teaching Django'}
+    return JsonResponse(name_dict)
+    '''
+    a = range(3)
+    privince = ""
+    city = ""
+    if 'privince' in request.POST:
+        privince = request.POST['privince']
+
+    if 'city' in request.POST:
+        city = request.POST['city']
+
+    area_list =  getAreaList(privince, city)
+    if area_list is None:
+        area_list = []
+
+    '''
+    if "privince" in request.POST:
+        a.append(request.POST["privince"])
+    '''
+    return JsonResponse(area_list)
+
 #host/city/area_id/rh/
 def show_rh_list(request):
     context = {}

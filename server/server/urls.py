@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^testdb$', testdb.testdb),
     url(r'^rhdetail', view.show_rh_detail),
     url(r'^rhlist', view.show_rh_list),
+    url(r'^citylist', view.citylist),
 ]
