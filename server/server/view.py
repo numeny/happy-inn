@@ -235,7 +235,19 @@ def get_rh_list(context, privince, city, area,
     global rh_num_per_page
     # FIXME, should not query all DB
     # db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
-    all_filter = Q(rh_area__endswith="海淀区")
+    all_filter = Q()
+    if len(privince) != 0:
+        all_filter = all_filter & Q(rh_privince__startswith=privince)
+        context['curr_privince'] = privince
+        print(context['curr_privince'])
+    if len(city) != 0:
+        all_filter = all_filter & Q(rh_city__startswith=city)
+        context['curr_city'] = city
+        print(context['curr_city'])
+    if len(area) != 0:
+        all_filter = all_filter & Q(rh_area__startswith=area)
+        context['curr_area'] = area
+        print(context['curr_area'])
 
     if len(price) != 0 and price != '0':
         price_filter = get_price_q_query(price)
@@ -307,11 +319,11 @@ def get_rh_list(context, privince, city, area,
         context['curr_prop'] = prop
 
     context['message'] = "privince: " + privince
+    context['message'] = context['message'] + ", city: " + city
+    context['message'] = context['message'] + ", area: "+ area
     context['message'] = context['message'] + ", page_idx: "+ str(page_idx)
     context['message'] = context['message'] + ", page_num: "+ str(page_num)
     context['message'] = context['message'] + ", records_num: "+ str(len(records))
-    context['message'] = context['message'] + ", city: " + city
-    context['message'] = context['message'] + ", area: "+ area
     context['message'] = context['message'] + ", price: "+ str(price)
     context['message'] = context['message'] + ", bed: "+ str(bed)
     context['message'] = context['message'] + ", str_type: " + str(str_type)

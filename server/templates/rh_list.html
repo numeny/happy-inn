@@ -133,6 +133,7 @@ a:hover {
 </head>
 <body>
 <div>message: <p><em>{{ message }}</em></p></div>
+<div>curr_privince: <p><em>{{ curr_privince }}</em></p></div>
 <div class="container">
   <div class="row">
     <div class="col-xs-3 col-sm-3 text-left">
@@ -140,7 +141,7 @@ a:hover {
         <a href="javascript:history.back();">
           <span class="glyphicon glyphicon-chevron-left"></span>
         </a>
-        <span id="start_city_select" class="switch_city"><em id="curr_privince">北京市</em><em id="curr_city">北京市</em><em id="curr_area">海淀区</em><i class="icon_pull"></i></span>
+        <span id="start_city_select" class="switch_city"><em id="all_privince">全国</em><em id="curr_privince">{{ curr_privince }}</em><em id="curr_city">{{ curr_city }}</em><em id="curr_area">{{ curr_area }}</em><i class="icon_pull"></i></span>
       </div>
     </div>
     <div class="col-xs-6 col-sm-6 text-center">
@@ -338,61 +339,68 @@ a:hover {
 <script type="text/javascript">
 $(function() {
 
-str_all_page_list = ""
-var page_num = parseInt({{ page_num }});
-var curr_page = parseInt({{ curr_page }});
-var start_page = 0;
-var end_page = 0;
-var pages_per_web_page = 5;
-var middle_of_pages = parseInt(pages_per_web_page / 2);
-if (page_num <= pages_per_web_page) {
+var curr_privince = ""
+var curr_city = ""
+var curr_area = ""
+function updatePagesIdx() {
+  var str_all_page_list = ""
+  var page_num = parseInt({{ page_num }});
+  var curr_page = parseInt({{ curr_page }});
+  var start_page = 0;
+  var end_page = 0;
+  var pages_per_web_page = 5;
+  var middle_of_pages = parseInt(pages_per_web_page / 2);
+  if (page_num <= pages_per_web_page) {
     start_page = 1;
     end_page = page_num;
-} else if (curr_page <= middle_of_pages) {
+  } else if (curr_page <= middle_of_pages) {
     start_page = 1;
     end_page = pages_per_web_page;
-} else if (page_num - curr_page <= middle_of_pages) {
+  } else if (page_num - curr_page <= middle_of_pages) {
     start_page = page_num - pages_per_web_page + 1;
     end_page = page_num;
-} else {
+  } else {
     start_page = curr_page - middle_of_pages;
     end_page = curr_page - middle_of_pages + pages_per_web_page - 1;
-}
+  }
 
-if (start_page > 1) {
+  if (start_page > 1) {
     str_all_page_list = str_all_page_list + "<li id=\"prev_page\">&laquo;</li>";
-}
-for (i = start_page; i <= end_page; i++) {
+  }
+  for (i = start_page; i <= end_page; i++) {
     str_all_page_list = str_all_page_list + "<li data-page-index=\"" + i + "\">" + i + "</li>";
-}
-if (end_page < page_num) {
+  }
+  if (end_page < page_num) {
     str_all_page_list = str_all_page_list + "<li id=\"next_page\">&raquo;</li>";
+  }
+  $("#page-idx").html(str_all_page_list);
+
+  $("[data-page-index]").removeClass("selected-page-idx");
+  $("[data-page-index]").removeClass("unselect-page-idx");
+  $("[data-page-index]").addClass("unselect-page-idx");
+  $("#page-idx").children("[data-page-index=\"{{ curr_page }}\"]").removeClass("unselect-page-idx");
+  $("#page-idx").children("[data-page-index=\"{{ curr_page }}\"]").addClass("selected-page-idx");
 }
-$("#page-idx").html(str_all_page_list);
+updatePagesIdx();
 
-$("[data-page-index]").removeClass("selected-page-idx");
-$("[data-page-index]").removeClass("unselect-page-idx");
-$("[data-page-index]").addClass("unselect-page-idx");
-$("#page-idx").children("[data-page-index=\"{{ curr_page }}\"]").removeClass("unselect-page-idx");
-$("#page-idx").children("[data-page-index=\"{{ curr_page }}\"]").addClass("selected-page-idx");
+function updateFilterItem() {
+  $("[data-index]").removeClass("unselect-item");
+  $("[data-index]").removeClass("selected-item");
+  $("[data-index]").addClass("unselect-item");
 
+  $("#priceList").children("[data-index={{ curr_price }}]").removeClass("unselect-item");
+  $("#priceList").children("[data-index={{ curr_price }}]").addClass("selected-item");
 
-$("[data-index]").removeClass("unselect-item");
-$("[data-index]").removeClass("selected-item");
-$("[data-index]").addClass("unselect-item");
+  $("#bedList").children("[data-index={{ curr_bednum }}]").removeClass("unselect-item");
+  $("#bedList").children("[data-index={{ curr_bednum }}]").addClass("selected-item");
 
-$("#priceList").children("[data-index={{ curr_price }}]").removeClass("unselect-item");
-$("#priceList").children("[data-index={{ curr_price }}]").addClass("selected-item");
+  $("#typeList").children("[data-index={{ curr_type }}]").removeClass("unselect-item");
+  $("#typeList").children("[data-index={{ curr_type }}]").addClass("selected-item");
 
-$("#bedList").children("[data-index={{ curr_bednum }}]").removeClass("unselect-item");
-$("#bedList").children("[data-index={{ curr_bednum }}]").addClass("selected-item");
-
-$("#typeList").children("[data-index={{ curr_type }}]").removeClass("unselect-item");
-$("#typeList").children("[data-index={{ curr_type }}]").addClass("selected-item");
-
-$("#propList").children("[data-index={{ curr_prop }}]").removeClass("unselect-item");
-$("#propList").children("[data-index={{ curr_prop }}]").addClass("selected-item");
-
+  $("#propList").children("[data-index={{ curr_prop }}]").removeClass("unselect-item");
+  $("#propList").children("[data-index={{ curr_prop }}]").addClass("selected-item");
+}
+updateFilterItem();
 
 // ======================================
 
@@ -453,9 +461,9 @@ function onRhListRequestShow(need_page_idx_query) {
   var hasQuery = false;
 
   // select area
-  privinceSelected = $("#privince").text();
-  citySelected = $("#city").text();
-  areaSelected = $("#area").text();
+  privinceSelected = $("#curr_privince").text();
+  citySelected = $("#curr_city").text();
+  areaSelected = $("#curr_area").text();
 
   if (privinceSelected.length != 0) {
     if (hasQuery) {
@@ -490,11 +498,11 @@ function onRhListRequestShow(need_page_idx_query) {
       pageSelected = $("#page-idx").children(".selected-page-idx").attr("data-page-index");
   }
 
-  if (priceSelected != "1") {
+  if (priceSelected != "0") {
     if (hasQuery) {
       query = query + "&"
     }
-    query = "price=" + priceSelected;
+    query = query + "price=" + priceSelected;
     hasQuery = true;
   }
   if (bedSelected != "0") {
@@ -598,11 +606,6 @@ $("#next_page").click(function(e) {
 
   onRhListRequestShow(true);
 });
-/*
-*/
-var curr_privince = ""
-var curr_city = ""
-var curr_area = ""
 
 function updateAreaTitle() {
   html_privince_selected_seperator = "";
@@ -697,6 +700,19 @@ $(document).on("click", ".city_select_item", function() {
   updateCurrCity(update_city_list);
 });
 
+$(document).on("click", "#privince_selected", function() {
+  var targetElem = $(this);
+  var t = targetElem.text()
+  if (t.length == 0) {
+    return;
+  }
+  curr_privince = t;
+  curr_city = "";
+  curr_area = "";
+ 
+  updateCurrCity(true);
+});
+
 $(document).on("click", "#city_selected", function() {
   var targetElem = $(this);
   var t = targetElem.text()
@@ -718,25 +734,36 @@ $(document).on("click", "#start_city_select", function() {
  
   updateCurrCity(true);
 });
+
 $(document).on("click", "#confirm_city_select", function() {
-  $("#city_select").css("display", "none")
+  $("#city_select").css("display", "none");
 
   if (curr_area.length > 0) {
-    $("#curr_privince").css("display", "none")
-    $("#curr_city").css("display", "none")
-    $("#curr_area").css("display", "inline")
+    $("#all_privince").css("display", "none");
+    $("#curr_privince").css("display", "none");
+    $("#curr_city").css("display", "none");
+    $("#curr_area").css("display", "inline");
   } else if (curr_city.length > 0) {
-    $("#curr_privince").css("display", "none")
-    $("#curr_city").css("display", "inline")
-    $("#curr_area").css("display", "none")
+    $("#all_privince").css("display", "none");
+    $("#curr_privince").css("display", "none");
+    $("#curr_city").css("display", "inline");
+    $("#curr_area").css("display", "none");
   } else if (curr_privince.length > 0) {
-    $("#curr_privince").css("display", "inline")
-    $("#curr_city").css("display", "none")
-    $("#curr_area").css("display", "none")
+    $("#all_privince").css("display", "none");
+    $("#curr_privince").css("display", "inline");
+    $("#curr_city").css("display", "none");
+    $("#curr_area").css("display", "none");
+  } else {
+    $("#all_privince").css("display", "inline");
+    $("#curr_privince").css("display", "none");
+    $("#curr_city").css("display", "none");
+    $("#curr_area").css("display", "none");
   }
-  $("#curr_privince").html(curr_privince)
-  $("#curr_city").html(curr_city)
-  $("#curr_area").html(curr_area)
+  $("#curr_privince").html(curr_privince);
+  $("#curr_city").html(curr_city);
+  $("#curr_area").html(curr_area);
+
+  onRhListRequestShow(false);
 });
 
 var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
