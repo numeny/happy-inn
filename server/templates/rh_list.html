@@ -11,7 +11,6 @@
 
    <link rel="stylesheet" href="/static/css/index.css">
    <!--script src="/static/js/index.js"></script-->
-</head>
 <style>
 a {
   color: black;
@@ -106,8 +105,15 @@ a:hover {
   color: #fff;
 }
 
+/*should the same as city_select_item*/
+.city_selected_item {
+  background-color: #888;
+}
+
+.city_unselect_item {
+  background-color: #fff;
+}
 .city_select_item {
-  background-color: #ffffff;
   width: 32%;
   height: 2.25rem;
   box-sizing: border-box;
@@ -124,6 +130,7 @@ a:hover {
 
 </style>
 
+</head>
 <body>
 <div>message: <p><em>{{ message }}</em></p></div>
 <div class="container">
@@ -133,9 +140,7 @@ a:hover {
         <a href="javascript:history.back();">
           <span class="glyphicon glyphicon-chevron-left"></span>
         </a>
-        <a href="/city/" class="city_wrap">
-          <span class="switch_city"><em id="privince">北京市</em><em id="city">北京市</em><em id="area">海淀区</em><i class="icon_pull"></i></span>
-        </a>
+        <span id="start_city_select" class="switch_city"><em id="curr_privince">北京市</em><em id="curr_city">北京市</em><em id="curr_area">海淀区</em><i class="icon_pull"></i></span>
       </div>
     </div>
     <div class="col-xs-6 col-sm-6 text-center">
@@ -147,7 +152,7 @@ a:hover {
   </div>
 </div>
 
-<div class="container city_select_mask">
+<div class="container city_select_mask" id="city_select" style="display: none">
   <div class="row city_select_panel mask_text_color">
       <div class="col-xs-6 col-sm-6">
         <a href="javascript:history.back();" class="mask_text_color">
@@ -160,71 +165,22 @@ a:hover {
   </div>
   <div class="row city_select_panel">
     <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
+      <div class="col-xs-4 col-sm-4 text-center privince_level_city city_unselect_item city_select_item">北京市</div>
+      <div class="col-xs-4 col-sm-4 text-center privince_level_city city_unselect_item city_select_item">上海市</div>
+      <div class="col-xs-4 col-sm-4 text-center privince_level_city city_unselect_item city_select_item">天津市</div>
     </div>
   </div>
   <div class="row city_select_panel">
     <div class="city_select_title">选择区域:
-      <span><span id="all_coutry">全国</span> | <span id="privince_selected">北京市</span> | <span id="city_selected">北京市</span> | <span id="area_selected">昌平区</span></span>
+      <span id="all_coutry">全国</span><span id="privince_selected_seperator"> | </span><span id="privince_selected">北京市</span><span id="city_selected_seperator"> | </span><span id="city_selected">北京市</span><span id="area_selected_seperator"> | </span><span id="area_selected">昌平区</span>
     </div>
   </div>
   <div class="city_list" id="city_list">
-  <div class="row city_select_panel">
-    <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
-    </div>
-  </div>
-  <div class="row city_select_panel">
-    <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">新疆维吾尔族自治区</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
-    </div>
-  </div>
-  <div class="row city_select_panel">
-    <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
-    </div>
-  </div>
-  <div class="row city_select_panel">
-    <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
-    </div>
-  </div>
-  <div class="row city_select_panel">
-    <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
-    </div>
-  </div>
-  <div class="row city_select_panel">
-    <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
-    </div>
-  </div>
-  <div class="row city_select_panel">
-    <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">北京</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">上海</div>
-      <div class="col-xs-4 col-sm-4 text-center city_select_item">深圳</div>
-    </div>
-  </div>
   </div>
   <div class="row city_select_panel mask_text_color">
       <div class="col-xs-4 col-sm-4 text-center">返回</div>
       <div class="col-xs-4 col-sm-4 text-center">重置</div>
-      <div class="col-xs-4 col-sm-4 text-center">确认</div>
+      <div class="col-xs-4 col-sm-4 text-center" id="confirm_city_select">确认</div>
   </div>
 </div>
 <div id="myCarousel" class="container carousel slide">
@@ -649,6 +605,30 @@ var curr_city = ""
 var curr_area = ""
 
 function updateAreaTitle() {
+  html_privince_selected_seperator = "";
+  html_privince_selected = ""
+  html_city_selected_seperator = "";
+  html_city_selected = ""
+  html_area_selected_seperator = "";
+  html_area_selected = ""
+  if (curr_privince.length > 0) {
+    html_privince_selected_seperator = " | ";
+    html_privince_selected = curr_privince;
+    if (curr_city.length > 0) {
+      html_city_selected_seperator = " | ";
+      html_city_selected = curr_city;
+      if (curr_area.length > 0) {
+        html_area_selected_seperator = " | ";
+        html_area_selected = curr_area;
+      }
+    }
+  }
+  $("#privince_selected_seperator").html(html_privince_selected_seperator)
+  $("#privince_selected").html(html_privince_selected)
+  $("#city_selected_seperator").html(html_city_selected_seperator)
+  $("#city_selected").html(html_city_selected)
+  $("#area_selected_seperator").html(html_area_selected_seperator)
+  $("#area_selected").html(html_area_selected)
 }
 function updateCurrCity(update_city_list) {
   updateAreaTitle();
@@ -661,7 +641,6 @@ function updateCurrCity(update_city_list) {
     type: "POST", //提交类型
     data: {"privince": curr_privince, "city": curr_city}, //提交的数据
     success: function (area_list) {
-      alert(area_list);
       city_list_html = "";
       $.each(area_list, function(n, area) {
         // city_list_html = city_list_html + "<div>" + n + ": " + area + "</div>";
@@ -669,7 +648,7 @@ function updateCurrCity(update_city_list) {
           city_list_html = city_list_html +
           "<div class=\"row city_select_panel\"><div class=\"city_select_panel_2\">"
         }
-        city_list_html = city_list_html + "<div class=\"col-xs-4 col-sm-4 text-center city_select_item\">"
+        city_list_html = city_list_html + "<div class=\"col-xs-4 col-sm-4 text-center city_unselect_item city_select_item\">"
                           + area + "</div>"
         if (n % 3 == 2) {
           city_list_html = city_list_html + "</div></div> "
@@ -693,7 +672,12 @@ $(document).on("click", ".city_select_item", function() {
   var targetElem = $(this);
   var t = targetElem.text()
   var updateCityList = false;
-  if (curr_privince.length == 0) {
+  if (targetElem.hasClass("privince_level_city")) {
+      curr_privince = t;
+      curr_city = t;
+      curr_area = "";
+      update_city_list = true;
+  } else if (curr_privince.length == 0) {
       curr_privince = t;
       curr_city = "";
       curr_area = "";
@@ -702,18 +686,64 @@ $(document).on("click", ".city_select_item", function() {
       curr_city = t;
       curr_area = "";
       update_city_list = true;
-  } else if (curr_area.length == 0) {
+  } else {
       curr_area = t;
       update_city_list = false;
-      // targetElem.addClass();
+      $(".city_select_item").removeClass("city_selected_item");
+      $(".city_select_item").addClass("city_unselect_item");
+      targetElem.removeClass("city_unselect_item");
+      targetElem.addClass("city_selected_item");
   }
   updateCurrCity(update_city_list);
+});
+
+$(document).on("click", "#city_selected", function() {
+  var targetElem = $(this);
+  var t = targetElem.text()
+  if (t.length == 0) {
+    return;
+  }
+  curr_city = t;
+  curr_area = "";
+ 
+  updateCurrCity(true);
+});
+
+$(document).on("click", "#start_city_select", function() {
+  $("#city_select").css("display", "block")
+
+  curr_privince = $("#curr_privince").html();
+  curr_city = $("#curr_city").html();
+  curr_area = $("#curr_area").html();
+ 
+  updateCurrCity(true);
+});
+$(document).on("click", "#confirm_city_select", function() {
+  $("#city_select").css("display", "none")
+
+  if (curr_area.length > 0) {
+    $("#curr_privince").css("display", "none")
+    $("#curr_city").css("display", "none")
+    $("#curr_area").css("display", "inline")
+  } else if (curr_city.length > 0) {
+    $("#curr_privince").css("display", "none")
+    $("#curr_city").css("display", "inline")
+    $("#curr_area").css("display", "none")
+  } else if (curr_privince.length > 0) {
+    $("#curr_privince").css("display", "inline")
+    $("#curr_city").css("display", "none")
+    $("#curr_area").css("display", "none")
+  }
+  $("#curr_privince").html(curr_privince)
+  $("#curr_city").html(curr_city)
+  $("#curr_area").html(curr_area)
 });
 
 var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
 spyObj.init();
 
 });
+
 </script>
 </body>
 </html>

@@ -74,7 +74,7 @@ def getAreaList(privince, city):
         return g_area_map.keys()
 
     if not g_area_map.has_key(privince):
-        print("Error: area map has no privince[%s]" % privince)
+        #print("Error: area map has no privince[%s]" % privince)
         return []
 
     privince_map = g_area_map.get(privince)
@@ -82,16 +82,11 @@ def getAreaList(privince, city):
         return privince_map.keys()
 
     if not privince_map.has_key(city):
-        print("Error: area map has no privince[%s] city[%s] " % (privince, city))
+        #print("Error: area map has no privince[%s] city[%s] " % (privince, city))
         return []
     return privince_map.get(city)
 
 def citylist(request):
-    '''
-    name_dict = {'twz': 'Love python and Django', 'zqxt': 'I am teaching Django'}
-    return JsonResponse(name_dict)
-    '''
-    a = range(3)
     privince = ""
     city = ""
     if 'privince' in request.POST:
@@ -104,10 +99,6 @@ def citylist(request):
     if area_list is None:
         area_list = []
 
-    '''
-    if "privince" in request.POST:
-        a.append(request.POST["privince"])
-    '''
     return JsonResponse(area_list)
 
 #host/city/area_id/rh/
