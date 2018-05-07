@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
  
 import sys
+import time
 
 from django.db.models import Q
 from django.http import HttpResponse
@@ -266,8 +267,9 @@ def get_rh_list(context, privince, city, area,
         all_filter = all_filter & prop_filter
 
     records = rh.objects.filter(all_filter)
-    page_num = len(records) / rh_num_per_page
-    if len(records) % rh_num_per_page > 0:
+    record_num = records.count()
+    page_num = record_num / rh_num_per_page
+    if record_num % rh_num_per_page > 0:
         page_num = page_num + 1
 
     if len(page) == 0 or page == '0':
@@ -276,23 +278,23 @@ def get_rh_list(context, privince, city, area,
         page_idx = int(page)
 
     ret_records = []
-    for idx, r in enumerate(records):
-        if idx >= (page_idx - 1) * rh_num_per_page and idx < page_idx * rh_num_per_page:
-            found = False
-            if len(r.rh_title_image) > 0:
-                r.rh_title_image = "title/" + r.rh_title_image
-                found = True
-            else:
-                if len(r.rh_images) > 0:
-                    first_img = r.rh_images.split(',')
-                    if len(first_img) > 0:
-                        r.rh_title_image = first_img[0]
-                        found = True
-            if found:
-                r.rh_title_image = ("/static/images/%d/%s" % (r.id, r.rh_title_image))
-            else:
-                r.rh_title_image = "/static/images/default.jpg"
-            ret_records.append(r)
+    result_record = records[((page_idx - 1) * rh_num_per_page) : (page_idx * rh_num_per_page)]
+    for idx, r in enumerate(result_record):
+        found_img = False
+        if len(r.rh_title_image) > 0:
+            r.rh_title_image = "title/" + r.rh_title_image
+            found_img = True
+        else:
+            if len(r.rh_images) > 0:
+                first_img = r.rh_images.split(',')
+                if len(first_img) > 0:
+                    r.rh_title_image = first_img[0]
+                    found_img = True
+        if found_img:
+            r.rh_title_image = ("/static/images/%d/%s" % (r.id, r.rh_title_image))
+        else:
+            r.rh_title_image = "/static/images/default.jpg"
+        ret_records.append(r)
 
     context['records'] = ret_records
     context['page_num'] = page_num
@@ -323,11 +325,12 @@ def get_rh_list(context, privince, city, area,
     context['message'] = context['message'] + ", area: "+ area
     context['message'] = context['message'] + ", page_idx: "+ str(page_idx)
     context['message'] = context['message'] + ", page_num: "+ str(page_num)
-    context['message'] = context['message'] + ", records_num: "+ str(len(records))
+    context['message'] = context['message'] + ", records_num: "+ str(record_num)
     context['message'] = context['message'] + ", price: "+ str(price)
     context['message'] = context['message'] + ", bed: "+ str(bed)
     context['message'] = context['message'] + ", str_type: " + str(str_type)
     context['message'] = context['message'] + ", prop: "+ str(prop)
+
     print(context['message'])
 
 def get_next_page(context):
