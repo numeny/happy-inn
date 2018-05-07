@@ -133,7 +133,7 @@ a:hover {
 </head>
 <body>
 <div>message: <p><em>{{ message }}</em></p></div>
-<div>curr_privince: <p><em>{{ curr_privince }}</em></p></div>
+<div>curr_privince: <p><em>{{ curr_privince | safe }}</em></p></div>
 <div class="container">
   <div class="row">
     <div class="col-xs-3 col-sm-3 text-left">
@@ -141,7 +141,7 @@ a:hover {
         <a href="javascript:history.back();">
           <span class="glyphicon glyphicon-chevron-left"></span>
         </a>
-        <span id="start_city_select" class="switch_city"><em id="all_privince">全国</em><em id="curr_privince">{{ curr_privince }}</em><em id="curr_city">{{ curr_city }}</em><em id="curr_area">{{ curr_area }}</em><i class="icon_pull"></i></span>
+        <span id="start_city_select" class="switch_city"><em id="all_privince">全国</em><em id="curr_privince">{{ curr_privince | safe }}</em><em id="curr_city">{{ curr_city | safe }}</em><em id="curr_area">{{ curr_area | safe }}</em><i class="icon_pull"></i></span>
       </div>
     </div>
     <div class="col-xs-6 col-sm-6 text-center">
@@ -173,7 +173,7 @@ a:hover {
   </div>
   <div class="row city_select_panel">
     <div class="city_select_title">选择区域:
-      <span id="all_coutry">全国</span><span id="privince_selected_seperator"> | </span><span id="privince_selected">北京市</span><span id="city_selected_seperator"> | </span><span id="city_selected">北京市</span><span id="area_selected_seperator"> | </span><span id="area_selected">昌平区</span>
+      <span id="all_coutry">全国</span><span id="privince_selected_seperator"></span><span id="privince_selected"></span><span id="city_selected_seperator"></span><span id="city_selected"></span><span id="area_selected_seperator"></span><span id="area_selected"></span>
     </div>
   </div>
   <div class="city_list" id="city_list">
@@ -738,6 +738,11 @@ $(document).on("click", "#start_city_select", function() {
 $(document).on("click", "#confirm_city_select", function() {
   $("#city_select").css("display", "none");
 
+  showCurrLocation();
+  onRhListRequestShow(false);
+});
+
+function showCurrLocation() {
   if (curr_area.length > 0) {
     $("#all_privince").css("display", "none");
     $("#curr_privince").css("display", "none");
@@ -762,9 +767,17 @@ $(document).on("click", "#confirm_city_select", function() {
   $("#curr_privince").html(curr_privince);
   $("#curr_city").html(curr_city);
   $("#curr_area").html(curr_area);
+}
 
-  onRhListRequestShow(false);
-});
+function initCurrLocation() {
+  curr_privince = "{{ curr_privince | safe }}";
+  curr_city = "{{ curr_city | safe }}";
+  curr_area = "{{ curr_area | safe }}";
+
+  showCurrLocation();
+}
+
+initCurrLocation();
 
 var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
 spyObj.init();
