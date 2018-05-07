@@ -788,7 +788,7 @@ spyObj.init();
 //  var lat = position.coords.latitude;
 //  var lon = position.coords.longitude;
   // var point = new BMap.Point(lon, lat);
-  var point = new BMap.Point(116.331398, 39.897445);
+  var point = new BMap.Point(116.331398, 34.897445);
 
   var myGeo = new BMap.Geocoder();
   myGeo.getLocation(point, function (result) {
@@ -799,8 +799,14 @@ spyObj.init();
       data: {"city": city}, //提交的数据
       success: function (area_dict) {
         a = $.parseJSON(area_dict)
-//        alert(a.privince)
-//        alert(a.city)
+        ret = confirm("您当前定位是 " + a.privince + a.city + ", 需要将当前位置修改为此定位吗?");
+        if (ret == false) {
+          return;
+        }
+        curr_privince = a.privince;
+        curr_city = a.city;
+        curr_area = "";
+        showCurrLocation();
       }
     });
   });
