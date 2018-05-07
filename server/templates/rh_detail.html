@@ -65,6 +65,7 @@
   </div><!--row-->
 
 
+<div>message: <p><em>{{ message | safe }}</em></p></div>
   <div>user_name: <p>{{ user_name }}<p></div>
   <div>session_key: <p>{{ session_key }}<p></div>
 
@@ -110,75 +111,77 @@
 
 <div class="container" style="margin: 5px">
   <div class="row text-center">
-    <h3>{{ record.rh_name  | safe }}</h3>
+    <h3>{{ record.rh_name | safe }}</h3>
   </div>
 
   <div class="chief_border row">
      <div class="col-xs-4 col-sm-4 chief_border_1">
         <p>所在区域</p>
-        <strong class="title_font ">{{ record.rh_location_id  | safe }}</strong>
+        <strong class="title_font ">{{ record.rh_location_id | safe }}</strong>
      </div>
      <div class="col-xs-4 col-sm-4 chief_border_1">
         <p>床位数</p>
-        <strong class="title_font">{{ record.rh_bednum  | safe }}</strong>
+        <strong class="title_font">{{ record.rh_bednum | safe }}</strong>
      </div>
      <div class="col-xs-4 col-sm-4 chief_border_1">
         <p>性质</p>
-        <strong class="title_font">{{ record.rh_factory_property  | safe }}</strong>
+        <strong class="title_font">{{ record.rh_factory_property | safe }}</strong>
      </div>
   </div>
   <div class="row">
     <div class="items_title">
       <div class="items_detail basic_info">
         <strong class="title_font ">基本信息</strong>
-        <div class="item_detail">id：<span>{{ record.rh_id  | safe }}</span></div>
-        <div class="item_detail">ylw_id：<span>{{ record.rh_ylw_id  | safe }}</span></div>
-        <div class="item_detail">机构名称：<span>{{ record.rh_name  | safe }}</span></div>
-        <div class="item_detail">成立时间：<span>{{ record.rh_establishment_time  | safe }}</span></div>
-        <div class="item_detail">床位数量：<span>{{ record.rh_bednum  | safe }}</span></div>
-        <div class="item_detail">收费区间：<span>{{ record.rh_charges_extent  | safe }}</span></div>
-        <div class="item_detail">员工人数：<span>{{ record.rh_staff_num  | safe }}</span></div>
-        <div class="item_detail">机构性质：<span>{{ record.rh_factory_property  | safe }}</span></div>
-        <div class="item_detail">机构类型：<span>{{ record.rh_type  | safe }}</span></div>
+        <div class="item_detail">id：<span>{{ record.id | safe }}</span></div>
+        <div class="item_detail">ylw_id：<span>{{ record.rh_ylw_id | safe }}</span></div>
+        <div class="item_detail">机构名称：<span>{{ record.rh_name | safe }}</span></div>
+        <div class="item_detail">成立时间：<span>{{ record.rh_establishment_time | safe }}</span></div>
+        <div class="item_detail">床位数量：<span>{{ record.rh_bednum | safe }}</span></div>
+        <div class="item_detail">收费区间：<span>{{ record.rh_charges_extent | safe }}</span></div>
+        <div class="item_detail">员工人数：<span>{{ record.rh_staff_num | safe }}</span></div>
+        <div class="item_detail">机构性质：<span>{{ record.rh_factory_property | safe }}</span></div>
+        <div class="item_detail">机构类型：<span>{{ record.rh_type | safe }}</span></div>
       </div><!--basic_info-->
       <div class="items_detail contact_info">
         <strong class="title_font">联系信息</strong>
-        <div class="item_detail">联系人  ：<span>{{ record.rh_contact_person  | safe }}</span></div>
-        <div class="item_detail">所在地区：<span>{{ record.rh_location_id  | safe }}</span></div>
-        <div class="item_detail">固定电话：<span>{{ record.rh_phone  | safe }}</span></div>
-        <div class="item_detail">手机号码：<span>{{ record.rh_mobile  | safe }}</span></div>
-        <div class="item_detail">官方网址：<span>{{ record.rh_url  | safe }}</span></div>
-        <div class="item_detail">电子邮箱：<span>{{ record.rh_email  | safe }}</span></div>
-        <div class="item_detail">邮政编码：<span>{{ record.rh_postcode  | safe }}</span></div>
-        <div class="item_detail">联系地址：<span>{{ record.rh_address  | safe }}</span></div>
+        <div class="item_detail">联系人  ：<span>{{ record.rh_contact_person | safe }}</span></div>
+        <div class="item_detail">所在地区：<span>{{ record.rh_location_id | safe }}</span></div>
+        <div class="item_detail">固定电话：<span>{{ record.rh_phone | safe }}</span></div>
+        <div class="item_detail">手机号码：<span>{{ record.rh_mobile | safe }}</span></div>
+        <div class="item_detail">官方网址：<span>{{ record.rh_url | safe }}</span></div>
+        <div class="item_detail">电子邮箱：<span>{{ record.rh_email | safe }}</span></div>
+        <div class="item_detail">邮政编码：<span>{{ record.rh_postcode | safe }}</span></div>
+        <div class="item_detail">联系地址：<span>{{ record.rh_address | safe }}</span></div>
       </div><!--contact_info-->
       <div class="items_detail introduction_info">
         <strong class="title_font">机构介绍</strong>
-        <div class="item_detail">{{ record.rh_inst_intro  | safe }}</div>
+        <div class="item_detail">{{ record.rh_inst_intro | safe }}</div>
       </div><!--introduction_info-->
       <div class="items_detail facilities_info">
         <strong class="title_font">环境设施</strong>
-        <div class="item_detail">{{ record.rh_facilities  | safe }}</div>
+        <div class="item_detail">{{ record.rh_facilities | safe }}</div>
       </div><!--facilities_info-->
       <div class="items_detail for_persons_info">
         <strong class="title_font">服务对象</strong>
-        <div class="item_detail">{{ record.rh_for_persons  | safe }}</div>
+        <div class="item_detail">{{ record.rh_for_persons | safe }}</div>
       </div><!--for_persons_info-->
       <div class="items_detail inst_notes_info">
         <strong class="title_font">入住须知</strong>
-        <div class="item_detail">{{ record.rh_inst_notes  | safe }}</div>
+        <div class="item_detail">{{ record.rh_inst_notes | safe }}</div>
       </div><!--inst_notes_info-->
       <div class="items_detail inst_charge_info">
         <strong class="title_font">收费标准</strong>
-        <div class="item_detail">{{ record.rh_inst_charge  | safe }}</div>
+        <div class="item_detail">{{ record.rh_inst_charge | safe }}</div>
       </div><!--inst_charge_info-->
       <div class="items_detail transportation_info">
         <strong class="title_font">交通信息</strong>
-        <div class="item_detail">{{ record.rh_transportation  | safe }}</div>
+        <div class="item_detail">{{ record.rh_transportation | safe }}</div>
       </div><!--transportation_info-->
       <div class="items_detail photos_info">
         <strong class="title_font">图片展示</strong>
-        <div class="item_detail"><img src="pic/a/a.jpg"> </img></div>
+        {% for i in images %}
+        <div class="item_detail"><img width="300" height="300" src="/static/images/{{ record.id | safe }}/{{ i | safe }}"> </img></div>
+        {% endfor %}
       </div><!--photos_info-->
 
   </div><!--row-->

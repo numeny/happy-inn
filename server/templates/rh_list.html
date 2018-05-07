@@ -132,7 +132,7 @@ a:hover {
 
 </head>
 <body>
-<div>message: <p><em>{{ message }}</em></p></div>
+<div>message: <p><em>{{ message | safe }}</em></p></div>
 <div>curr_privince: <p><em>{{ curr_privince | safe }}</em></p></div>
 <div class="container">
   <div class="row">
@@ -298,15 +298,15 @@ a:hover {
         <img id="rh_thumb" class="media-object" width="100" height="80" src="{{ record.rh_title_image }}" alt="媒体对象">
       </div>
       <div class="media-body">
-        <h4 class="media-heading">{{ record.rh_name  | safe }}</h4>
+        <h4 class="media-heading">{{ record.rh_name | safe }}</h4>
         <div>
-          <small>地址：{{ record.rh_location_id  | safe }}</small>
+          <small>地址：{{ record.rh_location_id | safe }}</small>
         </div>
         <div>
-          <small>床位数：{{ record.rh_bednum  | safe }}</small>
+          <small>床位数：{{ record.rh_bednum | safe }}</small>
         </div>
         <div>
-          <small>收费：{{ record.rh_charges_extent  | safe }}</small>
+          <small>收费：{{ record.rh_charges_extent | safe }}</small>
         </div>
       </div>
     </a>
@@ -344,8 +344,8 @@ var curr_city = ""
 var curr_area = ""
 function updatePagesIdx() {
   var str_all_page_list = ""
-  var page_num = parseInt({{ page_num }});
-  var curr_page = parseInt({{ curr_page }});
+  var page_num = parseInt({{ page_num | safe }});
+  var curr_page = parseInt({{ curr_page | safe }});
   var start_page = 0;
   var end_page = 0;
   var pages_per_web_page = 5;
@@ -378,8 +378,8 @@ function updatePagesIdx() {
   $("[data-page-index]").removeClass("selected-page-idx");
   $("[data-page-index]").removeClass("unselect-page-idx");
   $("[data-page-index]").addClass("unselect-page-idx");
-  $("#page-idx").children("[data-page-index=\"{{ curr_page }}\"]").removeClass("unselect-page-idx");
-  $("#page-idx").children("[data-page-index=\"{{ curr_page }}\"]").addClass("selected-page-idx");
+  $("#page-idx").children("[data-page-index=\"{{ curr_page | safe }}\"]").removeClass("unselect-page-idx");
+  $("#page-idx").children("[data-page-index=\"{{ curr_page | safe }}\"]").addClass("selected-page-idx");
 }
 updatePagesIdx();
 
@@ -388,17 +388,17 @@ function updateFilterItem() {
   $("[data-index]").removeClass("selected-item");
   $("[data-index]").addClass("unselect-item");
 
-  $("#priceList").children("[data-index={{ curr_price }}]").removeClass("unselect-item");
-  $("#priceList").children("[data-index={{ curr_price }}]").addClass("selected-item");
+  $("#priceList").children("[data-index={{ curr_price | safe }}]").removeClass("unselect-item");
+  $("#priceList").children("[data-index={{ curr_price | safe }}]").addClass("selected-item");
 
-  $("#bedList").children("[data-index={{ curr_bednum }}]").removeClass("unselect-item");
-  $("#bedList").children("[data-index={{ curr_bednum }}]").addClass("selected-item");
+  $("#bedList").children("[data-index={{ curr_bednum | safe }}]").removeClass("unselect-item");
+  $("#bedList").children("[data-index={{ curr_bednum | safe }}]").addClass("selected-item");
 
-  $("#typeList").children("[data-index={{ curr_type }}]").removeClass("unselect-item");
-  $("#typeList").children("[data-index={{ curr_type }}]").addClass("selected-item");
+  $("#typeList").children("[data-index={{ curr_type | safe }}]").removeClass("unselect-item");
+  $("#typeList").children("[data-index={{ curr_type | safe }}]").addClass("selected-item");
 
-  $("#propList").children("[data-index={{ curr_prop }}]").removeClass("unselect-item");
-  $("#propList").children("[data-index={{ curr_prop }}]").addClass("selected-item");
+  $("#propList").children("[data-index={{ curr_prop | safe }}]").removeClass("unselect-item");
+  $("#propList").children("[data-index={{ curr_prop | safe }}]").addClass("selected-item");
 }
 updateFilterItem();
 
@@ -595,7 +595,7 @@ $("#next_page").click(function(e) {
   currPage = parseInt(selectedElem.attr("data-page-index"));
   selectedElem.removeClass("selected-page-idx");
   selectedElem.addClass("unselect-page-idx");
-  if (currPage > {{ page_num }}) {
+  if (currPage > {{ page_num | safe }}) {
       return
   }
   currPage = currPage + 1

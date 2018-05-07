@@ -18,6 +18,10 @@ sys.path.append("../../")
 curr_index = 0
 rh_num_per_page = 15
 g_area_map = {}
+default_img = "/static/images/default.jpg"
+img_path = "/static/images"
+
+
 def start(request):
     global curr_index
     context = {}
@@ -231,6 +235,22 @@ def get_prop_q_query(prop):
         prop_filter = None
     return prop_filter
 
+def update_title_image(record):
+    found_img = False
+    if len(record.rh_title_image) > 0:
+        record.rh_title_image = "title/" + record.rh_title_image
+        found_img = True
+    else:
+        if len(record.rh_images) > 0:
+            first_img = record.rh_images.split(',')
+            if len(first_img) > 0:
+                record.rh_title_image = first_img[0]
+                found_img = True
+    if found_img:
+        record.rh_title_image = ("%s/%d/%s" % (img_path, record.id, record.rh_title_image))
+    else:
+        record.rh_title_image = default_img
+
 def get_rh_list(context, privince, city, area,
         price, bed, str_type, prop, page):
     global rh_num_per_page
@@ -280,20 +300,7 @@ def get_rh_list(context, privince, city, area,
     ret_records = []
     result_record = records[((page_idx - 1) * rh_num_per_page) : (page_idx * rh_num_per_page)]
     for idx, r in enumerate(result_record):
-        found_img = False
-        if len(r.rh_title_image) > 0:
-            r.rh_title_image = "title/" + r.rh_title_image
-            found_img = True
-        else:
-            if len(r.rh_images) > 0:
-                first_img = r.rh_images.split(',')
-                if len(first_img) > 0:
-                    r.rh_title_image = first_img[0]
-                    found_img = True
-        if found_img:
-            r.rh_title_image = ("/static/images/%d/%s" % (r.id, r.rh_title_image))
-        else:
-            r.rh_title_image = "/static/images/default.jpg"
+        update_title_image(r)
         ret_records.append(r)
 
     context['records'] = ret_records
@@ -343,10 +350,17 @@ def get_next_page(context):
 
 def get_page_from_rh_id(context, rh_id):
     context['message'] = 'you are querying rh_id: ' + rh_id
+    #db = rh.objects.filter(id='2188')
     db = rh.objects.filter(id=rh_id)
     if len(db) > 0:
         # FIXME, should not query only one
-        context['record'] = db[0]
+        record = db[0]
+        context['record'] = record
+        if len(record.rh_images) > 0:
+            imgs = record.rh_images.split(',')
+            if len(imgs) > 0:
+                context['images'] = imgs
+            context['message'] = context['message'] + ", images: " + str(imgs)
     else:
         context['message'] = context['message'] + ', Not Existed'
 
