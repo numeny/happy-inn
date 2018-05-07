@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^rhdetail', view.show_rh_detail),
     url(r'^rhlist', view.show_rh_list),
     url(r'^citylist', view.citylist),
+    url(r'^currcity', view.currcity),
 ]

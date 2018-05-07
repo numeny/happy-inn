@@ -2,12 +2,13 @@
 <html>
 <head>
    <meta charset="utf-8">
-   <title>Bootstrap 实例 - 响应式的列重置</title>
+   <title>实例</title>
    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
    <script src="/static/js/forbidden_post.js"></script>
    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=ToUeFuUgQI5NS2sNxWVcsz23UEiMkskj"></script>
 
    <link rel="stylesheet" href="/static/css/index.css">
    <!--script src="/static/js/index.js"></script-->
@@ -781,6 +782,29 @@ initCurrLocation();
 
 var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list"));
 spyObj.init();
+
+// FIXME, delete on mobile website
+//navigator.geolocation.getCurrentPosition(function (position) {
+//  var lat = position.coords.latitude;
+//  var lon = position.coords.longitude;
+  // var point = new BMap.Point(lon, lat);
+  var point = new BMap.Point(116.331398, 39.897445);
+
+  var myGeo = new BMap.Geocoder();
+  myGeo.getLocation(point, function (result) {
+    var city = result.addressComponents.city;
+    $.ajax({
+      url: "/currcity", //提交到那里
+      type: "POST", //提交类型
+      data: {"city": city}, //提交的数据
+      success: function (area_dict) {
+        a = $.parseJSON(area_dict)
+//        alert(a.privince)
+//        alert(a.city)
+      }
+    });
+  });
+//});
 
 });
 

@@ -2,6 +2,7 @@
  
 import sys
 import time
+import json
 
 from django.db.models import Q
 from django.http import HttpResponse
@@ -105,6 +106,24 @@ def citylist(request):
         area_list = []
 
     return JsonResponse(area_list)
+
+# get privince/city according city returned by geolocation
+def getCurrArea(curr_city):
+    records = city.objects.filter(Q(city__startswith=curr_city))
+    if records.count() <= 0:
+        return None
+    return {'privince': records[0].privince, 'city': curr_city}
+
+def currcity(request):
+    city = ''
+    if 'city' in request.POST:
+        city = request.POST['city']
+
+    area =  getCurrArea(city)
+    if area is None:
+        area = []
+
+    return JsonResponse(json.dumps(area), content_type="application/json")
 
 #host/city/area_id/rh/
 def show_rh_list(request):
@@ -355,6 +374,7 @@ def get_page_from_rh_id(context, rh_id):
     if len(db) > 0:
         # FIXME, should not query only one
         record = db[0]
+        update_title_image(record)
         context['record'] = record
         if len(record.rh_images) > 0:
             imgs = record.rh_images.split(',')
