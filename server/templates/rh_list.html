@@ -180,8 +180,8 @@ a:hover {
   <div class="city_list" id="city_list">
   </div>
   <div class="row city_select_panel mask_text_color">
-      <div class="col-xs-4 col-sm-4 text-center">返回</div>
-      <div class="col-xs-4 col-sm-4 text-center">重置</div>
+      <div class="col-xs-4 col-sm-4 text-center" id="return_city_select">返回</div>
+      <div class="col-xs-4 col-sm-4 text-center" id="reset_city_select">重置</div>
       <div class="col-xs-4 col-sm-4 text-center" id="confirm_city_select">确认</div>
   </div>
 </div>
@@ -343,6 +343,7 @@ $(function() {
 var curr_privince = ""
 var curr_city = ""
 var curr_area = ""
+
 function updatePagesIdx() {
   var str_all_page_list = ""
   var page_num = parseInt({{ page_num | safe }});
@@ -743,6 +744,17 @@ $(document).on("click", "#confirm_city_select", function() {
   onRhListRequestShow(false);
 });
 
+$(document).on("click", "#reset_city_select", function() {
+  curr_privince = "";
+  curr_city = "";
+  curr_area = "";
+  updateCurrCity(true);
+});
+
+$(document).on("click", "#return_city_select", function() {
+  $("#city_select").css("display", "none");
+});
+
 function showCurrLocation() {
   if (curr_area.length > 0) {
     $("#all_privince").css("display", "none");
@@ -788,6 +800,10 @@ spyObj.init();
 //  var lat = position.coords.latitude;
 //  var lon = position.coords.longitude;
   // var point = new BMap.Point(lon, lat);
+(function() {
+  if ('{{ has_located | safe }}' == 'y') {
+    return;
+  }
   var point = new BMap.Point(116.331398, 34.897445);
 
   var myGeo = new BMap.Geocoder();
@@ -807,10 +823,12 @@ spyObj.init();
         curr_city = a.city;
         curr_area = "";
         showCurrLocation();
+        onRhListRequestShow(false);
       }
     });
   });
 //});
+})();
 
 });
 

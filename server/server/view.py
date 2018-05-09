@@ -112,7 +112,8 @@ def getCurrArea(curr_city):
     records = city.objects.filter(Q(city__startswith=curr_city))
     if records.count() <= 0:
         return None
-    return {'privince': records[0].privince, 'city': curr_city}
+    privince = records[0].privince
+    return {'privince': privince, 'city': curr_city}
 
 def currcity(request):
     city = ''
@@ -123,6 +124,9 @@ def currcity(request):
     if area is None:
         area = []
 
+    request.session['geolocation_privince'] = area['privince']
+    request.session['geolocation_city'] = area['city']
+    request.session['has_located'] = "y"
     return JsonResponse(json.dumps(area), content_type="application/json")
 
 #host/city/area_id/rh/
@@ -158,6 +162,11 @@ def show_rh_list(request):
     # FIXME
     get_rh_list(context, privince, city, area,
             price, bed, str_type, prop, page)
+
+    context['has_located'] = request.session.get('has_located', 'n')
+    context['geolocation_privince'] = request.session.get('geolocation_privince', '')
+    context['geolocation_city'] = request.session.get('geolocation_city', '')
+    context['message'] = context['message'] + ", session_key: "+ str(request.session.session_key)
 
     return render(request, 'rh_list.html', context)
 
