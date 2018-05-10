@@ -53,7 +53,7 @@ for r in records:
     images_files = os.listdir(dst_root_dir + str(r.id))
     str_all_images = ""
     for f in images_files:
-        if f == "title":
+        if f == "title" or f.endswith('/'):
             continue;
         str_all_images = str_all_images + f + ","
     r.rh_images = str_all_images
