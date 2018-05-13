@@ -329,6 +329,7 @@ def get_rh_list(context, privince, city, area,
     result_record = records[((page_idx - 1) * rh_num_per_page) : (page_idx * rh_num_per_page)]
     for idx, r in enumerate(result_record):
         update_title_image(r)
+        get_rh_location_id(r)
         ret_records.append(r)
 
     context['records'] = ret_records
@@ -376,6 +377,9 @@ def get_next_page(context):
     curr_index = curr_index + 1
     context['records'] = db
 
+def get_rh_location_id(record):
+    record.rh_location_id = record.rh_privince + record.rh_city + record.rh_area
+
 def get_page_from_rh_id(context, rh_id):
     context['message'] = 'you are querying rh_id: ' + rh_id
     #db = rh.objects.filter(id='2188')
@@ -384,12 +388,14 @@ def get_page_from_rh_id(context, rh_id):
         # FIXME, should not query only one
         record = db[0]
         update_title_image(record)
+        get_rh_location_id(record)
         context['record'] = record
         if len(record.rh_images) > 0:
             imgs = record.rh_images.split(',')
             if len(imgs) > 0:
                 context['images'] = imgs
             context['message'] = context['message'] + ", images: " + str(imgs)
+        context['message'] = context['message'] + ", rh_location_id: " + record.rh_location_id
     else:
         context['message'] = context['message'] + ', Not Existed'
 

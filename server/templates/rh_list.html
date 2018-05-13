@@ -235,22 +235,22 @@ a:hover {
 	<div class="row visible-on">
 		<div class="col-xs-3 col-sm-3 text-center" style="background-color: #dedef8;">
       <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-exchange">
-        <h5>价格<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+        <h5 id="select_price_title">价格<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
       </a>
 		</div>
 		<div class="col-xs-3 col-sm-3 text-center classify-div" style="background-color: #dedef8;">
       <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-bed-num">
-        <h5>床位数<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+        <h5 id="select_bednum_title">床位数<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
       </a>
 		</div>
 		<div class="col-xs-3 col-sm-3 text-center" style="background-color: #dedef8;">
       <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-type">
-        <h5>类型<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+        <h5 id="select_type_title">类型<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
       </a>
 		</div>
 		<div class="col-xs-3 col-sm-3 text-center" style="background-color: #dedef8;">
       <a data-toggle="collapse" data-parent="#rh_list_title_bar" href="#rh-prop">
-        <h5>性质<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
+        <h5 id="select_prop_title">性质<span class="glyphicon glyphicon-triangle-bottom"></span></h5>
       </a>
 		</div>
 	</div>
@@ -413,6 +413,29 @@ function updateFilterItem() {
 
   $("#propList").children("[data-index={{ curr_prop | safe }}]").removeClass("unselect-item");
   $("#propList").children("[data-index={{ curr_prop | safe }}]").addClass("selected-item");
+
+
+  var down_button = "<span class=\"glyphicon glyphicon-triangle-bottom\"></span>"
+
+  if ({{ curr_price | safe }} != "0") {
+    var curr_price_item = $("#priceList").children("[data-index={{ curr_price | safe }}]").html();
+    $("#select_price_title").html(curr_price_item + down_button);
+  }
+
+  if ({{ curr_bednum | safe }} != "0") {
+    var curr_bednum_item = $("#bedList").children("[data-index={{ curr_bednum | safe }}]").html();
+    $("#select_bednum_title").html(curr_bednum_item + down_button);
+  }
+
+  if ({{ curr_type | safe }} != "0") {
+    var curr_type_item = $("#typeList").children("[data-index={{ curr_type | safe }}]").html();
+    $("#select_type_title").html(curr_type_item + down_button);
+  }
+
+  if ({{ curr_prop | safe }} != "0") {
+    var curr_prop_item = $("#propList").children("[data-index={{ curr_prop | safe }}]").html();
+    $("#select_prop_title").html(curr_prop_item + down_button);
+  }
 }
 updateFilterItem();
 
