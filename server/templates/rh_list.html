@@ -47,7 +47,20 @@ a:hover {
   background-color: pink;
 }
 
+.unselect-page-idx {
+  color: #000000;
+  padding: 1em;
+  font-size: 18px;
+}
+
 .selected-page-idx {
+  color: #0000ff;
+  padding: 1em;
+  font-size: 18px;
+}
+
+.page-list {
+  list-style-type: none;
   color: #0000ff;
 }
 
@@ -116,13 +129,12 @@ a:hover {
   background-color: #fff;
 }
 .city_select_item {
-  width: 32%;
+  width: 49%;
   height: 2.25rem;
-  box-sizing: border-box;
   margin-top: .4em;
   margin-bottom: .4em;
-  margin-left: .22em;
-  margin-right: .22em;
+  margin-left: .1em;
+  margin-right: .1em;
 }
 
 .city_list {
@@ -168,9 +180,9 @@ a:hover {
   </div>
   <div class="row city_select_panel">
     <div class="city_select_panel_2">
-      <div class="col-xs-4 col-sm-4 text-center privince_level_city city_unselect_item city_select_item">北京市</div>
-      <div class="col-xs-4 col-sm-4 text-center privince_level_city city_unselect_item city_select_item">上海市</div>
-      <div class="col-xs-4 col-sm-4 text-center privince_level_city city_unselect_item city_select_item">天津市</div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center privince_level_city city_unselect_item city_select_item">北京市</div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center privince_level_city city_unselect_item city_select_item">上海市</div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center privince_level_city city_unselect_item city_select_item">天津市</div>
     </div>
   </div>
   <div class="row city_select_panel">
@@ -320,16 +332,15 @@ a:hover {
 	</div>
 
 	<div class="row text-center">
-    <ul class="pagination" id="page-idx">
-      <!--li>&laquo;</li>
-      <li class="selected-page-idx" data-page-index="1">1</li>
-      <li class="unselect-page-idx" data-page-index="2">2</li>
-      <li class="unselect-page-idx" data-page-index="3">3</li>
-      <li class="unselect-page-idx" data-page-index="4">4</li>
-      <li class="unselect-page-idx" data-page-index="5">5</li>
-      <li class="unselect-page-idx" data-page-index="6">{{ page_num }}</li>
-      <li>&raquo;</li-->
-    </ul>
+    <div class="page-list" id="page-idx">
+      <!--span>&laquo;</span>
+      <span class="selected-page-idx" data-page-index="1">1</span>
+      <span class="unselect-page-idx" data-page-index="2">2</span>
+      <span class="unselect-page-idx" data-page-index="3">3</span>
+      <span class="unselect-page-idx" data-page-index="4">4</span>
+      <span class="unselect-page-idx" data-page-index="5">5</span>
+      <span>&raquo;</span-->
+    </div>
 	</div>
 
 </div>
@@ -344,7 +355,7 @@ $(function() {
 var curr_privince = ""
 var curr_city = ""
 var curr_area = ""
-
+// updatePagesIdx
 function updatePagesIdx() {
   var str_all_page_list = ""
   var page_num = parseInt({{ page_num | safe }});
@@ -368,13 +379,13 @@ function updatePagesIdx() {
   }
 
   if (start_page > 1) {
-    str_all_page_list = str_all_page_list + "<li id=\"prev_page\">&laquo;</li>";
+    str_all_page_list = str_all_page_list + "<span id=\"prev_page\">&laquo;</span>";
   }
   for (i = start_page; i <= end_page; i++) {
-    str_all_page_list = str_all_page_list + "<li data-page-index=\"" + i + "\">" + i + "</li>";
+    str_all_page_list = str_all_page_list + "<span data-page-index=\"" + i + "\">" + i + "</span>";
   }
   if (end_page < page_num) {
-    str_all_page_list = str_all_page_list + "<li id=\"next_page\">&raquo;</li>";
+    str_all_page_list = str_all_page_list + "<span id=\"next_page\">&raquo;</span>";
   }
   $("#page-idx").html(str_all_page_list);
 
@@ -407,7 +418,7 @@ updateFilterItem();
 
 // ======================================
 
-var host = "http://localhost:8000/rhlist";
+var host = "/rhlist";
 
 function spyObject(spyElement, stickClass, brother, stickFunc) {
   var spyOffset = function() {
@@ -650,13 +661,13 @@ function updateCurrCity(update_city_list) {
       city_list_html = "";
       $.each(area_list, function(n, area) {
         // city_list_html = city_list_html + "<div>" + n + ": " + area + "</div>";
-        if (n % 3 == 0) {
+        if (n % 2 == 0) {
           city_list_html = city_list_html +
           "<div class=\"row city_select_panel\"><div class=\"city_select_panel_2\">"
         }
-        city_list_html = city_list_html + "<div class=\"col-xs-4 col-sm-4 text-center city_unselect_item city_select_item\">"
+        city_list_html = city_list_html + "<div class=\"col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center city_unselect_item city_select_item\">"
                           + area + "</div>"
-        if (n % 3 == 2) {
+        if (n % 2 == 1) {
           city_list_html = city_list_html + "</div></div> "
         }
       });
@@ -797,15 +808,15 @@ var spyObj = new spyObject($("#rh_list_title_bar"), "stick_fixed", $("#rh_list")
 spyObj.init();
 
 // FIXME, delete on mobile website
-//navigator.geolocation.getCurrentPosition(function (position) {
-//  var lat = position.coords.latitude;
-//  var lon = position.coords.longitude;
-  // var point = new BMap.Point(lon, lat);
-(function() {
+  navigator.geolocation.getCurrentPosition(function (position) {
+  var lat = position.coords.latitude;
+  var lon = position.coords.longitude;
+  var point = new BMap.Point(lon, lat);
+//(function() {
   if ('{{ has_located | safe }}' == 'y') {
     return;
   }
-  var point = new BMap.Point(116.331398, 34.897445);
+  //var point = new BMap.Point(116.331398, 34.897445);
 
   var myGeo = new BMap.Geocoder();
   myGeo.getLocation(point, function (result) {
@@ -828,8 +839,8 @@ spyObj.init();
       }
     });
   });
-//});
-})();
+});
+//})();
 
 });
 

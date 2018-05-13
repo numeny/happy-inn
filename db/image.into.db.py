@@ -24,6 +24,7 @@ src_ylw_dir = "picture.ylw/"
 dst_root_dir = project_dir + "server/static/images/"
 
 records = models.rh.objects.all()
+#records = models.rh.objects.filter(Q(id__startswith="38952"))
 #records = models.rh.objects.filter(Q(rh_ylw_id__startswith="ff"))
 #print len(records)
 for r in records:
@@ -32,6 +33,9 @@ for r in records:
     # search img from rh_ylw_id
     title_image = ""
     print("%d is start" % r.id)
+    r.rh_images = ""
+    r.rh_title_image = ""
+    '''
     if r.rh_ylw_id.startswith("ff"):
         rh_ylw_id_pic_dir = src_ylxxw_dir + r.rh_ylw_id[r.rh_ylw_id.find('/') + 1:]
     else:
@@ -39,11 +43,15 @@ for r in records:
 
     if not os.path.exists(src_root_dir + rh_ylw_id_pic_dir):
         print("%d ( %s ) no images" % (r.id, r.rh_ylw_id))
+        r.save()
         continue;
+    '''
     if not os.path.exists(dst_root_dir + str(r.id)):
         os.mkdir(dst_root_dir + str(r.id))
+    '''
     cp_cmd = "cp -ra " + src_root_dir + rh_ylw_id_pic_dir + "/* " + dst_root_dir + str(r.id);
     os.system(cp_cmd)
+    '''
 
     title_dir = dst_root_dir + str(r.id) + "/title"
     if os.path.exists(title_dir):
@@ -56,6 +64,9 @@ for r in records:
         if f == "title" or f.endswith('/'):
             continue;
         str_all_images = str_all_images + f + ","
+    len_all_images = len(str_all_images)
+    if len_all_images != 0 and str_all_images[len_all_images-1] == ",":
+        str_all_images = str_all_images[:len_all_images-1]
     r.rh_images = str_all_images
     r.save()
     print("%d is OK" % r.id)
