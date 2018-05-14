@@ -314,7 +314,7 @@ def get_rh_list(context, privince, city, area,
         prop_filter = get_prop_q_query(prop)
         all_filter = all_filter & prop_filter
 
-    records = rh.objects.filter(all_filter).order_by('rh_name', 'rh_ylw_id')
+    records = rh.objects.filter(all_filter).order_by('-rh_bednum_int', 'rh_name', 'rh_ylw_id')
     record_num = records.count()
     page_num = record_num / rh_num_per_page
     if record_num % rh_num_per_page > 0:
@@ -333,6 +333,10 @@ def get_rh_list(context, privince, city, area,
         ret_records.append(r)
 
     context['records'] = ret_records
+    if page_idx < page_num:
+        context['record_num'] = rh_num_per_page
+    else:
+        context['record_num'] = (record_num - rh_num_per_page * (page_idx - 1))
     context['page_num'] = page_num
     context['curr_page'] = str(page_idx)
 

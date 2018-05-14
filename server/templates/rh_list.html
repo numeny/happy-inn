@@ -200,25 +200,31 @@ a:hover {
 </div>
 <div id="myCarousel" class="container carousel slide">
     <!-- 轮播（Carousel）指标 -->
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <ol class="carousel-indicators" id="carousel_ol">
+        <!--li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li-->
     </ol>
     <!-- 轮播（Carousel）项目 -->
-    <div class="carousel-inner">
-        <div class="item active">
+    <div class="carousel-inner" id="carousel_img">
+        <!--div class="item active">
+            <a href="http://www.baidu.com">
             <img src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="First slide">
             <div class="carousel-caption">标题 1</div>
+            </a>
         </div>
         <div class="item">
+            <a href="http://www.baidu.com">
             <img src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="First slide">
             <div class="carousel-caption">标题 2</div>
+            </a>
         </div>
         <div class="item">
+            <a href="http://www.baidu.com">
             <img src="https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg" alt="First slide">
             <div class="carousel-caption">标题 3</div>
-        </div>
+            </a>
+        </div-->
     </div>
     <!-- 轮播（Carousel）导航 -->
     <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
@@ -345,12 +351,37 @@ a:hover {
 
 </div>
 
-<div class="container">
-</div>
-
-
 <script type="text/javascript">
 $(function() {
+function initCarousel() {
+  var rh_items_num = {{ record_num | safe }};
+  var content_html = "";
+  var ol_html = "";
+  var is_active = "";
+  // alert({{ records }}[0]);
+  for (i = 0; i < rh_items_num && i < 3; i++) {
+    if (i >= 3) {
+      return;
+    }
+    alert(item.rh_name);
+    if (i == 0) {
+      is_active = "active";
+    } else {
+      is_active = "";
+    }
+    ol_html += "<li data-target=\"#myCarousel\" data-slide-to=\"" + i + "\" class=\""+ is_active + "\"></li>";
+    content_html += "<div class=\"item " +  is_active + "\">\
+                     <a href=\"http://www.baidu.com\">\
+                     <img src=\"https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg\" alt=\"First slide\">\
+                     <div class=\"carousel-caption\">标题 1</div>\
+                     </a>\
+                     </div>";
+  }
+
+  $("#carousel_ol").html(ol_html)
+  $("#carousel_img").html(content_html)
+}
+initCarousel();
 
 var curr_privince = ""
 var curr_city = ""
