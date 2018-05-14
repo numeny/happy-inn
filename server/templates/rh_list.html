@@ -142,6 +142,12 @@ a:hover {
   overflow: auto;
 }
 
+.carousel_image {
+  width: 100%;
+  height: 20em;
+  overflow: hidden;
+}
+
 </style>
 
 </head>
@@ -294,7 +300,6 @@ a:hover {
       <li class="list-group-item unselect-item" data-index="4">其他</li>
     </ul>
 	</div>
-</div>
 
 	<div class="row visible-on collapse" id="rh-prop">
     <ul class="list-group text-center" id="propList">
@@ -354,26 +359,21 @@ a:hover {
 <script type="text/javascript">
 $(function() {
 function initCarousel() {
-  var rh_items_num = {{ record_num | safe }};
   var content_html = "";
   var ol_html = "";
   var is_active = "";
-  // alert({{ records }}[0]);
-  for (i = 0; i < rh_items_num && i < 3; i++) {
-    if (i >= 3) {
-      return;
-    }
-    alert(item.rh_name);
+  var record = {{ head_three_record | safe }}
+  for (i = 0; i < Math.min({{ record_num | safe }}, 3); i++) {
     if (i == 0) {
       is_active = "active";
     } else {
       is_active = "";
     }
     ol_html += "<li data-target=\"#myCarousel\" data-slide-to=\"" + i + "\" class=\""+ is_active + "\"></li>";
-    content_html += "<div class=\"item " +  is_active + "\">\
-                     <a href=\"http://www.baidu.com\">\
-                     <img src=\"https://img1.gtimg.com/rcdimg/20180419/15/7610496475_966x604.jpg\" alt=\"First slide\">\
-                     <div class=\"carousel-caption\">标题 1</div>\
+    content_html += "<div class=\"item carousel_image " +  is_active + "\">\
+                     <a href=\"" + "/rhdetail?rhid=" + record[i]['rh_id'] + "\">\
+                     <img src=\"" + record[i]['rh_title_image'] + "\">\
+                     <div class=\"carousel-caption\">" + record[i]['rh_name']  + "</div>\
                      </a>\
                      </div>";
   }

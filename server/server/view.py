@@ -327,10 +327,14 @@ def get_rh_list(context, privince, city, area,
 
     ret_records = []
     result_record = records[((page_idx - 1) * rh_num_per_page) : (page_idx * rh_num_per_page)]
+    str_header_three_record = []
     for idx, r in enumerate(result_record):
         update_title_image(r)
         get_rh_location_id(r)
         ret_records.append(r)
+        if idx < 3:
+            str_header_three_record.append({'rh_id': r.id, 'rh_name': r.rh_name, 'rh_title_image': r.rh_title_image})
+#str_header_three_record.append([r.id, r.rh_name, r.rh_title_image])
 
     context['records'] = ret_records
     if page_idx < page_num:
@@ -339,6 +343,7 @@ def get_rh_list(context, privince, city, area,
         context['record_num'] = (record_num - rh_num_per_page * (page_idx - 1))
     context['page_num'] = page_num
     context['curr_page'] = str(page_idx)
+    context['head_three_record'] = json.dumps(str_header_three_record)
 
     if len(price) == 0:
         context['curr_price'] = '0'
@@ -397,6 +402,8 @@ def get_page_from_rh_id(context, rh_id):
         if len(record.rh_images) > 0:
             imgs = record.rh_images.split(',')
             if len(imgs) > 0:
+                for idx, r in enumerate(imgs):
+                    imgs[idx] = imgs[idx].encode('utf-8')
                 context['images'] = imgs
             context['message'] = context['message'] + ", images: " + str(imgs)
         context['message'] = context['message'] + ", rh_location_id: " + record.rh_location_id
