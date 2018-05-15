@@ -399,14 +399,15 @@ def get_page_from_rh_id(context, rh_id):
         update_title_image(record)
         get_rh_location_id(record)
         context['record'] = record
+        imgs = []
         if len(record.rh_images) > 0:
             imgs = record.rh_images.split(',')
             if len(imgs) > 0:
                 for idx, r in enumerate(imgs):
                     imgs[idx] = imgs[idx].encode('utf-8')
-                context['images'] = imgs
             context['message'] = context['message'] + ", images: " + str(imgs)
         context['message'] = context['message'] + ", rh_location_id: " + record.rh_location_id
+        context['images'] = imgs
     else:
         context['message'] = context['message'] + ', Not Existed'
 
