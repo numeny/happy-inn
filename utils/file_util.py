@@ -12,10 +12,12 @@ def create_dir(path):
         logger.warning("path : %s" % path)
         logger.warning(e)
 
-def save_pic(base_path, file_name, is_title, content):
+def save_pic(base_path, file_name, is_title, is_hdpi, content):
     picture_dir = base_path
     if is_title:
         picture_dir = os.path.join(picture_dir, "title")
+    if is_hdpi:
+        picture_dir = os.path.join(picture_dir, "hdpi")
     absolute_filename = os.path.join(picture_dir, file_name)
     try:
         if not os.path.exists(picture_dir):
