@@ -239,22 +239,27 @@ function initCarousel() {
   var ol_html = "";
   var is_active = "";
   var image_list = {{ images | safe }};
-  var len_carousel = Math.min(image_list.length, 8);
+  var title_img = "{{ record.rh_title_image }}";
+  var len_carousel = Math.min(image_list.length, 7) + ((title_img.length != 0) ? 1 : 0);
   if (len_carousel == 0) {
     $("#myCarousel").css('display', 'none');
     return;
   }
 
-  for (i = 0; i < len_carousel; i++) {
+  for (i = 0, j = 0; i < len_carousel; i++) {
+    var img_path;
     if (i == 0) {
       is_active = "active";
+      img_path = title_img;
     } else {
       is_active = "";
+      img_path = "/static/images/{{ record.id | safe }}/" + image_list[j];
+      j++;
     }
     ol_html = ol_html + "<li data-target=\"#myCarousel\" data-slide-to=\"" + i + "\" class=\"" + is_active + "\"></li>";
     content_html = content_html +
       "<div class=\"item " + is_active + "\">\
-        <img src=\"" + "/static/images/{{ record.id | safe }}/" + image_list[i] + "\">\
+        <img src=\"" + img_path + "\">\
       </div>";
   }
   $("#carousel_ol").html(ol_html);

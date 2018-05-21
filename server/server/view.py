@@ -328,11 +328,16 @@ def get_rh_list(context, privince, city, area,
     ret_records = []
     result_record = records[((page_idx - 1) * rh_num_per_page) : (page_idx * rh_num_per_page)]
     str_header_three_record = []
+
+    num_added = 0
     for idx, r in enumerate(result_record):
         update_title_image(r)
         get_rh_location_id(r)
         ret_records.append(r)
-        if idx < 3:
+        if r.rh_title_image == default_img:
+            continue;
+        num_added = num_added + 1
+        if num_added <= 3:
             str_header_three_record.append({'rh_id': r.id, 'rh_name': r.rh_name, 'rh_title_image': r.rh_title_image})
 #str_header_three_record.append([r.id, r.rh_name, r.rh_title_image])
 
