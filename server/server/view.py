@@ -251,12 +251,14 @@ def get_type_q_query(str_type):
 
 def get_prop_q_query(prop):
     if prop == '1':
-        prop_filter = Q(rh_factory_property__startswith='国营机构')
-    elif prop == '2':
         prop_filter = Q(rh_factory_property__startswith='民营机构')
+    elif prop == '2':
+        prop_filter = Q(rh_factory_property__startswith='国营机构')
     elif prop == '3':
-        prop_filter = Q(rh_factory_property__startswith='公办民营')
+        prop_filter = Q(rh_factory_property__startswith='公建民营')
     elif prop == '4':
+        prop_filter = Q(rh_factory_property__startswith='民办公助')
+    elif prop == '5':
         prop_filter = Q(rh_factory_property__startswith='其他')
     else:
         # FIXME
