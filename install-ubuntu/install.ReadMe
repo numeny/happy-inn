@@ -2,8 +2,8 @@
 mysql -u bdg -p
 
 2.
-CREATE USER bdg IDENTIFIED BY '3';
-CREATE USER bdg@localhost IDENTIFIED BY '3';
+CREATE USER bdg IDENTIFIED BY '1';
+CREATE USER bdg@localhost IDENTIFIED BY '1';
 GRANT ALL PRIVILEGES ON *.* TO bdg;
 GRANT ALL PRIVILEGES ON *.* TO bdg@localhost;
 
@@ -22,10 +22,21 @@ python manage.py migrate RHModel
 alter table RHModel_rh convert to charset utf8;
 
 
-插入rh表到RHModel_rh:
-insert into RHModel_rh(rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id) select rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id from rh;
+3. 插入rh表到rh_rh:
 
+insert into rh_rh(rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id) select rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id from rh;
 
 alter table rh add column rh_privince TEXT;
 alter table rh add column rh_city TEXT;
 alter table rh add column rh_area TEXT;
+
+
+3.2
+最终django目前是使用rh_rh的数据表
+
+4. 运行django服务：
+cd happy-inn/server
+python manage.py runserver 0.0.0.0:8000
+
+5. 浏览器访问：
+10.192.100.11:8000
