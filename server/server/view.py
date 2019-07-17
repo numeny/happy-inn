@@ -316,6 +316,9 @@ def get_rh_list(context, privince, city, area,
         prop_filter = get_prop_q_query(prop)
         all_filter = all_filter & prop_filter
 
+    # only display ylxxw's records
+    all_filter = all_filter & Q(rh_ylw_id__startswith="ff")
+
     records = rh.objects.filter(all_filter).order_by('-rh_bednum_int', 'rh_name', 'rh_ylw_id')
     record_num = records.count()
     page_num = record_num / rh_num_per_page

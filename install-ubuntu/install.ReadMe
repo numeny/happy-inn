@@ -1,7 +1,7 @@
 1.mysql:
 mysql -u bdg -p
 
-2.
+2. 恢复数据库
 CREATE USER bdg IDENTIFIED BY '1';
 CREATE USER bdg@localhost IDENTIFIED BY '1';
 GRANT ALL PRIVILEGES ON *.* TO bdg;
